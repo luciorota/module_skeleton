@@ -22,7 +22,7 @@
                     <tr class="<{cycle values='even, odd'}>">
                         <td align='center'><{$sorted_itemfieldcategory.itemfieldcategory.itemfieldcategory_id}></td>
                         <td class="head">
-                        <div style="margin: 0px 0px 0px <{$sorted_itemfieldcategory.level*20-20}>px">
+                        <div style="margin: 0 0 0 <{$sorted_itemfieldcategory.level*20-20}>px">
                             <div class="xoops-form-element-caption">
 <{*
                             <{section name=indent loop=$sorted_itemfieldcategory.level-1 step=1}>-<{/section}>

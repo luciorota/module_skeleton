@@ -1,6 +1,6 @@
 <div class="footer">
 // FOOTER
-<{if $com_rule <> 0}>
+<{if !$com_rule == 0}>
     <a name="comments"></a>
     <div class="module_skeleton_foot_commentnav">
         <{$commentsnav}>

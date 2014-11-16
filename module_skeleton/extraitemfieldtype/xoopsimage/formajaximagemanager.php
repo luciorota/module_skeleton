@@ -22,7 +22,7 @@ $currentPath = __FILE__;
 if (DIRECTORY_SEPARATOR != "/") {
     $currentPath = str_replace(strpos( $currentPath, "\\\\", 2 ) ? "\\\\" : DIRECTORY_SEPARATOR, "/", $currentPath);
 }
-include_once dirname(dirname(dirname(dirname(dirname(__FILE__))))) . '/mainfile.php';
+include_once dirname(dirname(dirname(dirname(__DIR__)))) . '/mainfile.php';
 defined('XOOPS_ROOT_PATH') || die('XOOPS root path not defined');
 $GLOBALS['xoopsLogger']->activated = false;
 
@@ -38,6 +38,7 @@ if (file_exists($file = FORMAJAXIMAGEMANAGER_PATH . '/language/' . $GLOBALS['xoo
 } else if (file_exists($file = FORMAJAXIMAGEMANAGER_PATH . '/language/english.php')) {
     include_once $file;
 }
+
 
 $module_handler = xoops_gethandler('module');
 $systemModule = $module_handler->getByDirname('system');
@@ -989,8 +990,9 @@ if (!class_exists('XoopsFormAjaxImageManager')) {
          * Constuctor
          *
          * @param string $caption caption
-         * @param string $name name
-         * @param string $value initial content
+         * @param string $name    name
+         * @param string $value   initial content
+         * @param array  $options
          */
         function __construct($caption, $name, $value = "", $options = array())
         {
@@ -1094,8 +1096,11 @@ if (!class_exists('XoopsFormAjaxImageManager')) {
         {
             return $this->_return;
         }
+
         /**
          * set return mode
+         *
+         * @param $return
          *
          * @return string
          */
@@ -1127,11 +1132,11 @@ if (!class_exists('XoopsFormAjaxImageManager')) {
         }
 
 
-
         /**
          * Set initial content
          *
-         * @param  $value string
+         * @param $image_id
+         * @internal param string $value
          */
         function setDefaultImageId($image_id)
         {
@@ -1148,11 +1153,11 @@ if (!class_exists('XoopsFormAjaxImageManager')) {
         }
 
 
-
         /**
          * Set initial content
          *
-         * @param  $value string
+         * @param $imgcat_id
+         * @internal param string $value
          */
         function setDefaultImgcatId($imgcat_id)
         {
@@ -1754,7 +1759,7 @@ function getImgcatPermissions(name, imgcat_id) {
                     $("input#" + name + "_create_imgcat_button").hide();
                     $("input#" + name + "_edit_imgcat_button").hide();
                     $("input#" + name + "_delete_imgcat_button").hide();
-                    
+
                     if (data.data.imgcats[imgcat_id].perm.img_write == true) {
                         $("input#" + name + "_upload_image_button").show();
                     } else {

@@ -20,7 +20,7 @@
  */
 
 $currentFile = basename(__FILE__);
-include dirname(__FILE__) . '/header.php';
+include __DIR__ . '/header.php';
 
 // Check directories
 if (!is_dir($module_skeleton->getConfig('uploadPath'))) {

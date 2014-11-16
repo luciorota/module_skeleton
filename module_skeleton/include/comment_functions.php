@@ -20,13 +20,15 @@
  */
 
 defined('XOOPS_ROOT_PATH') || die('XOOPS root path not defined');
-include_once dirname(__FILE__) . '/common.php';
+include_once __DIR__ . '/common.php';
 
 // comment callback functions
 
 /**
- * @param int               $download_id
- * @param int               $total_num
+ * @param     $item_id
+ * @param int $total_num
+ *
+ * @internal param int $download_id
  */
 function module_skeleton_com_update($item_id, $total_num)
 {

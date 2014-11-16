@@ -22,9 +22,11 @@
 /**
  * Module_skeleton module
  *
- * @param string            $itemcategory
- * @param int               $item_id
+ * @param string $itemcategory
+ * @param        $id
+ *
  * @return null
+ * @internal param int $item_id
  */
 function module_skeleton_notify_iteminfo($itemcategory, $id)
 {

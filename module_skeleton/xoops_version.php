@@ -26,11 +26,11 @@ $modversion['version']        = 0.01;
 $modversion['description']    = _MI_MODULE_SKELETON_DESC;
 $modversion['author']         = _MI_MODULE_SKELETON_AUTHOR;
 $modversion['credits']        = _MI_MODULE_SKELETON_CREDITS;
-$modversion['help']           = 'page=help';
+$modversion['help']           = 'page=overview';
 $modversion['license']        = 'GNU GPL 2.0 or later';
 $modversion['license_url']    = "http://www.gnu.org/licenses/gpl-2.0.html";
 $modversion['image']          = "assets/images/module_logo.png"; // Path and name of the module’s logo
-$modversion['dirname']        = basename(dirname(__FILE__));
+$modversion['dirname']        = basename(__DIR__);
 $modversion['dirmoduleadmin'] = 'Frameworks/moduleclasses';
 $modversion['icons16']        = 'Frameworks/moduleclasses/icons/16';
 $modversion['icons32']        = 'Frameworks/moduleclasses/icons/32';

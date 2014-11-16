@@ -8,7 +8,7 @@
 
 
 .blue-loader .ajax_loader {
-    background: url("ajax-loader_blue.gif") no-repeat center center transparent;
+    background: url("../ajax-loader_blue.gif") no-repeat center center transparent;
     }
 .extra-loader .ajax_loader {
     background: url("spinner.gif") no-repeat center center transparent;

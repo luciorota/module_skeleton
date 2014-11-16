@@ -20,7 +20,7 @@
  */
 
 $currentFile = basename(__FILE__);
-include_once dirname(__FILE__) . '/admin_header.php';
+include_once __DIR__ . '/admin_header.php';
 
 if (@$_POST['op'] == 'submit') {
     if (!$GLOBALS['xoopsSecurity']->check()) {

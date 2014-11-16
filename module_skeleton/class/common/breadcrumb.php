@@ -40,7 +40,7 @@ class Module_skeletonBreadcrumb
      */
     public function __construct()
     {
-        $this->dirname =  basename(dirname(dirname(__FILE__)));
+        $this->dirname =  basename(dirname(dirname(__DIR__)));
     }
 
     /**
@@ -77,7 +77,8 @@ class Module_skeletonBreadcrumb
 // IN PROGRESS
         //$ret .= $breadcrumbTpl->fetch(__DIR__ . '_breadcrumb.tpl');
         $tplSource = file_get_contents(__DIR__ . '/breadcrumb.tpl');
-        $ret .= $choiceByLetterTpl->fetchFromData($tplSource, false, null);
+//        $ret .= $choiceByLetterTpl->fetchFromData($tplSource, false, null);
+        $ret .= $breadcrumbTpl->fetchFromData($tplSource, false, null);
         unset($breadcrumbTpl);
 
         return $ret;

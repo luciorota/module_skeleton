@@ -20,7 +20,7 @@
  */
 
 defined('XOOPS_ROOT_PATH') || die('XOOPS root path not defined');
-include_once dirname(dirname(__FILE__)) . '/include/common.php';
+include_once dirname(__DIR__) . '/include/common.php';
 
 /**
  * Class Module_skeletonItemfield
@@ -63,6 +63,10 @@ class Module_skeletonItemfield extends XoopsObject
     /**
      * Extra treatment dealing with non latin encoding
      * Tricky solution
+     *
+     * @param string $key
+     * @param mixed  $value
+     * @param bool   $not_gpc
      */
     public function setVar($key, $value, $not_gpc = false)
     {
@@ -832,11 +836,12 @@ class Module_skeletonItemfield extends XoopsObject
     }
 
     /**
-    * Returns a value ready to be saved in the database
-    *
-    * @param mixed          $value value to format
-    * @return mixed
-    */
+     * Returns a value ready to be saved in the database
+     *
+     * @param       $itemObj
+     * @param mixed $value value to format
+     * @return mixed
+     */
     public function getValueForSave($itemObj, $value)
     {
         // get itemfiled vars

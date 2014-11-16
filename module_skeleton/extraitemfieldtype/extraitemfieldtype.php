@@ -21,11 +21,18 @@
 
 defined('XOOPS_ROOT_PATH') || die('XOOPS root path not defined');
 
+/**
+ * Class ExtraItemfieldType
+ */
 class ExtraItemfieldType
 {
-    private itemObj;
-    private itemfieldObj;
+    private $itemObj;
+    private $itemfieldObj;
 
+    /**
+     * @param $itemObj
+     * @param $itemfieldObj
+     */
     public function __construct($itemObj, $itemfieldObj)
     {
         $this->itemObj = $itemObj;

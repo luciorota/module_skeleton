@@ -20,7 +20,7 @@
  */
 
 $currentFile = basename(__FILE__);
-include dirname(__FILE__) . '/header.php';
+include __DIR__ . '/header.php';
 
 if (function_exists('mb_http_output')) {
     mb_http_output('pass');
