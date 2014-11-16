@@ -96,7 +96,7 @@ class Module_skeletonObjectTree extends XoopsObjectTree
         } elseif (false != $addEmptyOption) {
             $ret .= '<option value="0"></option>';
         }
-        $this->_makeSelBoxOptions( $fieldName, $selected, $key, $ret, $prefix );
+        $this->_makeSelBoxOptionsArray( $fieldName, $selected, $key, $ret, $prefix );
 
         return $ret . '</select>';
     }

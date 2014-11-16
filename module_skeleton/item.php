@@ -20,7 +20,7 @@
  */
 
 $currentFile = basename(__FILE__);
-include dirname(__FILE__) . '/header.php';
+include __DIR__ . '/header.php';
 
 // load template
 $xoopsOption['template_main'] = "{$module_skeleton->getModule()->dirname()}_item.tpl";
@@ -53,7 +53,7 @@ switch ($op) {
             redirect_header('index.php', 3, _CO_MODULE_SKELETON_ERROR_NOITEMCATEGORY);
         }
         //
-        include dirname(__FILE__) . '/footer.php';
+        include __DIR__ . '/footer.php';
         break;
 
     case 'item.view':
@@ -87,7 +87,7 @@ switch ($op) {
 
         echo print_r($info,true);
         //
-        include dirname(__FILE__) . '/footer.php';
+        include __DIR__ . '/footer.php';
         break;
 
     case 'item.new':
@@ -117,7 +117,7 @@ switch ($op) {
         $form = $itemObj->getForm();
         $form->display();
         //
-        include dirname(__FILE__) . '/footer.php';
+        include __DIR__ . '/footer.php';
         break;
 
     case 'item.save':
@@ -207,7 +207,7 @@ switch ($op) {
             );
             xoops_cp_footer();
         }
-
+        break;
     case 'item.delete.file':
         $item_id = Module_skeletonRequest::getInt('item_id', 0);
         $itemObj = $module_skeleton->getHandler('item')->get($item_id);
@@ -232,6 +232,6 @@ switch ($op) {
         $form = $itemObj->getForm();
         $form->display();
         //
-        include dirname(__FILE__) . '/footer.php';
+        include __DIR__ . '/footer.php';
         break;
 }

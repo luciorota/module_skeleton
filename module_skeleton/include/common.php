@@ -37,7 +37,7 @@ $notification_handler = &xoops_gethandler('notification');
 $groupperm_handler = xoops_gethandler('groupperm');
 
 // common module_skeleton stuff
-define('MODULE_SKELETON_DIRNAME', basename(dirname(dirname(__FILE__))));
+define('MODULE_SKELETON_DIRNAME', basename(dirname(__DIR__)));
 define('MODULE_SKELETON_URL', XOOPS_URL . '/modules/' . MODULE_SKELETON_DIRNAME);
 define('MODULE_SKELETON_IMAGES_URL', MODULE_SKELETON_URL . '/assets/images');
 define('MODULE_SKELETON_JS_URL', MODULE_SKELETON_URL . '/assets/js');

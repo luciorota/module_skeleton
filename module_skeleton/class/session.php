@@ -20,7 +20,7 @@
  * @version         $Id: session.php 10283 2012-11-28 13:39:36Z trabis $
  */
 defined('XOOPS_ROOT_PATH') || die('XOOPS root path not defined');
-include_once dirname(dirname(__FILE__)) . '/include/common.php';
+include_once dirname(__DIR__) . '/include/common.php';
 
 /**
  * Class Module_skeletonSession

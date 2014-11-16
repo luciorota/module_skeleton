@@ -5,11 +5,10 @@
     height: 444px;
     overflow-x: hidden;
     overflow-y: auto;
-    position: relative;
     background-color: #FFFFFF;
-    margin: 0px;
+    margin: 0;
     border: none;
-    padding: 0px;
+    padding: 0;
 
 }
 .faim-formajaximagemenager_list_imgcat_container,
@@ -26,8 +25,8 @@
 
 /* messages */
 .faim-formajaximagemenager_confirmMsg {
-    margin-top: 0px !important;
-    margin-bottom: 0px !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
 }
 
 /* images thumbs */
@@ -53,7 +52,7 @@
     position: relative;
     width:140px;
     height: 140px;
-    padding: 0px;
+    padding: 0;
     border: none;
     background: #CCCCCC no-repeat center top;
 }
@@ -61,9 +60,9 @@
 .faim-actions {
     position: absolute;
     width:140px;
-    bottom: 0px;
+    bottom: 0;
     height: 26px;
-    padding: 0px;
+    padding: 0;
     border: none;
     background: transparent;
 }
@@ -77,10 +76,10 @@
 
 .faim-selects {
     position: absolute;
-    bottom: 0px;
+    bottom: 0;
     width:140px;
     height: 22px;
-    padding: 0px;
+    padding: 0;
     border: none;
     background: transparent;
 }
@@ -93,28 +92,28 @@
     cursor: pointer;
     width: 16px;
     height: 16px;
-    margin: 0px;
-    padding: 0px;
+    margin: 0;
+    padding: 0;
 }
 
 .faim-selects img {
     cursor: pointer;
     width: 21px;
     height: 22px;
-    margin: 0px;
-    padding: 0px;
+    margin: 0;
+    padding: 0;
 }
 
 .faim-actions .tooltip {
     width: 16px;
     height: 16px;
-    margin: 0px;
-    padding: 0px;
+    margin: 0;
+    padding: 0;
 }
 
 .faim-selects .tooltip {
     width: 22px;
     height: 22px;
-    margin: 0px;
-    padding: 0px;
+    margin: 0;
+    padding: 0;
 }

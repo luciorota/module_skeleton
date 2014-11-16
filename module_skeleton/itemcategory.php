@@ -20,7 +20,7 @@
  */
 
 $currentFile = basename(__FILE__);
-include dirname(__FILE__) . '/header.php';
+include __DIR__ . '/header.php';
 
 // Get itemcategory
 $itemcategory_id = Module_skeletonRequest::getInt('itemcategory_id', 0);
@@ -78,7 +78,7 @@ switch ($op) {
         }
         $GLOBALS['xoopsTpl']->display("db:{$module_skeleton->getModule()->dirname()}_admin_itemcategories_list.tpl");
         //
-        include dirname(__FILE__) . '/footer.php';
+        include __DIR__ . '/footer.php';
         break;
 
     case 'itemcategory.new':
@@ -94,7 +94,7 @@ switch ($op) {
         $form = $itemcategoryObj->getForm();
         $form->display();
         //
-        include dirname(__FILE__) . '/footer.php';
+        include __DIR__ . '/footer.php';
         break;
 
     case 'itemcategory.save':
@@ -271,4 +271,4 @@ switch ($op) {
         break;
 }
 
-include dirname(__FILE__) . '/footer.php';
+include __DIR__ . '/footer.php';

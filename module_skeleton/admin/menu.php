@@ -22,7 +22,7 @@
 defined('XOOPS_ROOT_PATH') || die('XOOPS root path not defined');
 
 $module_handler = xoops_gethandler('module');
-$module = $module_handler->getByDirname(basename(dirname(dirname(__FILE__))));
+$module = $module_handler->getByDirname(basename(dirname(__DIR__)));
 $pathIcon32 = '../../' . $module->getInfo('icons32');
 //$pathIcon32 = '/assets/images/icons/32x32';
 

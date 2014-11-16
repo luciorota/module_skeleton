@@ -20,7 +20,7 @@
  */
 
 $currentFile = basename(__FILE__);
-include_once dirname(__FILE__) . 'header.php';
+include_once __DIR__ . 'header.php';
 
 $com_item_id = Module_skeletonRequest::getInt('com_item_id', 0);
 if ($com_itemid > 0) {

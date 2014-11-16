@@ -26,10 +26,16 @@ defined('XOOPS_ROOT_PATH') || die('XOOPS root path not defined');
 // IN PROGRESS
 // LOAD ExtraItemfieldType class
 //xoops_load('ExtraItemfieldType','module_skeleton');
-include_once __DIR__ . "/../extraitemfieldtype.php"
+include_once __DIR__ . "/../extraitemfieldtype.php";
 
-class ExtraItemfieldTypeXoopsImage extends ExtraItemfieldType
+/**
+ * Class ExtraItemfieldTypeXoopsImage
+ */class ExtraItemfieldTypeXoopsImage extends ExtraItemfieldType
 {
+    /**
+     * @param $itemObj
+     * @param $itemfieldObj
+     */
     public function __construct($itemObj, $itemfieldObj)
     {
 // IN PROGRESS
@@ -37,7 +43,10 @@ class ExtraItemfieldTypeXoopsImage extends ExtraItemfieldType
 // IN PROGRESS
     }
 
-	public function getEditElement()
+    /**
+     * @return XoopsFormElementTray
+     */
+    public function getEditElement()
     {
         // get itemfiled vars
         if ($itemObj->isNew()) {
@@ -74,7 +83,10 @@ class ExtraItemfieldTypeXoopsImage extends ExtraItemfieldType
         return $element;
     }
 
-	public function getOutputValue()
+    /**
+     * @return mixed
+     */
+    public function getOutputValue()
     {
         $name = $itemfieldObj->getVar('itemfield_name', 'e');
         $value = $itemObj->getVar($this->getVar('itemfield_name'));
@@ -83,6 +95,11 @@ class ExtraItemfieldTypeXoopsImage extends ExtraItemfieldType
         return $value;
     }
 
+    /**
+     * @param $value
+     *
+     * @return string
+     */
     public function getValueForSave($value)
     {
         $name = $itemfieldObj->getVar('itemfield_name', 'e');

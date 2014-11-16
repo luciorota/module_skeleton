@@ -243,7 +243,7 @@ switch ($op) {
             );
             xoops_cp_footer();
         }
-
+        break;
     case 'item.delete.file':
         $item_id = Module_skeletonRequest::getInt('item_id', 0);
         $itemObj = $module_skeleton->getHandler('item')->get($item_id);

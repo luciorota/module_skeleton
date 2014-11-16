@@ -58,6 +58,9 @@ define('_ER_UP_PHPERR_NO_TMP_DIR',      'Missing a temporary folder');
 define('_ER_UP_PHPERR_CANT_WRITE',      'Failed to write file to disk');
 define('_ER_UP_PHPERR_EXTENSION',       'A PHP extension stopped the file upload');
 
+/**
+ * Class Module_skeletonMediaUploader
+ */
 class Module_skeletonMediaUploader extends XoopsMediaUploader
 {
 
@@ -120,6 +123,12 @@ class Module_skeletonMediaUploader extends XoopsMediaUploader
         return $merged;
     }
 
+    /**
+     * @param $array
+     * @param $key1
+     *
+     * @return array
+     */
     private function moveFirstKeyRecursive($array, $key1) {
         $retArray = array();
         if(is_array($array)) {

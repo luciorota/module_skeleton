@@ -496,3 +496,6 @@ define('_AM_MODULE_SKELETON_FILE_CREATE', "Create new download");
 define('_AM_MODULE_SKELETON_FILE_EDIT', "Edit download");
 define('_AM_MODULE_SKELETON_FFS_1STEP', "1st step: choose itemcategory");
 */
+
+define('_AM_MODULE_SKELETON_REQUIRED_TOGGLE_FAILED', "Toggle failed");
+define('_AM_MODULE_SKELETON_REQUIRED_TOGGLE_SUCCESS', "Toggle was successful");
