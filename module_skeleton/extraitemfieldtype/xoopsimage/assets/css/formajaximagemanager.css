@@ -1,0 +1,120 @@
+/* main containers */
+.faim-formajaximagemenager_container {
+    position: relative;
+    width: 100%;
+    height: 444px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    position: relative;
+    background-color: #FFFFFF;
+    margin: 0px;
+    border: none;
+    padding: 0px;
+
+}
+.faim-formajaximagemenager_list_imgcat_container,
+.faim-formajaximagemenager_edit_image_container,
+.faim-formajaximagemenager_edit_imgcat_container {
+    position: relative;
+    width: 100%;
+    height: 480px;
+}
+
+.faim-formajaximagemenager_container .inner5 {
+    margin: 5px;
+}
+
+/* messages */
+.faim-formajaximagemenager_confirmMsg {
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
+}
+
+/* images thumbs */
+.faim-thumb {
+    background-color: #FFFFFF;
+    border-color: #CCCCCC #AAAAAA #AAAAAA #CCCCCC;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 4px;
+    height: 200px;
+    margin: 5px;
+    padding: 5px;
+    position: relative;
+    width: 140px;
+}
+
+.faim-thumb img {
+    border: 0 none;
+}
+
+
+.faim-thumbimg {
+    position: relative;
+    width:140px;
+    height: 140px;
+    padding: 0px;
+    border: none;
+    background: #CCCCCC no-repeat center top;
+}
+
+.faim-actions {
+    position: absolute;
+    width:140px;
+    bottom: 0px;
+    height: 26px;
+    padding: 0px;
+    border: none;
+    background: transparent;
+}
+
+.faim-informations {
+    line-height: 1em;
+    font-weight: bold;
+    width:140px;
+    background: transparent;
+}
+
+.faim-selects {
+    position: absolute;
+    bottom: 0px;
+    width:140px;
+    height: 22px;
+    padding: 0px;
+    border: none;
+    background: transparent;
+}
+
+.faim-actions button img,
+.faim-actions a img,
+.faim-actions span img,
+.faim-actions img,
+.faim-thumbimg img {
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+    margin: 0px;
+    padding: 0px;
+}
+
+.faim-selects img {
+    cursor: pointer;
+    width: 21px;
+    height: 22px;
+    margin: 0px;
+    padding: 0px;
+}
+
+.faim-actions .tooltip {
+    width: 16px;
+    height: 16px;
+    margin: 0px;
+    padding: 0px;
+}
+
+.faim-selects .tooltip {
+    width: 22px;
+    height: 22px;
+    margin: 0px;
+    padding: 0px;
+}
