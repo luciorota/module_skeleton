@@ -107,44 +107,24 @@ $modversion['search']['func'] = $modversion["dirname"] . '_search';
 
 // Menu
 $modversion['hasMain']     = true;
-$modversion['system_menu'] = true;
-/*
-global $xoopsModule, $xoopsModuleConfig, $xoopsUser;
-// check if submission is allowed
-$isSubmissionAllowed = false;
-if (is_object($xoopsModule) && $xoopsModule->dirname() == $modversion['dirname'] && $xoopsModule->isactive()) {
-    if (is_object($xoopsUser)
-        && ($xoopsModuleConfig['submissions'] == _MODULE_SKELETON_SUBMISSIONS_DOWNLOAD
-            || $xoopsModuleConfig['submissions'] == _MODULE_SKELETON_SUBMISSIONS_BOTH)
-    ) {
-        // if user is a registered user
-        $groups = $xoopsUser->getGroups();
-        if (count(array_intersect($xoopsModuleConfig['submitarts'], $groups)) > 0) {
-            $isSubmissionAllowed = true;
-        }
-    } else {
-        // if user is anonymous
-        if ($xoopsModuleConfig['anonpost'] == _MODULE_SKELETON_ANONPOST_DOWNLOAD || $xoopsModuleConfig['anonpost'] == _MODULE_SKELETON_ANONPOST_BOTH) {
-            $isSubmissionAllowed = true;
-        }
+if (isset($xoopsModule) && is_object($xoopsModule) && $xoopsModule->dirname() == $modversion['dirname'] && $xoopsModule->isactive()) {
+    if (!isset($module_skelton)) {
+        include_once __DIR__ . '/class/module_skeleton.php';
+        $module_skelton = Module_skeletonModule_skeleton::getInstance();
     }
-}
-$i = 0;
-if ($isSubmissionAllowed) {
+    $groups = (is_object($_GLOBAL['xoopsUser'])) ? $_GLOBAL['xoopsUser']->getGroups() : array(XOOPS_GROUP_ANONYMOUS);
+    $gperm_handler = xoops_gethandler('groupperm');
+    $i = 0;
+// IN PROGRESS
+// IN PROGRESS
+// IN PROGRESS
+    $modversion['sub'][$i]['name'] = _MI_MODULE_SKELETON_SUBMENU_ITEMCATEGORIES;
+    $modversion['sub'][$i]['url']  = "itemcategory.php";
     ++$i;
-    $modversion['sub'][$i]['name'] = _MI_MODULE_SKELETON_SMNAME1;
-    $category_suffix               = (!empty($_GET['cid'])) ? "?cid=" . intval($_GET['cid']) : ""; //Added by Lankford on 2008/2/20
-    $modversion['sub'][$i]['url']  = "submit.php{$category_suffix}";
+    $modversion['sub'][$i]['name'] = _MI_MODULE_SKELETON_SUBMENU_ITEMS;
+    $modversion['sub'][$i]['url']  = "item.php";
+    ++$i;
 }
-unset($i);
-*/
-$i = 0;
-$modversion['sub'][$i]['name'] = _MI_MODULE_SKELETON_SUBMENU_ITEMCATEGORIES;
-$modversion['sub'][$i]['url']  = "itemcategory.php";
-++$i;
-$modversion['sub'][$i]['name'] = _MI_MODULE_SKELETON_SUBMENU_ITEMS;
-$modversion['sub'][$i]['url']  = "item.php";
-++$i;
 
 
 

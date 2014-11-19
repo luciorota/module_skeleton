@@ -9,7 +9,7 @@
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
 /**
- *  module_skeletonRequestRequest class
+ *  Module_skeletonRequestRequest class
  *
  * @copyright       Copyright (C) 2005 - 2008 Open Source Matters. All rights reserved.
  * @license         GNU/GPL, see LICENSE.php
@@ -33,12 +33,12 @@ define('MODULE_SKELETON_REQUEST_ALLOWRAW', 2);
 define('MODULE_SKELETON_REQUEST_ALLOWHTML', 4);
 
 /**
- * module_skeletonRequest Class
+ * Module_skeletonRequest Class
  * This class serves to provide a common interface to access
  * request variables.  This includes $_POST, $_GET, and naturally $_REQUEST.  Variables
  * can be passed through an input filter to avoid injection or returned raw.
  */
-class module_skeletonRequest
+class Module_skeletonRequest
 {
 
     /**
@@ -114,14 +114,14 @@ class module_skeletonRequest
         }
         if (isset($input[$name]) && $input[$name] !== null) {
             // Get the variable from the input hash and clean it
-            $var = module_skeletonRequest::_cleanVar($input[$name], $mask, $type);
+            $var = Module_skeletonRequest::_cleanVar($input[$name], $mask, $type);
             // Handle magic quotes compatability
             if (get_magic_quotes_gpc() && ($var != $default) && ($hash != 'FILES')) {
-                $var = module_skeletonRequest::_stripSlashesRecursive($var);
+                $var = Module_skeletonRequest::_stripSlashesRecursive($var);
             }
         } elseif ($default !== null) {
             // Clean the default value
-            $var = module_skeletonRequest::_cleanVar($default, $mask, $type);
+            $var = Module_skeletonRequest::_cleanVar($default, $mask, $type);
         } else {
             $var = $default;
         }
@@ -145,7 +145,7 @@ class module_skeletonRequest
      */
     static function getInt($name, $default = 0, $hash = 'default')
     {
-        return module_skeletonRequest::getVar($name, $default, $hash, 'int');
+        return Module_skeletonRequest::getVar($name, $default, $hash, 'int');
     }
 
     /**
@@ -164,7 +164,7 @@ class module_skeletonRequest
      */
     static function getFloat($name, $default = 0.0, $hash = 'default')
     {
-        return module_skeletonRequest::getVar($name, $default, $hash, 'float');
+        return Module_skeletonRequest::getVar($name, $default, $hash, 'float');
     }
 
     /**
@@ -183,7 +183,7 @@ class module_skeletonRequest
      */
     static function getBool($name, $default = false, $hash = 'default')
     {
-        return module_skeletonRequest::getVar($name, $default, $hash, 'bool');
+        return Module_skeletonRequest::getVar($name, $default, $hash, 'bool');
     }
 
     /**
@@ -202,7 +202,7 @@ class module_skeletonRequest
      */
     static function getWord($name, $default = '', $hash = 'default')
     {
-        return module_skeletonRequest::getVar($name, $default, $hash, 'word');
+        return Module_skeletonRequest::getVar($name, $default, $hash, 'word');
     }
 
     /**
@@ -221,7 +221,7 @@ class module_skeletonRequest
      */
     static function getCmd($name, $default = '', $hash = 'default')
     {
-        return module_skeletonRequest::getVar($name, $default, $hash, 'cmd');
+        return Module_skeletonRequest::getVar($name, $default, $hash, 'cmd');
     }
 
     /**
@@ -242,7 +242,7 @@ class module_skeletonRequest
     static function getString($name, $default = '', $hash = 'default', $mask = 0)
     {
         // Cast to string, in case JREQUEST_ALLOWRAW was specified for mask
-        return (string)module_skeletonRequest::getVar($name, $default, $hash, 'string', $mask);
+        return (string)Module_skeletonRequest::getVar($name, $default, $hash, 'string', $mask);
     }
 
     /**
@@ -254,7 +254,7 @@ class module_skeletonRequest
      */
     static function getArray($name, $default = array(), $hash = 'default')
     {
-        return module_skeletonRequest::getVar($name, $default, $hash, 'array');
+        return Module_skeletonRequest::getVar($name, $default, $hash, 'array');
     }
 
     /**
@@ -266,7 +266,7 @@ class module_skeletonRequest
      */
     static function getText($name, $default = '', $hash = 'default')
     {
-        return (string)module_skeletonRequest::getVar($name, $default, $hash, 'string', PUBLISHER_REQUEST_ALLOWRAW);
+        return (string)Module_skeletonRequest::getVar($name, $default, $hash, 'string', PUBLISHER_REQUEST_ALLOWRAW);
     }
 
     /**
@@ -371,10 +371,10 @@ class module_skeletonRequest
                 $input = $_REQUEST;
                 break;
         }
-        $result = module_skeletonRequest::_cleanVar($input, $mask);
+        $result = Module_skeletonRequest::_cleanVar($input, $mask);
         // Handle magic quotes compatability
         if (get_magic_quotes_gpc() && ($hash != 'FILES')) {
-            $result = module_skeletonRequest::_stripSlashesRecursive($result);
+            $result = Module_skeletonRequest::_stripSlashesRecursive($result);
         }
 
         return $result;
@@ -390,7 +390,7 @@ class module_skeletonRequest
     static function set($array, $hash = 'default', $overwrite = true)
     {
         foreach ($array as $key => $value) {
-            module_skeletonRequest::setVar($key, $value, $hash, $overwrite);
+            Module_skeletonRequest::setVar($key, $value, $hash, $overwrite);
         }
     }
 
@@ -402,14 +402,14 @@ class module_skeletonRequest
      */
     static function clean()
     {
-        module_skeletonRequest::_cleanArray($_FILES);
-        module_skeletonRequest::_cleanArray($_ENV);
-        module_skeletonRequest::_cleanArray($_GET);
-        module_skeletonRequest::_cleanArray($_POST);
-        module_skeletonRequest::_cleanArray($_COOKIE);
-        module_skeletonRequest::_cleanArray($_SERVER);
+        Module_skeletonRequest::_cleanArray($_FILES);
+        Module_skeletonRequest::_cleanArray($_ENV);
+        Module_skeletonRequest::_cleanArray($_GET);
+        Module_skeletonRequest::_cleanArray($_POST);
+        Module_skeletonRequest::_cleanArray($_COOKIE);
+        Module_skeletonRequest::_cleanArray($_SERVER);
         if (isset($_SESSION)) {
-            module_skeletonRequest::_cleanArray($_SESSION);
+            Module_skeletonRequest::_cleanArray($_SESSION);
         }
         $REQUEST = $_REQUEST;
         $GET     = $_GET;
@@ -517,7 +517,7 @@ class module_skeletonRequest
      */
     protected function _stripSlashesRecursive($value)
     {
-        $value = is_array($value) ? array_map(array('module_skeletonRequest', '_stripSlashesRecursive'), $value) : stripslashes($value);
+        $value = is_array($value) ? array_map(array('Module_skeletonRequest', '_stripSlashesRecursive'), $value) : stripslashes($value);
 
         return $value;
     }

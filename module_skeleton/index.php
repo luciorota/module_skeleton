@@ -49,7 +49,8 @@ $breadcrumb->addLink($module_skeleton->getModule()->getVar('name'), MODULE_SKELE
 
 $xoopsTpl->assign('module_skeleton_breadcrumb', $breadcrumb->render());
 
-$xoopsTpl->assign('module_skeleton_letterschoice', module_skeleton_lettersChoice());
+$letterChoice = new Module_skeletonChoiceByLetter($module_skeleton->getHandler('item'), null, 'item_title', array(), 'letter', null, false);
+$xoopsTpl->assign('module_skeleton_choicebyletter', $letterChoice->render());
 
 // IN PROGRESS
 // IN PROGRESS

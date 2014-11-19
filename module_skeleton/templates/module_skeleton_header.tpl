@@ -2,8 +2,8 @@
 // HEADER
     <{$module_skeleton_breadcrumb}>
 
-<{if $module_skeleton_letterschoice}>
-    <div class="module_skeleton_head_letterschoice" align="center"><{$module_skeleton_letterschoice}></div>
+<{if $module_skeleton_choicebyletter}>
+    <div class="module_skeleton_head_choicebyletter" align="center"><{$module_skeleton_choicebyletter}></div>
     <br />
 <{/if}>
 // HEADER

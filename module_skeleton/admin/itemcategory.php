@@ -91,6 +91,14 @@ switch ($op) {
         $itemcategory_status = 0; // IN PROGRESS
         $itemcategory_version = 0; // IN PROGRESS
         $itemcategory_owner_uid = Module_skeletonRequest::getInt('itemcategory_owner_uid', 0, 'POST');
+// IN PROGRESS
+// IN PROGRESS
+// IN PROGRESS
+        $dateTimeObj = DateTime::createFromFormat(_SHORTDATESTRING, $_REQUEST['itemcategory_date']['date']);
+        $dateTimeObj->setTime(0, 0, 0);
+        $itemcategory_date = $dateTimeObj->getTimestamp() + $_REQUEST['itemcategory_date']['time'];
+        unset($dateTimeObj);
+// OR
         $itemcategory_date = time();
         //
         $itemcategoryObj = $module_skeleton->getHandler('itemcategory')->get($itemcategory_id);

@@ -1,6 +1,9 @@
 0.02 Alpha 2       NOT RELEASED
 =================================
 
+- fixed: Module_skeletonObjectTree (luciorota)
+- added: use php DateTime object methods instead of strtotime() function to get right timestamp date (luciorota)
+- fixed: objectise Module_skeletonChoiceByLetter (luciorota)
 - replaced "dirname(__FILE__)" with "__DIR__" since the min. PHP is now 5.3.7, and __DIR__ is faster  (mamba)
 - added missing _AM_MODULE_SKELETON_REQUIRED_TOGGLE_FAILED and _AM_MODULE_SKELETON_REQUIRED_TOGGLE_SUCCESS (mamba)
 - replaced $choiceByLetterTpl in \class\common\breadcrumb.php with $breadcrumbTpl (mamba)
@@ -10,10 +13,6 @@
 - added missing "Array" in "$this->_makeSelBoxOptionsArray" in \class\common\tree.php (mamba)
 - added phpDoc statements (mamba)
 - fixed several other minor issues (mamba)
-
-TODO:
-
-- Fatal error: Call to undefined function module_skeleton_lettersChoice() in S:\wamp64\www\258beta0\modules\module_skeleton\index.php on line 52
 
 0.01 Alpha 2       2014-11-05
 =================================

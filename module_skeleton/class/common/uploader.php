@@ -104,8 +104,8 @@ class Module_skeletonMediaUploader extends XoopsMediaUploader
      * Parameters are passed by reference, though only for performance reasons. They're not altered
      * by this function.
      *
-     * @param array $array1
-     * @param array $array2
+     * @param array         $array1
+     * @param array         $array2
      * @return array
      * @author Daniel <daniel (at) danielsmedegaardbuus (dot) dk>
      * @author Gabriel Sobrinho <gabriel (dot) sobrinho (at) gmail (dot) com>
@@ -124,8 +124,8 @@ class Module_skeletonMediaUploader extends XoopsMediaUploader
     }
 
     /**
-     * @param $array
-     * @param $key1
+     * @param array         $array
+     * @param string        $key1
      *
      * @return array
      */
@@ -262,7 +262,7 @@ class Module_skeletonMediaUploader extends XoopsMediaUploader
     /**
      * Copy the file to its destination
      *
-     * @param $chmod
+     * @param               $chmod
      * @return bool
      */
     function _copyFile($chmod)

@@ -41,6 +41,7 @@ class Module_skeletonChoiceByLetter
     private $arg_name;
     private $url;
     private $extra;
+    private $caseSensitive;
 
     /**
      * *#@-
@@ -51,12 +52,14 @@ class Module_skeletonChoiceByLetter
      *
      * @param object        $objHandler {@link XoopsPersistableObjectHandler}
      * @param object        $criteria {@link CriteriaElement}
-     * @param array         $alphabet Array of alphabet letters
+     * @param string        $field_name search by field
+     * @param array         $alphabet array of alphabet letters
      * @param string        $arg_name item on the current page
      * @param string        $url
      * @param string        $extra_arg Additional arguments to pass in the URL
+     * @param boolean       $caseSensitive
      */
-    public function __constructor($objHandler, $criteria = null, $field_name = null, $alphabet = array(), $arg_name = 'letter', $url = null, $extra_arg)
+    public function __construct($objHandler, $criteria = null, $field_name = null, $alphabet = array(), $arg_name = 'letter', $url = null, $extra_arg = '', $caseSensitive = false)
     {
         $this->objHandler = $objHandler;
         $this->criteria = is_null($criteria) ? new CriteriaCompo() : $criteria;
@@ -67,6 +70,7 @@ class Module_skeletonChoiceByLetter
         if ($extra_arg != '' && (substr($extra_arg, - 5) != '&amp;' || substr($extra_arg, - 1) != '&')) {
             $this->extra = '&amp;' . $extra_arg;
         }
+        $this->caseSensitive = $caseSensitive;
     }
 
     /**
@@ -77,27 +81,42 @@ class Module_skeletonChoiceByLetter
     public function render()
     {
         $ret = '';
-
-        $this->criteria->setGroupby('UPPER(LEFT(' . $this->field_name . ',1))');
-        $countsByLetters = $objHandler->getCounts($this->criteria);
-        // Fill alphabet array
-
+        //
+        if (!$this->caseSensitive) {
+            $this->criteria->setGroupby('UPPER(LEFT(' . $this->field_name . ',1))');
+        } else {
+            $this->criteria->setGroupby('LEFT(' . $this->field_name . ',1)');
+        }
+        $countsByLetters = $this->objHandler->getCounts($this->criteria);
+        // fill alphabet array
         $alphabet_array = array();
-        foreach ($alphabet as $letter) {
+        foreach ($this->alphabet as $letter) {
             $letter_array = array();
-            if (isset($countsByLetters[$letter])) {
-                $letter_array['letter'] = $letter;
-                $letter_array['count'] = $countsByLetters[$letter];
-                $letter_array['url'] = $this->url . '?' . $this->arg_name . '=' . $letter . $this->extra;
+            if (!$this->caseSensitive) {
+                if (isset($countsByLetters[strtoupper($letter)])) {
+                    $letter_array['letter'] = $letter;
+                    $letter_array['count'] = $countsByLetters[strtoupper($letter)];
+                    $letter_array['url'] = $this->url . '?' . $this->arg_name . '=' . $letter . $this->extra;
+                } else {
+                    $letter_array['letter'] = $letter;
+                    $letter_array['count'] = 0;
+                    $letter_array['url'] = "";
+                }
             } else {
-                $letter_array['letter'] = $letter;
-                $letter_array['count'] = 0;
-                $letter_array['url'] = "";
+                if (isset($countsByLetters[$letter])) {
+                    $letter_array['letter'] = $letter;
+                    $letter_array['count'] = $countsByLetters[$letter];
+                    $letter_array['url'] = $this->url . '?' . $this->arg_name . '=' . $letter . $this->extra;
+                } else {
+                    $letter_array['letter'] = $letter;
+                    $letter_array['count'] = 0;
+                    $letter_array['url'] = "";
+                }
             }
             $alphabet_array[$letter] = $letter_array;
             unset($letter_array);
         }
-        // Render output
+        // render output
         if (!isset($GLOBALS['xoTheme']) || !is_object($GLOBALS['xoTheme'])) {
             include_once $GLOBALS['xoops']->path('/class/theme.php');
             $GLOBALS['xoTheme'] = new xos_opal_Theme();

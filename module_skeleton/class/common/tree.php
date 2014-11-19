@@ -30,11 +30,11 @@ class Module_skeletonObjectTree extends XoopsObjectTree
     /**
      * Make options for a select box from
      *
-     * @param string $fieldName    Name of the member variable from the node objects that should be used as the title for the options.
-     * @param int    $key          ID of the object to display as the root of select options
-     * @param string $optionsArray (reference to a string when called from outside) Result from previous recursions
-     * @param string $prefix_orig  String to indent items at deeper levels
-     * @param string $prefix_curr  String to indent the current item
+     * @param string    $fieldName    Name of the member variable from the node objects that should be used as the title for the options.
+     * @param int       $key          ID of the object to display as the root of select options
+     * @param string    $optionsArray (reference to a string when called from outside) Result from previous recursions
+     * @param string    $prefix_orig  String to indent items at deeper levels
+     * @param string    $prefix_curr  String to indent the current item
      *
      * @return string
     @access private
@@ -58,11 +58,11 @@ class Module_skeletonObjectTree extends XoopsObjectTree
     /**
      * Make a select box with options from the tree
      *
-     * @param  string  $fieldName      Name of the member variable from the node objects that should be used as the title for the options.
-     * @param  string  $prefix         String to indent deeper levels
-     * @param  bool    $addEmptyOption Set TRUE to add an empty option with value "0" at the top of the hierarchy
-     * @param  integer $key            ID of the object to display as the root of select options
-     * @return array   $optionsArray   Associative array of value->name pairs, useful for {@link XoopsFormSelect}->addOptionArray method
+     * @param  string   $fieldName      Name of the member variable from the node objects that should be used as the title for the options.
+     * @param  string   $prefix         String to indent deeper levels
+     * @param  bool     $addEmptyOption Set TRUE to add an empty option with value "0" at the top of the hierarchy
+     * @param  integer  $key            ID of the object to display as the root of select options
+     * @return array    $optionsArray   Associative array of value->name pairs, useful for {@link XoopsFormSelect}->addOptionArray method
      */
     function makeSelBoxOptionsArray( $fieldName, $prefix = '-', $addEmptyOption = false, $key = 0 )
     {
@@ -76,15 +76,15 @@ class Module_skeletonObjectTree extends XoopsObjectTree
     /**
      * Make a select box with options from the tree
      *
-     * @param  string  $name           Name of the select box
-     * @param  string  $fieldName      Name of the member variable from the
-     *                                 node objects that should be used as the title for the options.
-     * @param  string  $prefix         String to indent deeper levels
-     * @param  string  $selected       Value to display as selected
-     * @param  bool    $addEmptyOption Set TRUE to add an empty option with value "0" at the top of the hierarchy
-     * @param  integer $key            ID of the object to display as the root of select options
-     * @param  string  $extra
-     * @return string  HTML select box
+     * @param  string   $name           Name of the select box
+     * @param  string   $fieldName      Name of the member variable from the
+     *                                  node objects that should be used as the title for the options.
+     * @param  string   $prefix         String to indent deeper levels
+     * @param  string   $selected       Value to display as selected
+     * @param  bool     $addEmptyOption Set TRUE to add an empty option with value "0" at the top of the hierarchy
+     * @param  integer  $key            ID of the object to display as the root of select options
+     * @param  string   $extra
+     * @return string   HTML select box
      */
     function makeSelBox( $name, $fieldName, $prefix = '-', $selected = '', $addEmptyOption = false, $key = 0, $extra = '' )
     {
@@ -96,7 +96,7 @@ class Module_skeletonObjectTree extends XoopsObjectTree
         } elseif (false != $addEmptyOption) {
             $ret .= '<option value="0"></option>';
         }
-        $this->_makeSelBoxOptionsArray( $fieldName, $selected, $key, $ret, $prefix );
+        $this->_makeSelBoxOptions( $fieldName, $selected, $key, $ret, $prefix );
 
         return $ret . '</select>';
     }

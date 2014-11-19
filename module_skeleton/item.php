@@ -133,6 +133,14 @@ switch ($op) {
         $item_status = 0; // IN PROGRESS
         $item_version = 0; // IN PROGRESS
         $item_owner_uid = Module_skeletonRequest::getInt('item_owner_uid', 0, 'POST');
+// IN PROGRESS
+// IN PROGRESS
+// IN PROGRESS
+        $dateTimeObj = DateTime::createFromFormat(_SHORTDATESTRING, $_REQUEST['item_date']['date']);
+        $dateTimeObj->setTime(0, 0, 0);
+        $item_date = $dateTimeObj->getTimestamp() + $_REQUEST['item_date']['time'];
+        unset($dateTimeObj);
+// OR
         $item_date = time();
         //
         $itemObj = $module_skeleton->getHandler('item')->get($item_id);
