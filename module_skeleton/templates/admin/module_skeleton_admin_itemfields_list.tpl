@@ -1,9 +1,13 @@
 <fieldset>
     <legend style='font-weight: bold; color: #900;'><{$smarty.const._CO_MODULE_SKELETON_ITEMFIELDS_LIST}></legend>
-<{if ($itemfields_count == 0)}>
+<{if ($itemfieldCount == 0)}>
     <{$smarty.const._CO_MODULE_SKELETON_WARNING_NOITEMFIELDS}>
 <{else}>
     <table class="outer">
+        <tr>
+            <td align='left' colspan='8'><{$smarty.const._AM_MODULE_SKELETON_ITEMFIELDS_COUNT|replace:'%s':$itemfieldCount}></td>
+        </tr>
+    <form id='itemfields_form' name='itemfields_form' action='' method='post'>
         <tr>
             <th><{$smarty.const._CO_MODULE_SKELETON_ITEMFIELD_ID}></th>
             <th><{$smarty.const._CO_MODULE_SKELETON_ITEMFIELD_NAME}></th>
@@ -38,7 +42,7 @@
             <td><{$itemfield.itemfieldtype}></td>
             <td align="center">
             <{if $itemfield.canEdit}>
-                <a href="itemfield.php?op=itemfield.toggle&amp;itemfield_required=<{$itemfield.itemfield_required}>&amp;itemfield_id=<{$itemfield.itemfield_id}>"><img src="<{xoModuleIcons16}><{$itemfield.itemfield_required}>.png" title="<{$smarty.const._AM_MODULE_SKELETON_REQUIRED_TOGGLE}>" alt="<{$smarty.const._AM_MODULE_SKELETON_REQUIRED_TOGGLE}>" /></a>
+                <a href="itemfield.php?op=itemfield.toggle&amp;itemfield_id=<{$itemfield.itemfield_id}>&amp;field=itemfield_required"><img src="<{xoModuleIcons16}><{$itemfield.itemfield_required}>.png" title="<{$smarty.const._AM_MODULE_SKELETON_REQUIRED_TOGGLE}>" alt="<{$smarty.const._AM_MODULE_SKELETON_REQUIRED_TOGGLE}>" /></a>
             <{/if}>
             </td>
             <td align="center">
@@ -51,8 +55,8 @@
                 &nbsp;<a href="itemfield.php?op=itemfield.delete&amp;itemfield_id=<{$itemfield.itemfield_id}>" title="<{$smarty.const._DELETE}>"><img src="<{xoModuleIcons16 delete.png}>" alt="<{$smarty.const._DELETE}>" title="<{$smarty.const._DELETE}>"</a>
             <{/if}>
             </td>
-            </tr>
-        <{/foreach}>
+        </tr>
+    <{/foreach}>
         <tr class="<{cycle values='odd, even'}>">
             <td colspan="4">
             </td>
@@ -64,6 +68,7 @@
             <td colspan="3">
             </td>
         </tr>
+    </form>
     </table>
 <{/if}>
 </fieldset>

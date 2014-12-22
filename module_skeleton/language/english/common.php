@@ -4,50 +4,39 @@
 // _CHARSET : UTF-8
 // Translator: XOOPS Translation Team
 
+// GENERIC
 define('_CO_MODULE_SKELETON_ACTIONS', "Actions");
 define('_CO_MODULE_SKELETON_ACTION_ENABLED', "Enabled");
 define('_CO_MODULE_SKELETON_ACTION_DISABLED', "Disabled");
-//
-define('_CO_MODULE_SKELETON_ITEMCATEGORY_STORED', "Item category saved");
-define('_CO_MODULE_SKELETON_ITEMCATEGORY_DELETED', "Item category deleted");
-define('_CO_MODULE_SKELETON_ITEMCATEGORY_DELETE_AREUSURE', "Warning: are you sure to delete this item category and ALL its subcategories, items and comments?");
-define('_CO_MODULE_SKELETON_ITEMCATEGORIES_REORDERED', "Item categories reordered");
-//
-define('_CO_MODULE_SKELETON_ITEM_STORED', "Item saved");
-define('_CO_MODULE_SKELETON_ITEM_DELETED', "Item deleted");
-define('_CO_MODULE_SKELETON_ITEM_DELETE_AREUSURE', "Warning: are you sure to delete this item and ALL its comments?");
-//
-define('_CO_MODULE_SKELETON_ITEMFIELDCATEGORY_STORED', "Item field category saved");
-define('_CO_MODULE_SKELETON_ITEMFIELDCATEGORY_DELETED', "Item field category deleted");
-define('_CO_MODULE_SKELETON_ITEMFIELDCATEGORY_DELETE_AREUSURE', "Warning: are you sure to delete this item field category and ALL its subcategories, itemfields and comments?");
-define('_CO_MODULE_SKELETON_ITEMFIELDCATEGORIES_REORDERED', "Item field categories reordered");
-//
-define('_CO_MODULE_SKELETON_ITEMFIELD_STORED', "Item field saved");
-define('_CO_MODULE_SKELETON_ITEMFIELD_STORED_EDIT', "Item field saved, now edit field options");
-define('_CO_MODULE_SKELETON_ITEMFIELD_DELETED', "Item field deleted");
-define('_CO_MODULE_SKELETON_ITEMFIELD_DELETE_AREUSURE', "Warning: are you sure to delete this item field from ALL items?");
-define('_CO_MODULE_SKELETON_ITEMFIELDS_REORDERED', "Item fields reordered");
+define('_CO_MODULE_SKELETON_ACTION_TOGGLED', "Toggled");
 
 // warnings
 define('_CO_MODULE_SKELETON_WARNING_NOUPLOADDIR', "Warning: the module upload directory does not exist");
-define('_CO_MODULE_SKELETON_WARNING_NOITEMCATEGORIES', "Warning: no item categories");
-define('_CO_MODULE_SKELETON_WARNING_NOITEMS', "Warning: no items");
-define('_CO_MODULE_SKELETON_WARNING_NOITEMFIELDCATEGORIES', "Warning: no itemfield categories");
-define('_CO_MODULE_SKELETON_WARNING_NOITEMFIELDS', "Warning: no item fields");
+define('_CO_MODULE_SKELETON_WARNING_NOTTOGGLED', "Warning: not toggled");
 
 // errors
-define('_CO_MODULE_SKELETON_ERROR_NOITEMCATEGORY', "Error: non-existent item category");
-define('_CO_MODULE_SKELETON_ERROR_NOITEM', "Error: non-existent item");
-define('_CO_MODULE_SKELETON_ERROR_NOITEMFIELDCATEGORY', "Error: non-existent item field category");
-define('_CO_MODULE_SKELETON_ERROR_NOITEMFIELD', "Error: non-existent itemfield");
+define('_CO_MODULE_SKELETON_ERROR_NOTTOGGLED', "Error: not toggled");
 
+// filter
+define('_CO_MODULE_SKELETON_FILTER_SEARCH', "Search");
+define('_CO_MODULE_SKELETON_FILTER_FILTER', "Filter");
+define('_CO_MODULE_SKELETON_FILTER_CONDITION', "Condition");
 
+// form options
+define('_CO_MODULE_SKELETON_TEXTOPTIONS', "Text options");
+define('_CO_MODULE_SKELETON_TEXTOPTIONS_DESC', "");
+define('_CO_MODULE_SKELETON_ALLOWHTML', " Allow HTML tags");
+define('_CO_MODULE_SKELETON_ALLOWSMILEY', " Allow Smiley icons");
+define('_CO_MODULE_SKELETON_ALLOWXCODE', " Allow XOOPS codes");
+define('_CO_MODULE_SKELETON_ALLOWIMAGES', " Allow images");
+define('_CO_MODULE_SKELETON_ALLOWBREAK', " Use XOOPS line break conversion");
 
-// generic buttons
+//  buttons
 define('_CO_MODULE_SKELETON_BUTTON_LIST', "List");
 define('_CO_MODULE_SKELETON_BUTTON_MOVE', "Move");
 define('_CO_MODULE_SKELETON_BUTTON_EDIT', "Edit");
 define('_CO_MODULE_SKELETON_BUTTON_ADD', "Add");
+define('_CO_MODULE_SKELETON_BUTTON_EXECUTE', "Execute");
 define('_CO_MODULE_SKELETON_BUTTON_DELETE', "Delete");
 define('_CO_MODULE_SKELETON_BUTTON_FILTER', "Filter");
 define('_CO_MODULE_SKELETON_BUTTON_SEARCH', "Search");
@@ -58,7 +47,24 @@ define('_CO_MODULE_SKELETON_BUTTON_CANCEL', "Cancel");
 define('_CO_MODULE_SKELETON_BUTTON_SAVE', "Save");
 define('_CO_MODULE_SKELETON_BUTTON_RESET', "Reset");
 define('_CO_MODULE_SKELETON_BUTTON_UPLOAD', "Upload");
-// item category buttons
+
+
+
+// ITEM CATEGORY
+// messages
+define('_CO_MODULE_SKELETON_ITEMCATEGORY_STORED', "Item category saved");
+define('_CO_MODULE_SKELETON_ITEMCATEGORY_DELETED', "Item category deleted");
+define('_CO_MODULE_SKELETON_ITEMCATEGORY_DELETE_AREUSURE', "Warning: are you sure to delete this item category and ALL its subcategories, items and comments?");
+define('_CO_MODULE_SKELETON_ITEMCATEGORIES_DELETE_AREUSURE', "Warning: are you sure to delete these item categories and ALL its subcategories, items and comments? %s");
+define('_CO_MODULE_SKELETON_ITEMCATEGORIES_REORDERED', "Item categories reordered");
+
+// warnings
+define('_CO_MODULE_SKELETON_WARNING_NOITEMCATEGORIES', "Warning: no item categories");
+
+// errors
+define('_CO_MODULE_SKELETON_ERROR_NOITEMCATEGORY', "Error: non-existent item category");
+
+// buttons
 define('_CO_MODULE_SKELETON_BUTTON_ITEMCATEGORIES_LIST', "List item categories");
 define('_CO_MODULE_SKELETON_BUTTON_ITEMCATEGORY_MOVE', "Move item category");
 define('_CO_MODULE_SKELETON_BUTTON_ITEMCATEGORIES_MOVE', "Move item categories");
@@ -68,7 +74,24 @@ define('_CO_MODULE_SKELETON_BUTTON_ITEMCATEGORY_ADD', "Add item category");
 define('_CO_MODULE_SKELETON_BUTTON_ITEMCATEGORIES_ADD', "Add item categories");
 define('_CO_MODULE_SKELETON_BUTTON_ITEMCATEGORY_DELETE', "Delete item category");
 define('_CO_MODULE_SKELETON_BUTTON_ITEMCATEGORIES_DELETE', "Delete item categories");
-// item buttons
+
+
+
+// ITEM
+// messages
+define('_CO_MODULE_SKELETON_ITEM_STORED', "Item saved");
+define('_CO_MODULE_SKELETON_ITEM_DELETED', "Item deleted");
+define('_CO_MODULE_SKELETON_ITEMS_DELETED', "Items deleted");
+define('_CO_MODULE_SKELETON_ITEM_DELETE_AREUSURE', "Warning: are you sure to delete this item and ALL its comments?");
+define('_CO_MODULE_SKELETON_ITEMS_DELETE_AREUSURE', "Warning: are you sure to delete these items and ALL its comments? %s");
+
+// warnings
+define('_CO_MODULE_SKELETON_WARNING_NOITEMS', "Warning: no items");
+
+// errors
+define('_CO_MODULE_SKELETON_ERROR_NOITEM', "Error: non-existent item");
+
+// buttons
 define('_CO_MODULE_SKELETON_BUTTON_ITEMS_LIST', "List items");
 define('_CO_MODULE_SKELETON_BUTTON_ITEM_MOVE', "Move item");
 define('_CO_MODULE_SKELETON_BUTTON_ITEMS_MOVE', "Move items");
@@ -78,7 +101,23 @@ define('_CO_MODULE_SKELETON_BUTTON_ITEM_ADD', "Add item");
 define('_CO_MODULE_SKELETON_BUTTON_ITEMS_ADD', "Add items");
 define('_CO_MODULE_SKELETON_BUTTON_ITEM_DELETE', "Delete item");
 define('_CO_MODULE_SKELETON_BUTTON_ITEMS_DELETE', "Delete items");
-// item field category buttons
+
+
+
+// ITEMFIELD CATEGORY
+// messages
+define('_CO_MODULE_SKELETON_ITEMFIELDCATEGORY_STORED', "Item field category saved");
+define('_CO_MODULE_SKELETON_ITEMFIELDCATEGORY_DELETED', "Item field category deleted");
+define('_CO_MODULE_SKELETON_ITEMFIELDCATEGORY_DELETE_AREUSURE', "Warning: are you sure to delete this item field category and ALL its subcategories, itemfields and comments?");
+define('_CO_MODULE_SKELETON_ITEMFIELDCATEGORIES_REORDERED', "Item field categories reordered");
+
+// warnings
+define('_CO_MODULE_SKELETON_WARNING_NOITEMFIELDCATEGORIES', "Warning: no itemfield categories");
+
+// errors
+define('_CO_MODULE_SKELETON_ERROR_NOITEMFIELDCATEGORY', "Error: non-existent item field category");
+
+// buttons
 define('_CO_MODULE_SKELETON_BUTTON_ITEMFIELDCATEGORIES_LIST', "List item field categories");
 define('_CO_MODULE_SKELETON_BUTTON_ITEMFIELDCATEGORY_MOVE', "Move item field category");
 define('_CO_MODULE_SKELETON_BUTTON_ITEMFIELDCATEGORIES_MOVE', "Move item field categories");
@@ -88,6 +127,23 @@ define('_CO_MODULE_SKELETON_BUTTON_ITEMFIELDCATEGORY_ADD', "Add item field categ
 define('_CO_MODULE_SKELETON_BUTTON_ITEMFIELDCATEGORIES_ADD', "Add item field categories");
 define('_CO_MODULE_SKELETON_BUTTON_ITEMFIELDCATEGORY_DELETE', "Delete item field category");
 define('_CO_MODULE_SKELETON_BUTTON_ITEMFIELDCATEGORIES_DELETE', "Delete item field categories");
+
+
+
+// ITEMFIELD
+// messages
+define('_CO_MODULE_SKELETON_ITEMFIELD_STORED', "Item field saved");
+define('_CO_MODULE_SKELETON_ITEMFIELD_STORED_EDIT', "Item field saved, now edit field options");
+define('_CO_MODULE_SKELETON_ITEMFIELD_DELETED', "Item field deleted");
+define('_CO_MODULE_SKELETON_ITEMFIELD_DELETE_AREUSURE', "Warning: are you sure to delete this item field from ALL items?");
+define('_CO_MODULE_SKELETON_ITEMFIELDS_REORDERED', "Item fields reordered");
+
+// warnings
+define('_CO_MODULE_SKELETON_WARNING_NOITEMFIELDS', "Warning: no item fields");
+
+// errors
+define('_CO_MODULE_SKELETON_ERROR_NOITEMFIELD', "Error: non-existent itemfield");
+
 // item field buttons
 define('_CO_MODULE_SKELETON_BUTTON_ITEMFIELDS_LIST', "List item fields");
 define('_CO_MODULE_SKELETON_BUTTON_ITEMFIELD_MOVE', "Move item field");
@@ -101,21 +157,11 @@ define('_CO_MODULE_SKELETON_BUTTON_ITEMFIELDS_DELETE', "Delete items field");
 
 
 
-// filter
-define('_CO_MODULE_SKELETON_FILTER_SEARCH', "Search");
-define('_CO_MODULE_SKELETON_FILTER_FILTER', "Filter");
-define('_CO_MODULE_SKELETON_FILTER_CONDITION', "Condition");
-define('_CO_MODULE_SKELETON_FILTER_SEARCH_EQUAL', " = ");
-define('_CO_MODULE_SKELETON_FILTER_SEARCH_CONTAINS', "contains");
+//
+//
+//
 
-// form options
-define('_CO_MODULE_SKELETON_TEXTOPTIONS', "Text options");
-define('_CO_MODULE_SKELETON_TEXTOPTIONS_DESC', "");
-define('_CO_MODULE_SKELETON_ALLOWHTML', " Allow HTML tags");
-define('_CO_MODULE_SKELETON_ALLOWSMILEY', " Allow Smiley icons");
-define('_CO_MODULE_SKELETON_ALLOWXCODE', " Allow XOOPS codes");
-define('_CO_MODULE_SKELETON_ALLOWIMAGES', " Allow images");
-define('_CO_MODULE_SKELETON_ALLOWBREAK', " Use XOOPS line break conversion");
+
 
 // itemcategory
 define('_CO_MODULE_SKELETON_ITEMCATEGORIES_LIST', "Item categories list");
@@ -231,9 +277,6 @@ define('_CO_MODULE_SKELETON_ITEMFIELD_TYPE_FILE_ALLOWEDMIMETYPES',"Allowed file 
 define('_CO_MODULE_SKELETON_ITEMFIELD_TYPE_FILE_ALLOWEDMIMETYPES_DESC',"Separate with | <br/>Leave empty for no limits (Xoops limits)");
 define('_CO_MODULE_SKELETON_ITEMFIELD_TYPE_FILE_MAXNUM',"Max number of uploadables files");
 define('_CO_MODULE_SKELETON_ITEMFIELD_TYPE_FILE_MAXNUM_DESC',"Leave empty for no limits (module config limits, server limits)");
-define('_CO_MODULE_SKELETON_ITEMFIELD_TYPE_XOOPSIMAGE',"Xoops Image");
-define('_CO_MODULE_SKELETON_ITEMFIELD_TYPE_XOOPSIMAGE_MAXNUM',"Max number of images");
-define('_CO_MODULE_SKELETON_ITEMFIELD_TYPE_XOOPSIMAGE_MAXNUM_DESC',"");
 define('_CO_MODULE_SKELETON_ITEMFIELD_VALUETYPE', "Value type");
 define('_CO_MODULE_SKELETON_ITEMFIELD_VALUETYPE_DESC', "");
 define('_CO_MODULE_SKELETON_ITEMFIELD_VALUETYPE_ARRAY',"Array");
@@ -336,6 +379,5 @@ function module_skeleton_alphabet()
         'Y',
         'Z'
     );
-
     return $alphabet;
 }

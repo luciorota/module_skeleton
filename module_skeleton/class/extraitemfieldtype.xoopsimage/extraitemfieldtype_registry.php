@@ -21,7 +21,7 @@
 
 defined('XOOPS_ROOT_PATH') || die('XOOPS root path not defined');
 return $config = array(
-    'class' => 'ExtraFieldTypeXoopsImage',
+    'class' => 'ExtraitemfieldtypeXoopsImage',
     'file' => __DIR__ . '/xoopsimage.php',
     'title' => _CO_MODULE_SKELETON_EXTRA_ITEMFIELD_TYPE_XOOPSIMAGE,
     'order' => 1

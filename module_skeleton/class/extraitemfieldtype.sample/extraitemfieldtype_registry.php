@@ -20,50 +20,9 @@
  */
 
 defined('XOOPS_ROOT_PATH') || die('XOOPS root path not defined');
-
-/**
- * Class ExtraItemfieldType
- */
-class ExtraItemfieldType
-{
-    private $itemObj;
-    private $itemfieldObj;
-
-    /**
-     * @param $itemObj
-     * @param $itemfieldObj
-     */
-    public function __construct($itemObj, $itemfieldObj)
-    {
-        $this->itemObj = $itemObj;
-        $this->itemfieldObj = $itemfieldObj;
-    }
-
-	public function getEditElement()
-    {
-    }
-
-	public function getOutputValue()
-    {
-    }
-
-    public function getValueForSave()
-    {
-    }
-
-    public function insert()
-    {
-    }
-
-    public function delete()
-    {
-    }
-
-    public function itemfield_typeconfigs()
-    {
-    }
-
-    public function search()
-    {
-    }
-}
+return $config = array(
+    'class' => 'ExtraitemfieldtypeSample',
+    'file' => __DIR__ . '/sample.php',
+    'title' => _CO_MODULE_SKELETON_EXTRA_ITEMFIELD_TYPE_SAMPLE,
+    'order' => 1
+	);

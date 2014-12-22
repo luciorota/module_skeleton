@@ -1068,7 +1068,7 @@ if (!class_exists('XoopsFormAjaxImageManager')) {
          */
         function setId($name)
         {
-            $this->_id = uniqid(time());
+            $this->_id = md5(uniqid(rand(), true));
         }
 
         /**

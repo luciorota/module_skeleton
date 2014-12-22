@@ -41,7 +41,7 @@ echo $indexAdmin->addNavigation($currentFile);
 xoops_load('XoopsFormLoader');
 include_once $GLOBALS['xoops']->path('/class/xoopsform/grouppermform.php');
 
-$op = Module_skeletonRequest::getString('op', 'itemcategory_read');
+$op = XoopsRequest::getString('op', 'itemcategory_read');
 
 $permission_select_form = new XoopsSimpleForm('', 'opform', $currentFile, 'get');
 $op_select = new XoopsFormSelect('', 'op', $op);
@@ -170,4 +170,4 @@ $GLOBALS['xoopsTpl']->assign('permissions_form', $permissions_form->render());
 
 $GLOBALS['xoopsTpl']->display("db:{$module_skeleton->getModule()->dirname()}_admin_permissions.tpl");
 
-include 'admin_footer.php';
+include __DIR__ . '/admin_footer.php';

@@ -22,7 +22,7 @@
 $currentFile = basename(__FILE__);
 include_once __DIR__ . 'header.php';
 
-$com_item_id = Module_skeletonRequest::getInt('com_item_id', 0);
+$com_item_id = XoopsRequest::getInt('com_item_id', 0);
 if ($com_itemid > 0) {
     // Get item title
     $item = $module_skeleton->getHandler('item')->get($com_item_id);

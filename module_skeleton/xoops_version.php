@@ -41,11 +41,11 @@ include_once XOOPS_ROOT_PATH . "/modules/" . $modversion['dirname'] . "/include/
 
 // About
 $modversion["module_status"]       = "Alpha";
-$modversion['release_date']        = '2014/11/05'; // YYYY/mm/dd
+$modversion['release_date']        = '2014/12/22'; // YYYY/mm/dd
 $modversion["module_website_url"]  = "http://www.xoops.org/";
 $modversion["module_website_name"] = "XOOPS";
 $modversion['min_php']             = '5.3.7';
-$modversion['min_xoops']           = '2.5.7';
+$modversion['min_xoops']           = '2.5.7.1';
 $modversion['min_admin']           = '1.1';
 $modversion['min_db']              = array(
     'mysql'  => '5.0.7',

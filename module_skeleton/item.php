@@ -47,7 +47,7 @@ switch ($op) {
     case 'items.list':
     case 'items.filter':
         // get itemcategory
-        $itemcategory_id = Module_skeletonRequest::getInt('itemcategory_id', 0);
+        $itemcategory_id = XoopsRequest::getInt('itemcategory_id', 0);
         $itemcategoryObj = $module_skeleton->getHandler('itemcategory')->get($itemcategory_id);
         if (empty($itemcategoryObj)) {
             redirect_header('index.php', 3, _CO_MODULE_SKELETON_ERROR_NOITEMCATEGORY);
@@ -58,13 +58,13 @@ switch ($op) {
 
     case 'item.view':
         // get item
-        $item_id = Module_skeletonRequest::getInt('item_id', 0);
+        $item_id = XoopsRequest::getInt('item_id', 0);
         $itemObj = $module_skeleton->getHandler('item')->get($item_id);
         if (empty($itemObj) || $itemObj->isNew()) {
             redirect_header('index.php', 3, _CO_MODULE_SKELETON_ERROR_NOITEM);
         }
         // get itemcategory
-        $itemcategory_id = Module_skeletonRequest::getInt('itemcategory_id', $itemObj->getVar('item_category_id'));
+        $itemcategory_id = XoopsRequest::getInt('itemcategory_id', $itemObj->getVar('item_category_id'));
         $itemcategoryObj = $module_skeleton->getHandler('itemcategory')->get($itemcategory_id);
         if (empty($itemcategoryObj)) {
             redirect_header('index.php', 3, _CO_MODULE_SKELETON_ERROR_NOITEMCATEGORY);
@@ -94,13 +94,13 @@ switch ($op) {
     case 'item.add':
     case 'item.edit':
         // get item
-        $item_id = Module_skeletonRequest::getInt('item_id', 0);
+        $item_id = XoopsRequest::getInt('item_id', 0);
         $itemObj = $module_skeleton->getHandler('item')->get($item_id);
         if (empty($itemObj) || $itemObj->isNew()) {
             redirect_header('index.php', 3, _CO_MODULE_SKELETON_ERROR_NOITEM);
         }
         // get itemcategory
-        $itemcategory_id = Module_skeletonRequest::getInt('itemcategory_id', $itemObj->getVar('item_category_id'));
+        $itemcategory_id = XoopsRequest::getInt('itemcategory_id', $itemObj->getVar('item_category_id'));
         $itemcategoryObj = $module_skeleton->getHandler('itemcategory')->get($itemcategory_id);
         if (empty($itemcategoryObj)) {
             redirect_header('index.php', 3, _CO_MODULE_SKELETON_ERROR_NOITEMCATEGORY);
@@ -124,15 +124,15 @@ switch ($op) {
         if (!$GLOBALS['xoopsSecurity']->check()) {
             //redirect_header($currentFile, 3, implode(',', $GLOBALS['xoopsSecurity']->getErrors()));
         }
-        $item_id = Module_skeletonRequest::getInt('item_id', 0, 'POST');
+        $item_id = XoopsRequest::getInt('item_id', 0, 'POST');
         $isNewItem = ($item_id == 0) ? true : false;
-        $item_category_id = Module_skeletonRequest::getInt('item_category_id', 0, 'POST');
-        $item_title = Module_skeletonRequest::getString('item_title', '', 'POST');
+        $item_category_id = XoopsRequest::getInt('item_category_id', 0, 'POST');
+        $item_title = XoopsRequest::getString('item_title', '', 'POST');
 
-        $item_weight = Module_skeletonRequest::getInt('item_weight', 0, 'POST');
+        $item_weight = XoopsRequest::getInt('item_weight', 0, 'POST');
         $item_status = 0; // IN PROGRESS
         $item_version = 0; // IN PROGRESS
-        $item_owner_uid = Module_skeletonRequest::getInt('item_owner_uid', 0, 'POST');
+        $item_owner_uid = XoopsRequest::getInt('item_owner_uid', 0, 'POST');
 // IN PROGRESS
 // IN PROGRESS
 // IN PROGRESS
@@ -186,13 +186,13 @@ switch ($op) {
         break;
 
     case 'item.delete':
-        $item_id = Module_skeletonRequest::getInt('item_id', 0);
+        $item_id = XoopsRequest::getInt('item_id', 0);
         $itemObj = $module_skeleton->getHandler('item')->get($item_id);
         if (!$itemObj) {
             redirect_header($currentFile, 3, _CO_MODULE_SKELETON_ERROR_NOITEM);
             exit();
         }
-        if (Module_skeletonRequest::getBool('ok', false, 'POST') == true) {
+        if (XoopsRequest::getBool('ok', false, 'POST') == true) {
             if (!$GLOBALS['xoopsSecurity']->check()) {
                 redirect_header($currentFile, 3, implode(',', $GLOBALS['xoopsSecurity']->getErrors()));
             }
@@ -208,7 +208,7 @@ switch ($op) {
         } else {
             xoops_cp_header();
             xoops_confirm(
-                array('ok' => true, 'op' => 'item.delete', 'item_id' => $item_id),
+                array('ok' => true, 'op' => $op, 'item_id' => $item_id),
                 $_SERVER['REQUEST_URI'],
                 _CO_MODULE_SKELETON_ITEM_DELETE_AREUSURE,
                 _DELETE
@@ -217,10 +217,10 @@ switch ($op) {
         }
         break;
     case 'item.delete.file':
-        $item_id = Module_skeletonRequest::getInt('item_id', 0);
+        $item_id = XoopsRequest::getInt('item_id', 0);
         $itemObj = $module_skeleton->getHandler('item')->get($item_id);
         // get item field name and file key
-        $file_name_key = Module_skeletonRequest::getArray('delete_file_name_key', 0); // form value: delete_file_name_key[$itemfield_name][$file_key]
+        $file_name_key = XoopsRequest::getArray('delete_file_name_key', 0); // form value: delete_file_name_key[$itemfield_name][$file_key]
         $itemfield_names = array_keys($file_name_key);
         $itemfield_name = $itemfield_names[0];
         $file_keys = array_keys($file_name_key[$itemfield_name]);

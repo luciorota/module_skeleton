@@ -26,6 +26,8 @@ xoops_load('XoopsFormLoader');
 xoops_load('XoopsPageNav');
 xoops_load('XoopsUserUtility');
 xoops_load('XoopsLocal');
+xoops_load('XoopsRequest');
+xoops_load('XoopsLists');
 
 // MyTextSanitizer object
 $myts = MyTextSanitizer::getInstance();
@@ -43,8 +45,7 @@ define('MODULE_SKELETON_IMAGES_URL', MODULE_SKELETON_URL . '/assets/images');
 define('MODULE_SKELETON_JS_URL', MODULE_SKELETON_URL . '/assets/js');
 define('MODULE_SKELETON_CSS_URL', MODULE_SKELETON_URL . '/assets/css');
 define('MODULE_SKELETON_ADMIN_URL', MODULE_SKELETON_URL . '/admin');
-define('MODULE_SKELETON_ROOT_PATH', XOOPS_ROOT_PATH . '/modules/' . MODULE_SKELETON_DIRNAME);
-define('MODULE_SKELETON_EXTRAITEMFIELDTYPES_PATH', MODULE_SKELETON_ROOT_PATH . '/extraitemfieldtype');
+define('MODULE_SKELETON_ROOT_PATH', dirname(__DIR__));
 
 xoops_loadLanguage('common', MODULE_SKELETON_DIRNAME);
 
@@ -53,7 +54,6 @@ include_once MODULE_SKELETON_ROOT_PATH . '/include/constants.php';
 
 include_once MODULE_SKELETON_ROOT_PATH . '/class/session.php'; // Module_skeletonSession class
 include_once MODULE_SKELETON_ROOT_PATH . '/class/module_skeleton.php'; // Module_skeletonModule_skeleton class
-include_once MODULE_SKELETON_ROOT_PATH . '/class/common/request.php'; // Module_skeletonRequest class
 include_once MODULE_SKELETON_ROOT_PATH . '/class/common/breadcrumb.php'; // Module_skeletonBreadcrumb class
 include_once MODULE_SKELETON_ROOT_PATH . '/class/common/choicebyletter.php'; // Module_skeletonChoiceByLetter class
 include_once MODULE_SKELETON_ROOT_PATH . '/class/common/tree.php'; // Module_skeletonObjectTree class

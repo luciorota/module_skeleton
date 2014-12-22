@@ -23,13 +23,13 @@ $currentFile = basename(__FILE__);
 include __DIR__ . '/header.php';
 
 // Get itemcategory
-$itemcategory_id = Module_skeletonRequest::getInt('itemcategory_id', 0);
+$itemcategory_id = XoopsRequest::getInt('itemcategory_id', 0);
 $itemcategoryObj = $module_skeleton->getHandler('itemcategory')->get($itemcategory_id);
 if (empty($itemcategoryObj) || $itemcategoryObj->isNew()) {
     redirect_header('index.php', 3, _CO_MODULE_SKELETON_ERROR_NOITEMCATEGORY);
 }
 
-$start = Module_skeletonRequest::getInt('start', 0);
+$start = XoopsRequest::getInt('start', 0);
 
 // check permissions
 $groups = is_object($xoopsUser) ? $xoopsUser->getGroups() : array(0 => XOOPS_GROUP_ANONYMOUS);
@@ -64,7 +64,7 @@ $xoopsTpl->assign('module_skeleton_breadcrumb', $breadcrumb->render());
 // IN PROGRESS
 // IN PROGRESS
 
-$op = Module_skeletonRequest::getString('op', 'categories.list');
+$op = XoopsRequest::getString('op', 'categories.list');
 switch ($op) {
     default:
     case 'categories.list':
@@ -85,7 +85,7 @@ switch ($op) {
     case 'itemcategory.add':
     case 'itemcategory.edit':
         //
-        $itemcategory_id = Module_skeletonRequest::getInt('itemcategory_id', 0);
+        $itemcategory_id = XoopsRequest::getInt('itemcategory_id', 0);
         if (!$itemcategoryObj = $module_skeleton->getHandler('itemcategory')->get($itemcategory_id)) {
             // ERROR
             redirect_header($currentFile, 3, _CO_MODULE_SKELETON_ERROR_NOITEMCATEGORY);
@@ -101,15 +101,15 @@ switch ($op) {
         if (!$GLOBALS['xoopsSecurity']->check()) {
             redirect_header($currentFile, 3, implode(',', $GLOBALS['xoopsSecurity']->getErrors()));
         }
-        $itemcategory_id = Module_skeletonRequest::getInt('itemcategory_id', 0, 'POST');
+        $itemcategory_id = XoopsRequest::getInt('itemcategory_id', 0, 'POST');
         $isNewCategory = ($itemcategory_id == 0) ? true : false;
-        $itemcategory_pid = Module_skeletonRequest::getInt('itemcategory_pid', 0, 'POST');
-        $itemcategory_title = Module_skeletonRequest::getString('itemcategory_title', '', 'POST');
+        $itemcategory_pid = XoopsRequest::getInt('itemcategory_pid', 0, 'POST');
+        $itemcategory_title = XoopsRequest::getString('itemcategory_title', '', 'POST');
         //
-        $itemcategory_weight = Module_skeletonRequest::getInt('itemcategory_weight', 0, 'POST');
+        $itemcategory_weight = XoopsRequest::getInt('itemcategory_weight', 0, 'POST');
         $itemcategory_status = 0; // IN PROGRESS
         $itemcategory_version = 0; // IN PROGRESS
-        $itemcategory_owner_uid = Module_skeletonRequest::getInt('itemcategory_owner_uid', 0, 'POST');
+        $itemcategory_owner_uid = XoopsRequest::getInt('itemcategory_owner_uid', 0, 'POST');
 // IN PROGRESS
 // IN PROGRESS
 // IN PROGRESS
@@ -155,9 +155,9 @@ switch ($op) {
         }
         $itemcategory_id = (int) $itemcategoryObj->getVar('itemcategory_id');
         // save permissions
-        $read_groups = Module_skeletonRequest::getArray('itemcategory_read', array(), 'POST');
+        $read_groups = XoopsRequest::getArray('itemcategory_read', array(), 'POST');
         module_skeleton_savePermissions($read_groups, $itemcategory_id, 'itemcategory_read');
-        $write_groups = Module_skeletonRequest::getArray('itemcategory_write', array(), 'POST');
+        $write_groups = XoopsRequest::getArray('itemcategory_write', array(), 'POST');
         module_skeleton_savePermissions($write_groups, $itemcategory_id, 'itemcategory_write');
         //
         if ($isNewCategory) {
@@ -176,13 +176,13 @@ switch ($op) {
         break;
 
     case 'itemcategory.delete':
-        $itemcategory_id = Module_skeletonRequest::getInt('itemcategory_id', 0);
+        $itemcategory_id = XoopsRequest::getInt('itemcategory_id', 0);
         $itemcategoryObj = $module_skeleton->getHandler('itemcategory')->get($itemcategory_id);
         if (!$itemcategoryObj) {
             redirect_header($currentFile, 3, _CO_MODULE_SKELETON_ERROR_NOITEMCATEGORY);
             exit();
         }
-        if (Module_skeletonRequest::getBool('ok', false, 'POST') == true) {
+        if (XoopsRequest::getBool('ok', false, 'POST') == true) {
             if (!$GLOBALS['xoopsSecurity']->check()) {
                 redirect_header($currentFile, 3, implode(',', $GLOBALS['xoopsSecurity']->getErrors()));
             }
@@ -198,7 +198,7 @@ switch ($op) {
         } else {
             xoops_cp_header();
             xoops_confirm(
-                array('ok' => true, 'op' => 'itemcategory.delete', 'itemcategory_id' => $itemcategory_id),
+                array('ok' => true, 'op' => $op, 'itemcategory_id' => $itemcategory_id),
                 $_SERVER['REQUEST_URI'],
                 _CO_MODULE_SKELETON_ITEMCATEGORY_DELETE_AREUSURE,
                 _DELETE
@@ -208,8 +208,8 @@ switch ($op) {
         break;
 
     case 'itemcategory.move':
-        $itemcategory_id = Module_skeletonRequest::getInt('itemcategory_id', 0);
-        if (Module_skeletonRequest::getBool('ok', false, 'POST')) {
+        $itemcategory_id = XoopsRequest::getInt('itemcategory_id', 0);
+        if (XoopsRequest::getBool('ok', false, 'POST')) {
             xoops_cp_header();
             //
             xoops_load('XoopsFormLoader');
@@ -239,8 +239,8 @@ switch ($op) {
             //
             xoops_cp_footer();
         } else {
-            $source_category_id = Module_skeletonRequest::getInt('source_category_id', 0, 'POST');
-            $target_category_id = Module_skeletonRequest::getInt('target_category_id', 0, 'POST');
+            $source_category_id = XoopsRequest::getInt('source_category_id', 0, 'POST');
+            $target_category_id = XoopsRequest::getInt('target_category_id', 0, 'POST');
             if ($target_category_id == $source_category_id) {
                 redirect_header($currentFile . "?op=itemcategory.move&amp;ok=0&amp;itemcategory_id={$source_category_id}", 3, _AM_MODULE_SKELETON_ITEMCATEGORY_MODIFY_FAILED);
             }

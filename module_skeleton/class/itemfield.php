@@ -117,7 +117,7 @@ class Module_skeletonItemfield extends XoopsObject
         xoops_load('XoopsUserUtility');
         //
         $datatypes = $this->module_skeleton->getHandler('itemfield')->getDataTypes(); // array of data types
-        $itemfieldtypes = $this->module_skeleton->getHandler('itemfield')->getStandardItemfieldTypesList();  // array of itemfield types
+        $itemfieldtypes = $this->module_skeleton->getHandler('itemfield')->getItemfieldTypesList();  // array of itemfield types
         //
         $itemfield = $this->toArray();
         $itemfield['id'] = $itemfield['itemfield_id'];
@@ -203,26 +203,6 @@ class Module_skeletonItemfield extends XoopsObject
 // IN PROGRESS
 // IN PROGRESS
             $itemfieldtypes = $this->module_skeleton->getHandler('itemfield')->getItemfieldTypesList();
-/*            $itemfieldtypes = array(
-                'checkbox'      => _CO_MODULE_SKELETON_ITEMFIELD_TYPE_CHECKBOX,
-                'date'          => _CO_MODULE_SKELETON_ITEMFIELD_TYPE_DATE,
-                'datetime'      => _CO_MODULE_SKELETON_ITEMFIELD_TYPE_DATETIME,
-                'longdate'      => _CO_MODULE_SKELETON_ITEMFIELD_TYPE_LONGDATE,
-                'group'         => _CO_MODULE_SKELETON_ITEMFIELD_TYPE_GROUP,
-                'group_multi'   => _CO_MODULE_SKELETON_ITEMFIELD_TYPE_GROUPMULTI,
-                'language'      => _CO_MODULE_SKELETON_ITEMFIELD_TYPE_LANGUAGE,
-                'radio'         => _CO_MODULE_SKELETON_ITEMFIELD_TYPE_RADIO,
-                'select'        => _CO_MODULE_SKELETON_ITEMFIELD_TYPE_SELECT,
-                'select_multi'  => _CO_MODULE_SKELETON_ITEMFIELD_TYPE_SELECTMULTI,
-                'textarea'      => _CO_MODULE_SKELETON_ITEMFIELD_TYPE_TEXTAREA,
-                'dhtmltextarea' => _CO_MODULE_SKELETON_ITEMFIELD_TYPE_DHTMLTEXTAREA,
-                'textbox'       => _CO_MODULE_SKELETON_ITEMFIELD_TYPE_TEXTBOX,
-                'timezone'      => _CO_MODULE_SKELETON_ITEMFIELD_TYPE_TIMEZONE,
-                'yesno'         => _CO_MODULE_SKELETON_ITEMFIELD_TYPE_YESNO,
-                'file'          => _CO_MODULE_SKELETON_ITEMFIELD_TYPE_FILE, // new
-                'xoopsimage'    => _CO_MODULE_SKELETON_ITEMFIELD_TYPE_XOOPSIMAGE, // new
-            );
-*/
             $element_select = new XoopsFormSelect(_CO_MODULE_SKELETON_ITEMFIELD_TYPE, 'itemfield_type', $this->getVar('itemfield_type', 'e'));
             $element_select->addOptionArray($itemfieldtypes);
             $form->addElement($element_select);
@@ -271,12 +251,26 @@ class Module_skeletonItemfield extends XoopsObject
                     $type_select->addOptionArray($datatypes);
                     $form->addElement($type_select);
                     break;
+                // extra item field types
                 default:
-                    // NOP
+                    if ($extraItemfieldTypeObj = $this->module_skeleton->getHandler('extraitemfieldtype')->get($this->getVar('itemfield_type'), null, $this)) {
+                        $extraItemfieldTypeObj->itemfield_datatype($form);
+                    } else {
+                        // NOP
+                    }
                     break;
             }
             // itemfield: itemfield_notnull
-//            $form->addElement(new XoopsFormRadioYN(_AM_MODULE_SKELETON_NOTNULL, 'itemfield_notnull', $this->getVar('itemfield_notnull', 'e') ));
+            switch ($this->getVar('itemfield_notnull')) {
+                // extra item field types
+                default:
+                    if ($extraItemfieldTypeObj = $this->module_skeleton->getHandler('extraitemfieldtype')->get($this->getVar('itemfield_type'), null, $this)) {
+                        $extraItemfieldTypeObj->itemfield_notnull($form);
+                    } else {
+//            $form->addElement(new XoopsFormRadioYN(_AM_MODULE_SKELETON_NOTNULL, 'itemfield_notnull', $this->getVar('itemfield_notnull', 'e') ));                    }
+                    break;
+                }
+            }
             // itemfield: itemfield_options
             switch ($this->getVar('itemfield_type')) {
                 case 'select':
@@ -311,8 +305,13 @@ class Module_skeletonItemfield extends XoopsObject
                     $option_text .= "</table>";
                     $form->addElement(new XoopsFormLabel(_CO_MODULE_SKELETON_ITEMFIELD_ADDOPTION, $option_text));
                     break;
+                // extra item field types
                 default:
-                    // NOP
+                    if ($extraItemfieldTypeObj = $this->module_skeleton->getHandler('extraitemfieldtype')->get($this->getVar('itemfield_type'), null, $this)) {
+                        $extraItemfieldTypeObj->itemfield_options($form);
+                    } else {
+                        // NOP
+                    }
                     break;
             }
             // itemfield: itemfield_typeconfigs
@@ -346,11 +345,8 @@ class Module_skeletonItemfield extends XoopsObject
                     $textarea_cols_text->setDescription(_CO_MODULE_SKELETON_ITEMFIELD_TYPE_TEXTAREA_COLS_DESC);
                     $form->addElement($textarea_cols_text);
                     break;
-                default:
-                    // NOP
-                    break;
-// extra item field types
-               case 'file':
+                // new item field types
+                case 'file':
                     $typeconfigs = $this->getVar('itemfield_typeconfigs');
                     // default
                     if(empty($typeconfigs)) {
@@ -369,24 +365,14 @@ class Module_skeletonItemfield extends XoopsObject
                     $file_maxnum_text = new XoopsFormText(_CO_MODULE_SKELETON_ITEMFIELD_TYPE_FILE_MAXNUM, 'itemfield_typeconfigs[maxnum]', 50, 255, $typeconfigs['maxnum']);
                     $file_maxnum_text->setDescription(_CO_MODULE_SKELETON_ITEMFIELD_TYPE_FILE_MAXNUM_DESC);
                     $form->addElement($file_maxnum_text);
-// IN PROGRESS
-// IN PROGRESS
-// IN PROGRESS
                     break;
-                case 'xoopsimage':
-                    $typeconfigs = $this->getVar('itemfield_typeconfigs');
-                    // default
-                    if(empty($typeconfigs)) {
-                        $typeconfigs = array(
-                            'maxnum' => 1
-                        );
+                // extra item field types
+                default:
+                    if ($extraItemfieldTypeObj = $this->module_skeleton->getHandler('extraitemfieldtype')->get($this->getVar('itemfield_type'), null, $this)) {
+                        $extraItemfieldTypeObj->itemfield_typeconfigs($form);
+                    } else {
+                        // NOP
                     }
-                    $xoopsimage_maxnum_text = new XoopsFormText(_CO_MODULE_SKELETON_ITEMFIELD_TYPE_XOOPSIMAGE_MAXNUM, 'itemfield_typeconfigs[maxnum]', 50, 255, $typeconfigs['maxnum']);
-                    $xoopsimage_maxnum_text->setDescription(_CO_MODULE_SKELETON_ITEMFIELD_TYPE_XOOPSIMAGE_MAXNUM_DESC);
-                    $form->addElement($xoopsimage_maxnum_text);
-// IN PROGRESS
-// IN PROGRESS
-// IN PROGRESS
                     break;
             }
         }
@@ -454,16 +440,18 @@ class Module_skeletonItemfield extends XoopsObject
                 case 'autotext':
                     $form->addElement(new XoopsFormTextArea(_CO_MODULE_SKELETON_ITEMFIELD_DEFAULT, 'itemfield_default', $this->getVar('itemfield_default', 'e')));
                     break;
-// extra item field types
+                // new item field types
                 case 'file':
-// IN PROGRESS
-// IN PROGRESS
-// IN PROGRESS
+                    // NOP
                     break;
-                case 'xoopsimage':
-// IN PROGRESS
-// IN PROGRESS
-// IN PROGRESS
+                // extra item field types
+                default:
+                    if ($extraItemfieldTypeObj = $this->module_skeleton->getHandler('extraitemfieldtype')->get($this->getVar('itemfield_type'), null, $this)) {
+                        $extraItemfieldTypeObj->itemfield_default($form);
+                    } else {
+                        // NOP
+                    }
+                    // NOP
                     break;
             }
         }
@@ -550,7 +538,6 @@ class Module_skeletonItemfield extends XoopsObject
         }
         // get edit element by type
         switch ($this->getVar('itemfield_type')) {
-            default:
             case 'autotext':
                 //autotext is not for editing
                 $element = new XoopsFormLabel($caption, $this->getOutputValue($itemObj));
@@ -650,8 +637,8 @@ class Module_skeletonItemfield extends XoopsObject
                     $element->addOptionArray($dirlist);
                 }
                 break;
-// extra item field types
-            case 'file': // new
+            // new item field types
+            case 'file':
                 $typeconfigs = $this->getVar('itemfield_typeconfigs');
                 $value = $itemObj->getVar($name);
                 if (empty($value)) {
@@ -688,20 +675,12 @@ class Module_skeletonItemfield extends XoopsObject
                     unset($add_formElementTray);
                 }
                 break;
-            case 'xoopsimage':
-                $typeconfigs = $this->getVar('itemfield_typeconfigs');
-                $value = $itemObj->getVar($name);
-                if (empty($value)) {
-                    $images = array();
+            // extra item field types
+            default:
+                if ($extraItemfieldTypeObj = $this->module_skeleton->getHandler('extraitemfieldtype')->get($this->getVar('itemfield_type'), $itemObj, $this)) {
+                    $element = $extraItemfieldTypeObj->getEditElement();
                 } else {
-                    $images = json_decode($value, true); // associative arrays
-                }
-                $maxnum = (!empty($typeconfigs['maxnum'])) ? $typeconfigs['maxnum'] : 1;
-                include_once MODULE_SKELETON_ROOT_PATH . '/extraitemfieldtype/xoopsimage/formajaximagemanager.php'; // XoopsFormAjaxImageManager class
-                $element = new XoopsFormElementTray($caption, '<br>');
-                $element->addElement(new XoopsFormHidden($name, '')); // IN PROGRESS
-                for ($image_key = 0; $image_key < $maxnum; ++$image_key) {
-                    $element->addElement(new XoopsFormAjaxImageManager('', $name . "[]", $images["$image_key"]));
+                    $element = new XoopsFormLabel($caption, $this->getOutputValue($itemObj));
                 }
                 break;
         }
@@ -725,9 +704,8 @@ class Module_skeletonItemfield extends XoopsObject
         $value = $itemObj->getVar($this->getVar('itemfield_name'));
         // get output value by type
         switch ($this->getVar('itemfield_type')) {
-            default:
             case 'textbox':
-                if ( $this->getVar('itemfield_name') == 'url' && $value != '') {
+                if ($this->getVar('itemfield_name') == 'url' && $value != '') {
                      return '<a href="' . formatURL($value) . '" rel="external">' . $value . '</a>';
                    } else {
                      return $value;
@@ -784,6 +762,7 @@ class Module_skeletonItemfield extends XoopsObject
                 // return YYYY/MM/DD format - not optimal as it is not using local date format, but how do we do that
                 // when we cannot convert it to a UNIX timestamp?
                 return str_replace("-", "/", $value);
+                break;
             case 'date':
                 return formatTimestamp($value, 's');
                 break;
@@ -799,9 +778,9 @@ class Module_skeletonItemfield extends XoopsObject
                 break;
             case 'autotext':
                 $value = $itemObj->getVar($this->getVar('itemfield_name'), 'n'); // autotext can have HTML in it
-                $value = str_replace("{X_UID}", $itemObj->getVar("uid"), $value);
+                $value = str_replace("{X_UID}", $itemObj->getVar('uid'), $value);
                 $value = str_replace("{X_URL}", XOOPS_URL, $value );
-                $value = str_replace("{X_UNAME}", $itemObj->getVar("uname"), $value);
+                $value = str_replace("{X_UNAME}", $itemObj->getVar('uname'), $value);
                 return $value;
                 break;
             case 'rank':
@@ -821,16 +800,19 @@ class Module_skeletonItemfield extends XoopsObject
                 $value = empty($value) ? '0' : strval($value);
                 return $timezones[str_replace('.0', '', $value)];
                 break;
-// extra item field types
-            case 'file': // new
+            // new item field types
+            case 'file':
                 $typeconfigs = $this->getVar('itemfield_typeconfigs');
                 $value = json_decode($value, true); // associative arrays
                 return $value;
                 break;
-            case 'xoopsimage':
-                $typeconfigs = $this->getVar('itemfield_typeconfigs');
-                $value = json_decode($value, true); // associative arrays
-                return $value;
+            // extra item field types
+            default:
+                if ($extraItemfieldTypeObj = $this->module_skeleton->getHandler('extraitemfieldtype')->get($this->getVar('itemfield_type'), $itemObj, $this)) {
+                    return $extraItemfieldTypeObj->getOutputValue();
+                } else {
+                    return $value;
+                }
                 break;
         }
     }
@@ -862,25 +844,53 @@ class Module_skeletonItemfield extends XoopsObject
             case 'select_multi':
             case 'group':
             case 'group_multi':
-            case 'longdate':
                 return $value;
+                break;
+            case 'longdate':
+// IN PROGRESS
+// IN PROGRESS
+// IN PROGRESS
+/*
+                if ($value != '') {
+                    $dateTimeObj = DateTime::createFromFormat(_SHORTDATESTRING, $value);
+                    $dateTimeObj->setTime(0, 0, 0);
+                    $ret = $dateTimeObj->format('Y-m-d');
+                    unset($dateTimeObj);
+                    return $ret;
+                }
+*/
+                return $value;
+                break;
             case 'checkbox':
                 return (array) $value;
+                break;
             case 'date':
                 if ($value != '') {
-                    return strtotime($value);
+                    $dateTimeObj = DateTime::createFromFormat(_SHORTDATESTRING, $value);
+                    $dateTimeObj->setTime(0, 0, 0);
+                    $ret = $dateTimeObj->getTimestamp() + 0;
+                    unset($dateTimeObj);
+                    return $ret;
                 }
                 return $value;
+                break;
             case 'datetime':
                 if (!empty($value)) {
-                    return strtotime($value['date']) + (int) $value['time'];
+                    $dateTimeObj = DateTime::createFromFormat(_SHORTDATESTRING, $value['date']);
+                    $dateTimeObj->setTime(0, 0, 0);
+                    $ret = $dateTimeObj->getTimestamp() + $value['time'];
+                    unset($dateTimeObj);
+                    return $ret;
                 }
                 return $value;
-// extra item field types
+                break;
+            // new item field types
             case 'file':
-                include_once MODULE_SKELETON_ROOT_PATH . '/class/uploader.php'; // Module_skeletonMediaUploader class
                 $uploadDir = $this->module_skeleton->getConfig('uploadPath') . '/';
                 $typeconfigs = $this->getVar('itemfield_typeconfigs');
+// IN PROGRESS
+// IN PROGRESS
+// IN PROGRESS
                 $files = json_decode($itemObj->getVar($name), true); // associative arrays
                 if ($files == false) {
                     $files = array();
@@ -895,31 +905,33 @@ class Module_skeletonItemfield extends XoopsObject
                 // upload files
                 $maxFileSize = (!empty($typeconfigs['maxFileSize'])) ? $typeconfigs['maxFileSize'] : $this->module_skeleton->getConfig('uploadMaxFileSize');
                 $allowedMimeTypes = (!empty($typeconfigs['allowedMimeTypes'])) ? explode('|', $typeconfigs['allowedMimeTypes']) : null;
-                foreach ($_POST['xoops_upload_file'] as $media_name) {
-                    preg_match('/' . preg_quote('upload_file_name_key') . '\(([\w]+)\)\(([0-9]+)\)/', $media_name, $matches);
-                    $itemfield_name = $matches[1];
-                    $file_key = $matches[2];
-                    $uploader = new Module_skeletonMediaUploader($uploadDir, $allowedMimeTypes, $maxFileSize, null, null);
+                if (isset($_POST['xoops_upload_file'])) {
+                    foreach ($_POST['xoops_upload_file'] as $media_name) {
+                        preg_match('/' . preg_quote('upload_file_name_key') . '\(([\w]+)\)\(([0-9]+)\)/', $media_name, $matches);
+                        $itemfield_name = $matches[1];
+                        $file_key = $matches[2];
+                        $uploader = new Module_skeletonMediaUploader($uploadDir, $allowedMimeTypes, $maxFileSize, null, null);
 // IN PROGRESS
 // IN PROGRESS
 // IN PROGRESS
 error_log(print_r($uploader->normalizedFILES(),true));
-                    if (($itemfield_name == $name) && $uploader->mediaExists($media_name)) {
-                        $uploader->setPrefix('file_') ; // keep original name
-                        if ($uploader->fetchMedia($media_name) && $uploader->upload()) {
-                            $files[$file_key] = array(
-                                'savedfilename' => $uploader->getSavedFileName(),
-                                'saveddestination' => $uploader->getSavedDestination(), // full path
-                                'medianame' => $uploader->getMediaName(), // original name
-                                'mediatempname' => $uploader->getMediaTmpName(),
-                                'mediatype' => $uploader->getMediaType(), // mimetype
-                                'mediasize' => $uploader->getMediaSize() // bytes
-                            );
-                        } else {
-                            // ERROR
-                            $errors = $uploader->getErrors();
-                            redirect_header('javascript:history.go(-1)', 3, $errors);
-                            exit();
+                        if (($itemfield_name == $name) && $uploader->mediaExists($media_name)) {
+                            $uploader->setPrefix('file_') ; // keep original name
+                            if ($uploader->fetchMedia($media_name) && $uploader->upload()) {
+                                $files[$file_key] = array(
+                                    'savedfilename' => $uploader->getSavedFileName(),
+                                    'saveddestination' => $uploader->getSavedDestination(), // full path
+                                    'medianame' => $uploader->getMediaName(), // original name
+                                    'mediatempname' => $uploader->getMediaTmpName(),
+                                    'mediatype' => $uploader->getMediaType(), // mimetype
+                                    'mediasize' => $uploader->getMediaSize() // bytes
+                                );
+                            } else {
+                                // ERROR
+                                $errors = $uploader->getErrors();
+                                redirect_header('javascript:history.go(-1)', 3, $errors);
+                                exit();
+                            }
                         }
                     }
                 }
@@ -927,9 +939,15 @@ error_log(print_r($uploader->normalizedFILES(),true));
                 $files = array_values($files);
                 //return base64_encode(serialize($files));
                 return json_encode($files);
-            case 'xoopsimage':
-                $typeconfigs = $this->getVar('itemfield_typeconfigs');
-                return json_encode($value);
+                break;
+            // extra item field types
+            default:
+                if ($extraItemfieldTypeObj = $this->module_skeleton->getHandler('extraitemfieldtype')->get($this->getVar('itemfield_type'), $itemObj, $this)) {
+                    return $extraItemfieldTypeObj->getValueForSave($value);
+                } else {
+                    return $value;
+                }
+                break;
         }
     }
 
@@ -1005,11 +1023,13 @@ class Module_skeletonItemfieldHandler extends XoopsPersistableObjectHandler
         $itemfieldObj->setVar('itemfield_name', str_replace(' ', '_', $itemfieldObj->getVar('itemfield_name')));
         $itemfieldObj->cleanVars();
         $defaultstring = '';
+        //
         switch ($itemfieldObj->getVar('itemfield_type')) {
+            // standard itemfield types
             case 'datetime':
             case 'date':
                 $itemfieldObj->setVar('itemfield_datatype', XOBJ_DTYPE_INT);
-                $itemfieldObj->setVar('itemfield_typeconfigs', array('maxLength' => 255));
+                $itemfieldObj->setVar('itemfield_typeconfigs', array('maxLength' => 10));
                 break;
             case 'longdate':
                 $itemfieldObj->setVar('itemfield_datatype', XOBJ_DTYPE_MTIME);
@@ -1042,15 +1062,17 @@ class Module_skeletonItemfieldHandler extends XoopsPersistableObjectHandler
             case 'textarea':
                 $itemfieldObj->setVar('itemfield_datatype', XOBJ_DTYPE_TXTAREA);
                 break;
+            // new item field types
+            case 'file':
+                $itemfieldObj->setVar('itemfield_datatype', XOBJ_DTYPE_OTHER);
+                break;
+            // extra itemfield types
             default:
-                $itemfieldObj->setVar('itemfield_datatype', XOBJ_DTYPE_TXTBOX);
-                break;
-// extra item field types
-            case 'file': // new
-                $itemfieldObj->setVar('itemfield_datatype', XOBJ_DTYPE_OTHER);
-                break;
-            case 'xoopsimage': // new
-                $itemfieldObj->setVar('itemfield_datatype', XOBJ_DTYPE_OTHER);
+                if ($extraItemfieldTypeObj = $this->module_skeleton->getHandler('extraitemfieldtype')->get($itemfieldObj->getVar('itemfield_type'), null, $itemfieldObj)) {
+                    $extraItemfieldTypeObj->insert();
+                } else {
+                    $itemfieldObj->setVar('itemfield_datatype', XOBJ_DTYPE_TXTBOX);
+                }
                 break;
         }
         //
@@ -1110,8 +1132,7 @@ class Module_skeletonItemfieldHandler extends XoopsPersistableObjectHandler
                 return false;
             }
         }
-
-        //change this to also update the cached itemfield information storage
+        // change this to also update the cached itemfield information storage
         $itemfieldObj->setDirty();
         if (!parent::insert($itemfieldObj, $force)) {
             return false;
@@ -1142,8 +1163,9 @@ class Module_skeletonItemfieldHandler extends XoopsPersistableObjectHandler
         } else {
             return false;
         }
-
+        //
         switch ($itemfieldObj->getVar('itemfield_type')) {
+            // standard itemfield types
             case 'datetime':
             case 'date':
             case 'longdate':
@@ -1158,7 +1180,6 @@ class Module_skeletonItemfieldHandler extends XoopsPersistableObjectHandler
             case 'theme':
             case 'dhtmltextarea':
             case 'textarea':
-            default:
                 // remove column from item table
                 $sql = "ALTER TABLE {$this->module_skeleton->getHandler('item')->table}";
                 $sql .= " DROP `{$itemfieldObj->getVar('itemfield_name', 'n')}`";
@@ -1167,8 +1188,8 @@ class Module_skeletonItemfieldHandler extends XoopsPersistableObjectHandler
                     return false;
                 }
                 break;
-// extra item field types
-            case 'file': // new
+            // new item field types
+            case 'file':
                 // delete files from filesystem
                 $uploadDir = $this->module_skeleton->getConfig('uploadPath') . '/';
                 $sql = "SELECT {$itemfieldObj->getVar('itemfield_name')} FROM `{$this->module_skeleton->getHandler('item')->table}`";
@@ -1189,17 +1210,21 @@ class Module_skeletonItemfieldHandler extends XoopsPersistableObjectHandler
                     return false;
                 }
                 break;
-            case 'xoopsimage': // new
-                // remove column from item table
-                $sql = "ALTER TABLE {$this->module_skeleton->getHandler('item')->table}";
-                $sql .= " DROP `{$itemfieldObj->getVar('itemfield_name', 'n')}`";
-                if (!$this->db->query($sql)) {
-                    // ERROR
-                    return false;
+            // extra itemfield types
+            default:
+                if ($extraItemfieldTypeObj = $this->module_skeleton->getHandler('extraitemfieldtype')->get($itemfieldObj->getVar('itemfield_type'), null, $itemfieldObj)) {
+                    $extraItemfieldTypeObj->delete();
+                } else {
+                    // remove column from item table
+                    $sql = "ALTER TABLE {$this->module_skeleton->getHandler('item')->table}";
+                    $sql .= " DROP `{$itemfieldObj->getVar('itemfield_name', 'n')}`";
+                    if (!$this->db->query($sql)) {
+                        // ERROR
+                        return false;
+                    }
                 }
                 break;
         }
-
         // delete itemfield
         if (!parent::delete($itemfieldObj, $force)) {
             // ERROR
@@ -1269,12 +1294,15 @@ class Module_skeletonItemfieldHandler extends XoopsPersistableObjectHandler
             'yesno'         => _CO_MODULE_SKELETON_ITEMFIELD_TYPE_YESNO,
             'date'          => _CO_MODULE_SKELETON_ITEMFIELD_TYPE_DATE,
             'datetime'      => _CO_MODULE_SKELETON_ITEMFIELD_TYPE_DATETIME,
-            'longdate'      => _CO_MODULE_SKELETON_ITEMFIELD_TYPE_LONGDATE,
+// IN PROGRESS
+// IN PROGRESS
+// IN PROGRESS
+//            'longdate'      => _CO_MODULE_SKELETON_ITEMFIELD_TYPE_LONGDATE,
             'theme'         => _CO_MODULE_SKELETON_ITEMFIELD_TYPE_THEME,
             'autotext'      => _CO_MODULE_SKELETON_ITEMFIELD_TYPE_AUTOTEXT,
             'rank'          => _CO_MODULE_SKELETON_ITEMFIELD_TYPE_RANK,
+            // new item field types
             'file'          => _CO_MODULE_SKELETON_ITEMFIELD_TYPE_FILE, // new
-            'xoopsimage'    => _CO_MODULE_SKELETON_ITEMFIELD_TYPE_XOOPSIMAGE // new
         );
     }
 
@@ -1283,33 +1311,9 @@ class Module_skeletonItemfieldHandler extends XoopsPersistableObjectHandler
      *
      * @return array
      */
-    public function getExtraItemfieldTypesList()
+    public function getExtraitemfieldtypesList()
     {
-        xoops_load('XoopsCache');
-        $list = XoopsCache::read('module_skeleton_extraitemfieldtypeslist');
-        if (empty($list)) {
-            $list = array();
-            $order = array();
-            xoops_load('XoopsLists');
-            $types = XoopsLists::getDirListAsArray(MODULE_SKELETON_EXTRAITEMFIELDTYPES_PATH . '/');
-            foreach ($types as $type) {
-                if (file_exists($file = MODULE_SKELETON_EXTRAITEMFIELDTYPES_PATH . '/' . $type . '/language/' . $GLOBALS['xoopsConfig']['language'] . '.php')) {
-                    include_once $file;
-                } else if (file_exists($file = MODULE_SKELETON_EXTRAITEMFIELDTYPES_PATH . '/' . $type . '/language/english.php')) {
-                    include_once $file;
-                }
-                if (file_exists($file = MODULE_SKELETON_EXTRAITEMFIELDTYPES_PATH . '/' . $type . '/extraitemfieldtype_registry.php')) {
-                    include $file;
-                    if (empty($config['order']))
-                        continue;
-                    $order[] = $config['order'];
-                    $list[$type] = $config['title'];
-                }
-            }
-            array_multisort($order, $list);
-            XoopsCache::write('module_skeleton_extraitemfieldtypeslist', $list);
-        }
-        return $list;
+        return $this->module_skeleton->getHandler('extraitemfieldtype')->getList();
     }
 
     /**
@@ -1319,10 +1323,10 @@ class Module_skeletonItemfieldHandler extends XoopsPersistableObjectHandler
      */
     public function getItemfieldTypesList()
     {
-        $standardItemfieldtypes = $this->getStandardItemfieldTypesList();
-        $extraItemfieldtypes = $this->getExtraItemfieldTypesList();
-        $itemfieldtypes = array_merge($standardItemfieldtypes, $extraItemfieldtypes);
-        return $itemfieldtypes;
+        $standardItemfieldTypes = $this->getStandardItemfieldTypesList();
+        $extraItemfieldTypes = $this->getExtraitemfieldtypesList();
+        $itemfieldTypes = array_merge($standardItemfieldTypes, $extraItemfieldTypes);
+        return $itemfieldTypes;
     }
 
     /**
