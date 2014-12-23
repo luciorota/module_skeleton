@@ -64,7 +64,7 @@ define('_ER_UP_PHPERR_EXTENSION',       'A PHP extension stopped the file upload
 class Module_skeletonMediaUploader extends XoopsMediaUploader
 {
 
-    var $warnings = array();
+    public $warnings = array();
 
     /**
      * Check if uploaded file exists
@@ -73,7 +73,7 @@ class Module_skeletonMediaUploader extends XoopsMediaUploader
      * @param int           $index Index of the file (if more than one uploaded under that name)
      * @return bool
      */
-    function mediaExists($media_name, $index = null)
+    public function mediaExists($media_name, $index = null)
     {
         // 4: UPLOAD_ERR_NO_FILE
         if (empty($_FILES[$media_name]['name']) && $_FILES[$media_name]['size'] == 0 && $_FILES[$media_name]['error'] == UPLOAD_ERR_NO_FILE) {
@@ -156,15 +156,12 @@ class Module_skeletonMediaUploader extends XoopsMediaUploader
             $normalizedFiles = array();
             foreach ($_FILES as $field_name => $field) {
                 $tempArrays = array();
-                //error_log(print_r($field,true));
 
                 foreach($field as $key1 => $array) {
                     $tempArrays[] = $this->moveFirstKeyRecursive($array, $key1);
                 }
-                //error_log(print_r($tempArrays,true));
                 $mergedArray = array();
                 foreach ($tempArrays as $key => $tempArray) {
-                    //error_log('$tempArray = ' . print_r($tempArray,true));
                     $mergedArray = $this->arrayMergeRecursiveDistinct($mergedArray, $tempArray);
                 }
                 $normalizedFiles[$field_name] = $mergedArray;
@@ -265,7 +262,8 @@ class Module_skeletonMediaUploader extends XoopsMediaUploader
      * @param               $chmod
      * @return bool
      */
-    function _copyFile($chmod)
+    public function _copyFile($chmod)
+    // should be private, but is public because Module_skeletonMediaUploader extends XoopsMediaUploader
     {
         $matched = array();
         if (!preg_match("/\.([a-zA-Z0-9]+)$/", $this->mediaName, $matched)) {

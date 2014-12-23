@@ -22,7 +22,7 @@
 defined('XOOPS_ROOT_PATH') || die('XOOPS root path not defined');
 
 // LOAD Extraitemfieldtype class
-xoops_load('Extraitemfieldtype','module_skeleton');
+//xoops_load('Extraitemfieldtype','module_skeleton');
 
 /**
  * Class ExtraitemfieldtypeSample

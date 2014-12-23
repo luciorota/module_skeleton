@@ -165,13 +165,13 @@ class Module_skeletonExtraitemfieldtypeHandler
             xoops_load('XoopsLists');
             $types = XoopsLists::getDirListAsArray($this->root_path . '/');
             foreach ($types as $type) {
-                if (file_exists($file = $this->root_path . '/' . $type . '/language/' . $GLOBALS['xoopsConfig']['language'] . '.php')) {
-                    include_once $file;
-                } else if (file_exists($file = $this->root_path . '/' . $type . '/language/english.php')) {
-                    include_once $file;
+                if (file_exists($laguageFile = $this->root_path . '/' . $type . '/language/' . $GLOBALS['xoopsConfig']['language'] . '.php')) {
+                    include_once $laguageFile;
+                } else if (file_exists($laguageFile = $this->root_path . '/' . $type . '/language/english.php')) {
+                    include_once $laguageFile;
                 }
-                if (file_exists($file = $this->root_path . '/' . $type . '/extraitemfieldtype_registry.php')) {
-                    include $file;
+                if (file_exists($registryFile = $this->root_path . '/' . $type . '/extraitemfieldtype_registry.php')) {
+                    include $registryFile;
                     if (empty($config['order']))
                         continue;
                     $order[] = $config['order'];
@@ -220,13 +220,13 @@ class Module_skeletonExtraitemfieldtypeHandler
             return false;
         }
         $extraItemfieldTypes_path = $this->root_path . '/' . $name;
-        if (file_exists($file = $extraItemfieldTypes_path . '/language/' . $GLOBALS['xoopsConfig']['language'] . '.php')) {
-            include_once $file;
-        } else if (file_exists($file = $extraItemfieldTypes_path . '/language/english.php')) {
-            include_once $file;
+        if (file_exists($laguageFile = $extraItemfieldTypes_path . '/language/' . $GLOBALS['xoopsConfig']['language'] . '.php')) {
+            include_once $laguageFile;
+        } else if (file_exists($laguageFile = $extraItemfieldTypes_path . '/language/english.php')) {
+            include_once $laguageFile;
         }
-        if (file_exists($file = $extraItemfieldTypes_path . '/extraitemfieldtype_registry.php')) {
-            include_once $file;
+        if (file_exists($registryFile = $extraItemfieldTypes_path . '/extraitemfieldtype_registry.php')) {
+            include $registryFile;
         } else {
             return false;
         }

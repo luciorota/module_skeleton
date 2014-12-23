@@ -22,7 +22,7 @@
 defined('XOOPS_ROOT_PATH') || die('XOOPS root path not defined');
 
 // LOAD Extraitemfieldtype class
-xoops_load('Extraitemfieldtype','module_skeleton');
+//xoops_load('Extraitemfieldtype','module_skeleton');
 
 /**
  * Class ExtraitemfieldtypeXoopsImage
@@ -35,9 +35,6 @@ class ExtraitemfieldtypeXoopsImage extends Module_skeletonExtraitemfieldtype
     public function getEditElement()
     {
         xoops_load('XoopsFormLoader');
-// IN PROGRESS
-// IN PROGRESS
-// IN PROGRESS
         include_once __DIR__ . '/formajaximagemanager.php'; // XoopsFormAjaxImageManager class
         // get itemfiled vars
         if ($this->itemObj->isNew()) {
@@ -150,7 +147,6 @@ class ExtraitemfieldtypeXoopsImage extends Module_skeletonExtraitemfieldtype
 // IN PROGRESS
 // IN PROGRESS
 // IN PROGRESS
-
     }
 
 // IN PROGRESS
