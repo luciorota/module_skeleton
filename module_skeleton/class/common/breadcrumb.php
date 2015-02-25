@@ -11,12 +11,12 @@
 /**
  * Module_skeletonBreadcrumb Class
  *
- * @copyright   The XOOPS Project http://sourceforge.net/projects/xoops/
- * @license     http://www.fsf.org/copyleft/gpl.html GNU public license
- * @author      lucio <lucio.rota@gmail.com>
- * @package     Module_skeleton
- * @since       1.00
- * @version     $Id:$
+ * @copyright       The XOOPS Project http://sourceforge.net/projects/xoops/
+ * @license         GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @package         module_skeleton
+ * @since           1.00
+ * @author          Xoops Development Team
+ * @version         svn:$id$
  *
  * Example:
  * $breadcrumb = new Module_skeletonBreadcrumb();
@@ -26,12 +26,19 @@
  * echo $breadcrumb->render();
  */
 defined('XOOPS_ROOT_PATH') || die('XOOPS root path not defined');
+include_once dirname(dirname(__DIR__)) . '/include/common.php';
 
 /**
  * Class Module_skeletonBreadcrumb
  */
 class Module_skeletonBreadcrumb
 {
+    /**
+     * @var Module_skeletonModule_skeleton
+     * @access public
+     */
+    public $module_skeleton = null;
+
     private $dirname;
     private $_bread = array();
 
@@ -40,7 +47,8 @@ class Module_skeletonBreadcrumb
      */
     public function __construct()
     {
-        $this->dirname =  basename(dirname(dirname(__DIR__)));
+        $this->module_skeleton = Module_skeletonModule_skeleton::getInstance();
+        $this->dirname = basename(dirname(dirname(__DIR__)));
     }
 
     /**
@@ -75,10 +83,7 @@ class Module_skeletonBreadcrumb
 // IN PROGRESS
 // IN PROGRESS
 // IN PROGRESS
-        //$ret .= $breadcrumbTpl->fetch(__DIR__ . '_breadcrumb.tpl');
-        $tplSource = file_get_contents(__DIR__ . '/breadcrumb.tpl');
-//        $ret .= $choiceByLetterTpl->fetchFromData($tplSource, false, null);
-        $ret .= $breadcrumbTpl->fetchFromData($tplSource, false, null);
+        $ret .= $breadcrumbTpl->fetch("db:{$this->module_skeleton->getModule()->dirname()}_co_breadcrumb.tpl");
         unset($breadcrumbTpl);
 
         return $ret;

@@ -21,7 +21,7 @@
             <th><{$smarty.const._CO_MODULE_SKELETON_ITEMCATEGORY_DATE}></th>
             <th><{$smarty.const._CO_MODULE_SKELETON_ACTIONS}></th>
         </tr>
-    <{foreach item=sorted_itemcategory from=$sorted_categories}>
+    <{foreach item=sorted_itemcategory from=$sorted_itemcategories}>
         <tr class="<{cycle values='even, odd'}>">
             <td align='center'><{$sorted_itemcategory.itemcategory.itemcategory_id}></td>
             <td class="head">

@@ -11,24 +11,31 @@
 /**
  * Module_skeletonChoiceByLetter class
  *
- * @copyright   The XOOPS Project http://sourceforge.net/projects/xoops/
- * @license     http://www.fsf.org/copyleft/gpl.html GNU public license
- * @author      lucio <lucio.rota@gmail.com>
- * @package     Module_skeleton
- * @since       1.00
- * @version     $Id:$
+ * @copyright       The XOOPS Project http://sourceforge.net/projects/xoops/
+ * @license         GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @package         module_skeleton
+ * @since           1.00
+ * @author          Xoops Development Team
+ * @version         svn:$id$
  *
  * Example:
  * $choicebyletter = new Module_skeletonChoiceByLetter($objHandler, null, null, range('a', 'z'), 'letter');
  * echo $choicebyletter->render();
  */
 defined('XOOPS_ROOT_PATH') || die('XOOPS root path not defined');
+include_once dirname(dirname(__DIR__)) . '/include/common.php';
 
 /**
  * Class Module_skeletonChoiceByLetter
  */
 class Module_skeletonChoiceByLetter
 {
+    /**
+     * @var Module_skeletonModule_skeleton
+     * @access public
+     */
+    public $module_skeleton = null;
+
     /**
      * *#@+
      *
@@ -61,6 +68,7 @@ class Module_skeletonChoiceByLetter
      */
     public function __construct($objHandler, $criteria = null, $field_name = null, $alphabet = array(), $arg_name = 'letter', $url = null, $extra_arg = '', $caseSensitive = false)
     {
+        $this->module_skeleton = Module_skeletonModule_skeleton::getInstance();
         $this->objHandler = $objHandler;
         $this->criteria = is_null($criteria) ? new CriteriaCompo() : $criteria;
         $this->field_name = is_null($field_name) ? $this->objHandler->identifierName : $field_name;
@@ -128,9 +136,7 @@ class Module_skeletonChoiceByLetter
 // IN PROGRESS
 // IN PROGRESS
 // IN PROGRESS
-        //$ret .= $choiceByLetterTpl->fetch(__DIR__ . '/choicebyletter.tpl');
-        $tplSource = file_get_contents(__DIR__ . '/choicebyletter.tpl');
-        $ret .= $choiceByLetterTpl->fetchFromData($tplSource, false, null);
+        $ret .= $choiceByLetterTpl->fetch("db:{$this->module_skeleton->getModule()->dirname()}_co_choicebyletter.tpl");
         unset($choiceByLetterTpl);
 
         return $ret;

@@ -41,7 +41,7 @@ include_once XOOPS_ROOT_PATH . "/modules/" . $modversion['dirname'] . "/include/
 
 // About
 $modversion["module_status"]       = "Alpha";
-$modversion['release_date']        = '2014/12/22'; // YYYY/mm/dd
+$modversion['release_date']        = '2015/02/25'; // YYYY/mm/dd
 $modversion["module_website_url"]  = "http://www.xoops.org/";
 $modversion["module_website_name"] = "XOOPS";
 $modversion['min_php']             = '5.3.7';
@@ -107,14 +107,18 @@ $modversion['search']['func'] = $modversion["dirname"] . '_search';
 
 // Menu
 $modversion['hasMain']     = true;
+
+$module_handler = xoops_gethandler('module');
+$xoopsModule = $module_handler->getByDirname($modversion['dirname']);
 if (isset($xoopsModule) && is_object($xoopsModule) && $xoopsModule->dirname() == $modversion['dirname'] && $xoopsModule->isactive()) {
     if (!isset($module_skelton)) {
         include_once __DIR__ . '/class/module_skeleton.php';
         $module_skelton = Module_skeletonModule_skeleton::getInstance();
     }
-    $groups = (is_object($_GLOBAL['xoopsUser'])) ? $_GLOBAL['xoopsUser']->getGroups() : array(XOOPS_GROUP_ANONYMOUS);
+    $uid = (is_object($GLOBALS['xoopsUser']) && isset($GLOBALS['xoopsUser'])) ? $GLOBALS['xoopsUser']->uid() : 0;
+    $groups = (is_object($GLOBALS['xoopsUser'])) ? $GLOBALS['xoopsUser']->getGroups() : array(XOOPS_GROUP_ANONYMOUS);
     $gperm_handler = xoops_gethandler('groupperm');
-    $i = 0;
+    $i = 1;
 // IN PROGRESS
 // IN PROGRESS
 // IN PROGRESS
@@ -157,43 +161,66 @@ $modversion['blocks'][$i]['template']    = $modversion['dirname'] . "_block_top_
 
 
 // Templates
-$i                                          = 0;
-$modversion['templates'][$i]['file']        = $modversion['dirname'] . '_header.tpl';
-$modversion['templates'][$i]['description'] = 'Header info';
-++$i;
-$modversion['templates'][$i]['file']        = $modversion['dirname'] . '_footer.tpl';
-$modversion['templates'][$i]['description'] = 'Footer info';
-++$i;
-$modversion['templates'][$i]['file']        = $modversion['dirname'] . '_index.tpl';
-$modversion['templates'][$i]['description'] = '';
-++$i;
-$modversion['templates'][$i]['file']        = $modversion['dirname'] . '_item.tpl';
-$modversion['templates'][$i]['description'] = '';
-++$i;
-$modversion['templates'][$i]['file']        = $modversion['dirname'] . '_itemcategory.tpl';
-$modversion['templates'][$i]['description'] = '';
+$modversion['templates'][] = array(
+    'file'        => $modversion['dirname'] . '_header.tpl',
+    'description' => 'Header info'
+);
+$modversion['templates'][] = array(
+    'file'        => $modversion['dirname'] . '_footer.tpl',
+    'description' => 'Footer info'
+);
+$modversion['templates'][] = array(
+    'file'        => $modversion['dirname'] . '_index.tpl',
+    'description' => ''
+);
+$modversion['templates'][] = array(
+    'file'        => $modversion['dirname'] . '_item.tpl',
+    'description' => ''
+);
+$modversion['templates'][] = array(
+    'file'        => $modversion['dirname'] . '_itemcategory.tpl',
+    'description' => ''
+);
 
 // Admin templates
-++$i;
-$modversion['templates'][$i]['file']        = $modversion['dirname'] . '_admin_itemcategories_list.tpl';
-$modversion['templates'][$i]['type']        = 'admin';
-$modversion['templates'][$i]['description'] = '';
-++$i;
-$modversion['templates'][$i]['file']        = $modversion['dirname'] . '_admin_items_list.tpl';
-$modversion['templates'][$i]['type']        = 'admin';
-$modversion['templates'][$i]['description'] = '';
-++$i;
-$modversion['templates'][$i]['file']        = $modversion['dirname'] . '_admin_itemfieldcategories_list.tpl';
-$modversion['templates'][$i]['type']        = 'admin';
-$modversion['templates'][$i]['description'] = '';
-++$i;
-$modversion['templates'][$i]['file']        = $modversion['dirname'] . '_admin_itemfields_list.tpl';
-$modversion['templates'][$i]['type']        = 'admin';
-$modversion['templates'][$i]['description'] = '';
-++$i;
-$modversion['templates'][$i]['file']        = $modversion['dirname'] . '_admin_permissions.tpl';
-$modversion['templates'][$i]['type']        = 'admin';
-$modversion['templates'][$i]['description'] = '';
+$modversion['templates'][] = array(
+    'file'        => $modversion['dirname'] . '_am_itemcategories_list.tpl',
+    'type'        => 'admin',
+    'description' => ''
+);
+$modversion['templates'][] = array(
+    'file'        => $modversion['dirname'] . '_am_items_list.tpl',
+    'type'        => 'admin',
+    'description' => ''
+);
+$modversion['templates'][] = array(
+    'file'        => $modversion['dirname'] . '_am_itemfieldcategories_list.tpl',
+    'type'        => 'admin',
+    'description' => ''
+);
+$modversion['templates'][] = array(
+    'file'        => $modversion['dirname'] . '_am_itemfields_list.tpl',
+    'type'        => 'admin',
+    'description' => ''
+);
+$modversion['templates'][] = array(
+    'file'        => $modversion['dirname'] . '_am_permissions.tpl',
+    'type'        => 'admin',
+    'description' => ''
+);
+
+// Common templates
+$modversion['templates'][] = array(
+    'file'        => $modversion['dirname'] . '_co_breadcrumb.tpl',
+    'type'        => 'common',
+    'description' => ''
+);
+
+$modversion['templates'][] = array(
+    'file'        => $modversion['dirname'] . '_co_choicebyletter.tpl',
+    'type'        => 'common',
+    'description' => ''
+);
 
 
 

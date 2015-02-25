@@ -48,7 +48,7 @@ switch ($op) {
             $GLOBALS['xoopsTpl']->assign('sorted_itemfieldcategories', $sortedItemfieldcategories);
             $GLOBALS['xoopsTpl']->assign('token', $GLOBALS['xoopsSecurity']->getTokenHTML() );
         }
-        $GLOBALS['xoopsTpl']->display("db:{$module_skeleton->getModule()->dirname()}_admin_itemfieldcategories_list.tpl");
+        $GLOBALS['xoopsTpl']->display("db:{$module_skeleton->getModule()->dirname()}_am_itemfieldcategories_list.tpl");
         //
         include __DIR__ . '/admin_footer.php';
         break;

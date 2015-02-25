@@ -45,10 +45,10 @@ switch ($op) {
         $GLOBALS['xoopsTpl']->assign('itemcategoryCount', $itemcategoryCount);
         if ($itemcategoryCount > 0) {
             $sortedItemcategories = module_skeleton_sortItemcategories(); // as array
-            $GLOBALS['xoopsTpl']->assign('sorted_categories', $sortedItemcategories);
+            $GLOBALS['xoopsTpl']->assign('sorted_itemcategories', $sortedItemcategories);
             $GLOBALS['xoopsTpl']->assign('token', $GLOBALS['xoopsSecurity']->getTokenHTML() );
         }
-        $GLOBALS['xoopsTpl']->display("db:{$module_skeleton->getModule()->dirname()}_admin_itemcategories_list.tpl");
+        $GLOBALS['xoopsTpl']->display("db:{$module_skeleton->getModule()->dirname()}_am_itemcategories_list.tpl");
         //
         include __DIR__ . '/admin_footer.php';
         break;

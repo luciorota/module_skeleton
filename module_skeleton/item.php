@@ -20,7 +20,71 @@
  */
 
 $currentFile = basename(__FILE__);
-include __DIR__ . '/header.php';
+include_once __DIR__ . '/header.php';
+
+$groups = is_object($xoopsUser) ? $xoopsUser->getGroups() : array(0 => XOOPS_GROUP_ANONYMOUS);
+
+// get item_id
+$item_id = XoopsRequest::getInt('item_id', 0);
+
+// get itemObj
+$itemObj = $module_skeleton->getHandler('item')->get($item_id);
+if (empty($itemObj)) {
+    redirect_header('index.php', 3, _CO_MODULE_SKELETON_ERROR_NOITEM);
+}
+
+$item = $itemObj->getInfo();
+
+// get itemcategory_id
+$itemcategory_id = $item['item_category_id'];
+
+// get itemcategory
+if ($itemcategory_id != 0) {
+    $itemcategoryObj = $module_skeleton->getHandler('itemcategory')->get($itemcategory_id);
+    if (empty($itemcategoryObj) || $itemcategoryObj->isNew()) {
+        redirect_header('index.php', 3, _CO_MODULE_SKELETON_ERROR_NOITEMCATEGORY);
+    }
+    $itemcategory = $itemcategoryObj->getInfo();
+// IN PROGRESS
+// IN PROGRESS
+// IN PROGRESS
+} else {
+    $itemcategory = array();
+    $itemcategory['id'] = 0;
+    $itemcategory['itemcategory_id'] = 0;
+    $itemcategory['itemcategory_title'] = _CO_MODULE_SKELETON_ITEMCATEGORY_ROOT; // IN PROGRESS
+    $itemcategory['itemcategory_title_html'] = $myts->htmlSpecialChars($itemcategory['itemcategory_title']);
+    $itemcategory['itemcategory_description'] = _CO_MODULE_SKELETON_ITEMCATEGORY_ROOT_DESC;
+    $itemcategory['itemcategory_description_html'] = $myts->htmlSpecialChars($itemcategory['itemcategory_description']);
+// IN PROGRESS
+// IN PROGRESS
+// IN PROGRESS
+}
+
+// check permissions
+if (!$groupperm_handler->checkRight('itemcategory_read', $itemcategory_id, $groups, $module_skeleton->getModule()->mid())) {
+    if (in_array(XOOPS_GROUP_ANONYMOUS, $groups)) {
+        redirect_header(XOOPS_URL . '/user.php', 3, _MD_MODULE_SKELETON_NEEDLOGINVIEW);
+    } else {
+        redirect_header('index.php', 3, _NOPERM);
+    }
+}
+
+// get write/read permissions
+$itemcategory_write_ids = $groupperm_handler->getItemIds('itemcategory_write', $groups, $module_skeleton->getModule()->mid()); // array
+$itemcategory_read_ids = $groupperm_handler->getItemIds('itemcategory_read', $groups, $module_skeleton->getModule()->mid()); // array
+
+// get itemcategories tree
+$itemcategoryCriteria = new CriteriaCompo();
+$itemcategoryCriteria->add(new Criteria('itemcategory_id', '(' . implode(',', $itemcategory_read_ids) . ')', 'IN'));
+$itemcategoryObjs = $module_skeleton->getHandler('itemcategory')->getObjects($itemcategoryCriteria, true);
+$itemcategoryObjsTree = new XoopsObjectTree($itemcategoryObjs, 'itemcategory_id', 'itemcategory_pid');
+
+// get first childs and all parents
+$childItemcategoryObjs = $itemcategoryObjsTree->getFirstChild($itemcategory_id);
+$parentItemcategoryObjs = $itemcategoryObjsTree->getAllParent($itemcategory_id);
+
+
 
 // load template
 $xoopsOption['template_main'] = "{$module_skeleton->getModule()->dirname()}_item.tpl";
@@ -31,88 +95,120 @@ $xoTheme->addStylesheet(MODULE_SKELETON_URL . '/assets/css/module.css');
 
 $xoopsTpl->assign('module_skeleton_url', MODULE_SKELETON_URL . '/');
 
-// Breadcrumb
+// template: module_skeleton_breadcrumb
 $breadcrumb = new Module_skeletonBreadcrumb();
 $breadcrumb->addLink($module_skeleton->getModule()->getVar('name'), MODULE_SKELETON_URL);
-
+if ($itemcategory_id != 0) {
+    $breadcrumb->addLink(_CO_MODULE_SKELETON_ITEMCATEGORY_ROOT, MODULE_SKELETON_URL . '/itemcategory.php');
+    foreach (array_reverse($parentItemcategoryObjs) as $parentItemcategoryObj) {
+        $breadcrumb->addLink($parentItemcategoryObj->getVar('itemcategory_title'), '?itemcategory_id=' . $parentItemcategoryObj->getVar('itemcategory_id'));
+    }
+}
+$breadcrumb->addLink($itemcategory['itemcategory_title'], MODULE_SKELETON_URL . '/itemcategory.php?itemcategory_id=' . $itemcategory['itemcategory_id']);
+$breadcrumb->addLink($item['item_title'], '');
 $xoopsTpl->assign('module_skeleton_breadcrumb', $breadcrumb->render());
 
 // IN PROGRESS
 // IN PROGRESS
 // IN PROGRESS
 
-$op = Module_skeletonRequest::getString('op', 'items.list');
+$op = XoopsRequest::getString('op', 'item.add');
 switch ($op) {
     default:
     case 'items.list':
-    case 'items.filter':
-        // get itemcategory
-        $itemcategory_id = XoopsRequest::getInt('itemcategory_id', 0);
-        $itemcategoryObj = $module_skeleton->getHandler('itemcategory')->get($itemcategory_id);
-        if (empty($itemcategoryObj)) {
-            redirect_header('index.php', 3, _CO_MODULE_SKELETON_ERROR_NOITEMCATEGORY);
+        $apply_filter = XoopsRequest::getBool('apply_filter', false);
+        $itemcategoryCount = $module_skeleton->getHandler('itemcategory')->getCount();
+        $categories = $module_skeleton->getHandler('itemcategory')->getObjects(null, true, false); // as array
+        $itemCount = $module_skeleton->getHandler('item')->getCount();
+        $GLOBALS['xoopsTpl']->assign('itemCount', $itemCount);
+        if ($itemCount > 0) {
+            // get filter parameters
+            $item_first_letter = XoopsRequest::getString('item_first_letter', '');
+// IN PROGRESS
+// IN PROGRESS
+// IN PROGRESS
+            $itemCriteria = new CriteriaCompo();
+            $itemCriteria->add(new Criteria('item_category_id', '(' . implode(',', $itemcategory_read_ids) . ')', 'IN'));
+            if ($apply_filter == true) {
+                // evaluate item_first_letter criteria
+                if ($item_first_letter != '') {
+                    $itemCriteria->add(new Criteria('LEFT(item_title,1)', $item_first_letter));
+                }
+            }
+            $GLOBALS['xoopsTpl']->assign('apply_filter', $apply_filter);
+            $itemFilterCount = $module_skeleton->getHandler('item')->getCount($itemCriteria);
+            $GLOBALS['xoopsTpl']->assign('itemFilterCount', $itemFilterCount);
+            //
+            $itemCriteria->setSort('item_date');
+            $itemCriteria->setOrder('DESC');
+            //
+            $start = XoopsRequest::getInt('start', 0);
+            $limit = $module_skeleton->getConfig('perpage');
+            $itemCriteria->setStart($start);
+            $itemCriteria->setLimit($limit);
+            //
+            if ($itemFilterCount > $limit) {
+                xoops_load('xoopspagenav');
+                $linklist = "op={$op}";
+                $linklist .= "&item_first_letter={$item_first_letter}";
+                $pagenav = new XoopsPageNav($itemFilterCount, $limit, $start, 'start', $linklist);
+                $pagenav = $pagenav->renderNav(4);
+            } else {
+                $pagenav = '';
+            }
+            $GLOBALS['xoopsTpl']->assign('items_pagenav', $pagenav);
+            //
+            $GLOBALS['xoopsTpl']->assign('token', $GLOBALS['xoopsSecurity']->getTokenHTML());
+            $itemObjs = $module_skeleton->getHandler('item')->getObjects($itemCriteria, true, true);
+            $items = $module_skeleton->getHandler('item')->getObjects($itemCriteria, true, false); // as array
+            // fill items array
+            foreach ($itemObjs as $item_id => $itemObj) {
+                $itemArray = $itemObj->getInfo();
+                $GLOBALS['xoopsTpl']->append('items', $itemArray);
+            }
+
+
+
+
+// IN PROGRESS
+// IN PROGRESS
+// IN PROGRESS
+
+        } else {
+            // NOP
         }
+
+
+
+
+
+
+
+
         //
         include __DIR__ . '/footer.php';
-        break;
 
     case 'item.view':
-        // get item
-        $item_id = XoopsRequest::getInt('item_id', 0);
-        $itemObj = $module_skeleton->getHandler('item')->get($item_id);
-        if (empty($itemObj) || $itemObj->isNew()) {
-            redirect_header('index.php', 3, _CO_MODULE_SKELETON_ERROR_NOITEM);
-        }
-        // get itemcategory
-        $itemcategory_id = XoopsRequest::getInt('itemcategory_id', $itemObj->getVar('item_category_id'));
-        $itemcategoryObj = $module_skeleton->getHandler('itemcategory')->get($itemcategory_id);
-        if (empty($itemcategoryObj)) {
-            redirect_header('index.php', 3, _CO_MODULE_SKELETON_ERROR_NOITEMCATEGORY);
-        }
-        // check permissions
-        $groups = is_object($xoopsUser) ? $xoopsUser->getGroups() : array(0 => XOOPS_GROUP_ANONYMOUS);
-        if (!$groupperm_handler->checkRight('itemcategory_read', $itemcategory_id, $groups, $module_skeleton->getModule()->mid())) {
-            if (in_array(XOOPS_GROUP_ANONYMOUS, $groups)) {
-                redirect_header(XOOPS_URL . '/user.php', 3, _MD_MODULE_SKELETON_NEEDLOGINVIEW);
-            } else {
-                redirect_header('index.php', 3, _NOPERM);
-            }
-        }
-        //
-        $info = $itemObj->getInfo();
+        $item = $itemObj->getInfo();
 
 // IN PROGRESS
 // IN PROGRESS
 // IN PROGRESS
 
-        echo print_r($info,true);
+        echo print_r($item,true);
         //
         include __DIR__ . '/footer.php';
         break;
 
-    case 'item.new':
     case 'item.add':
     case 'item.edit':
+//exit("debug");
         // get item
         $item_id = XoopsRequest::getInt('item_id', 0);
-        $itemObj = $module_skeleton->getHandler('item')->get($item_id);
-        if (empty($itemObj) || $itemObj->isNew()) {
-            redirect_header('index.php', 3, _CO_MODULE_SKELETON_ERROR_NOITEM);
-        }
-        // get itemcategory
-        $itemcategory_id = XoopsRequest::getInt('itemcategory_id', $itemObj->getVar('item_category_id'));
-        $itemcategoryObj = $module_skeleton->getHandler('itemcategory')->get($itemcategory_id);
-        if (empty($itemcategoryObj)) {
-            redirect_header('index.php', 3, _CO_MODULE_SKELETON_ERROR_NOITEMCATEGORY);
-        }
-        // check permissions
-        $groups = is_object($xoopsUser) ? $xoopsUser->getGroups() : array(0 => XOOPS_GROUP_ANONYMOUS);
-        if (!$groupperm_handler->checkRight('itemcategory_read', $itemcategory_id, $groups, $module_skeleton->getModule()->mid())) {
-            if (in_array(XOOPS_GROUP_ANONYMOUS, $groups)) {
-                redirect_header(XOOPS_URL . '/user.php', 3, _MD_MODULE_SKELETON_NEEDLOGINVIEW);
-            } else {
-                redirect_header('index.php', 3, _NOPERM);
-            }
+        if (!$itemObj = $module_skeleton->getHandler('item')->get($item_id)) {
+            // ERROR
+            redirect_header($currentFile, 3, _CO_MODULE_SKELETON_ERROR_NOITEM);
+            exit();
         }
         $form = $itemObj->getForm();
         $form->display();

@@ -46,7 +46,7 @@ switch ($op) {
         //
         $itemfieldCriteria = new CriteriaCompo();
         $itemfieldCriteria->setSort('itemfield_weight');
-        $itemfieldCriteria->setOrder('DESC');
+        $itemfieldCriteria->setOrder('ASC');
         $itemfieldCount = $module_skeleton->getHandler('itemfield')->getCount();
         $GLOBALS['xoopsTpl']->assign('itemfieldCount', $itemfieldCount);
         //$itemfields = $module_skeleton->getHandler('itemfield')->getObjects($itemfieldCriteria, true, false); // as array
@@ -68,7 +68,7 @@ switch ($op) {
         }
 
         $GLOBALS['xoopsTpl']->assign('token', $GLOBALS['xoopsSecurity']->getTokenHTML());
-        $GLOBALS['xoopsTpl']->display("db:{$module_skeleton->getModule()->dirname()}_admin_itemfields_list.tpl");
+        $GLOBALS['xoopsTpl']->display("db:{$module_skeleton->getModule()->dirname()}_am_itemfields_list.tpl");
         //
         include __DIR__ . '/admin_footer.php';
         break;

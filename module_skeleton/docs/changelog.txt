@@ -1,7 +1,10 @@
 0.02 Alpha 2       NOT RELEASED
 =================================
 
-- added: extra/custom itemfield types support (luciorota)
+- added: Google Map Position (longitude, latitude, elevation and zoom level) extra itemfield type (luciorota)
+- added: Xoops Image extra itemfield type (luciorota)
+- added: Sample extra itemfield type (luciorota)
+- added: extra itemfield type support (luciorota)
 - fixed: Module_skeletonObjectTree (luciorota)
 - added: use php DateTime object methods instead of strtotime() function to get right timestamp date (luciorota)
 - fixed: objectise Module_skeletonChoiceByLetter (luciorota)

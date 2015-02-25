@@ -20,17 +20,9 @@
  */
 
 defined('XOOPS_ROOT_PATH') || die('XOOPS root path not defined');
-$modDirName = basename(dirname(__DIR__));
-include_once(XOOPS_ROOT_PATH . "/modules/$modDirName/include/common.php");
-//@include_once(XOOPS_ROOT_PATH . "/modules/module_skeleton/language/" . $xoopsConfig['language'] . "/admin.php");
-xoops_loadLanguage('admin', $modDirName);
-
-/**
- * @param object            $xoopsModule
- * @param int               $prev_version
- * @return bool             FALSE if failed
- */
-function xoops_module_update_module_skeleton(&$xoopsModule, $prev_version)
-{
-    return true;
-}
+return $config = array(
+    'class' => 'ExtraitemfieldtypeGmaplnglat',
+    'file' => __DIR__ . '/gmaplnglat.php',
+    'title' => _CO_MODULE_SKELETON_EXTRA_ITEMFIELD_TYPE_GMAPLNGLAT,
+    'order' => 1
+	);

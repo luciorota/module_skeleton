@@ -154,7 +154,7 @@ switch ($op) {
             } else {
                 $pagenav = '';
             }
-            $GLOBALS['xoopsTpl']->assign('subscrs_pagenav', $pagenav);
+            $GLOBALS['xoopsTpl']->assign('items_pagenav', $pagenav);
             //
             $filter_item_title_condition_select = new XoopsFormSelect(_CO_MODULE_SKELETON_ITEM_TITLE, 'filter_item_title_condition', $filter_item_title_condition, 1, false);
             $filter_item_title_condition_select->addOption('CONTAINS', _CONTAINS);
@@ -203,7 +203,7 @@ switch ($op) {
         } else {
             // NOP
         }
-        $GLOBALS['xoopsTpl']->display("db:{$module_skeleton->getModule()->dirname()}_admin_items_list.tpl");
+        $GLOBALS['xoopsTpl']->display("db:{$module_skeleton->getModule()->dirname()}_am_items_list.tpl");
         //
         include 'admin_footer.php';
         break;

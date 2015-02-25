@@ -168,6 +168,6 @@ switch ($op) {
 $GLOBALS['xoopsTpl']->assign('permission_select_form', $permission_select_form->render());
 $GLOBALS['xoopsTpl']->assign('permissions_form', $permissions_form->render());
 
-$GLOBALS['xoopsTpl']->display("db:{$module_skeleton->getModule()->dirname()}_admin_permissions.tpl");
+$GLOBALS['xoopsTpl']->display("db:{$module_skeleton->getModule()->dirname()}_am_permissions.tpl");
 
 include __DIR__ . '/admin_footer.php';

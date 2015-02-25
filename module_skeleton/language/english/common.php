@@ -164,8 +164,11 @@ define('_CO_MODULE_SKELETON_BUTTON_ITEMFIELDS_DELETE', "Delete items field");
 
 
 // itemcategory
+define('_CO_MODULE_SKELETON_ITEMCATEGORY', "Item category");
+define('_CO_MODULE_SKELETON_ITEMCATEGORIES', "Item categories");
 define('_CO_MODULE_SKELETON_ITEMCATEGORIES_LIST', "Item categories list");
 define('_CO_MODULE_SKELETON_ITEMCATEGORY_ROOT', "ROOT");
+define('_CO_MODULE_SKELETON_ITEMCATEGORY_ROOT_DESC', "");
 define('_CO_MODULE_SKELETON_ITEMCATEGORY_MOVE_ITEMS_TO', "Move all items to item category...");
 define('_CO_MODULE_SKELETON_ITEMCATEGORY_MOVE_ITEMS_TO_DESC', "");
 
@@ -193,6 +196,8 @@ define('_CO_MODULE_SKELETON_ITEMCATEGORY_DATE', "Date");
 define('_CO_MODULE_SKELETON_ITEMCATEGORY_DATE_DESC', "");
 
 // item
+define('_CO_MODULE_SKELETON_ITEM', "Item");
+define('_CO_MODULE_SKELETON_ITEMS', "Items");
 define('_CO_MODULE_SKELETON_ITEMS_LIST', "Items list");
 
 define('_CO_MODULE_SKELETON_ITEM_ID', "Id");

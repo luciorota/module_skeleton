@@ -700,13 +700,13 @@ class Module_skeletonItemfield extends XoopsObject
     public function getOutputValue($itemObj)
     {
         // get itemfiled vars
-        $name = $this->getVar('itemfield_name', 'e');
-        $value = $itemObj->getVar($this->getVar('itemfield_name'));
+        $name = $this->getVar('itemfield_name');
         // get output value by type
         switch ($this->getVar('itemfield_type')) {
             case 'textbox':
+                $value = $itemObj->getVar($name);
                 if ($this->getVar('itemfield_name') == 'url' && $value != '') {
-                     return '<a href="' . formatURL($value) . '" rel="external">' . $value . '</a>';
+                     return "<a href='" . formatURL($value) . "' rel='external'>{$value}</a>";
                    } else {
                      return $value;
                 }
@@ -716,10 +716,12 @@ class Module_skeletonItemfield extends XoopsObject
             case 'theme':
             case 'language':
             case 'list':
+                $value = $itemObj->getVar($name);
                 return $value;
                 break;
             case 'select':
             case 'radio':
+                $value = $itemObj->getVar($name);
                 $options = $this->getVar('itemfield_options');
                 if (isset($options[$value])) {
                     $value = htmlspecialchars(defined($options[$value]) ? constant($options[$value]) : $options[$value]);
@@ -730,6 +732,7 @@ class Module_skeletonItemfield extends XoopsObject
                 break;
             case 'select_multi':
             case 'checkbox':
+                $value = $itemObj->getVar($name);
                 $options = $this->getVar('itemfield_options');
                 $ret = array();
                 if (count($options) > 0) {
@@ -742,13 +745,17 @@ class Module_skeletonItemfield extends XoopsObject
                 return $ret;
                 break;
             case 'group':
-                $member_handler = &xoops_gethandler('member');
+                $member_handler = xoops_gethandler('member');
+                //
+                $value = $itemObj->getVar($name);
                 $options = $member_handler->getGroupList();
                 $ret = isset($options[$value]) ? $options[$value] : '';
                 return $ret;
                 break;
             case 'group_multi':
-                $member_handler = &xoops_gethandler('member');
+                $member_handler = xoops_gethandler('member');
+                //
+                $value = $itemObj->getVar($name);
                 $options = $member_handler->getGroupList();
                 $ret = array();
                 foreach (array_keys($options) as $key) {
@@ -759,14 +766,17 @@ class Module_skeletonItemfield extends XoopsObject
                 return $ret;
                 break;
             case 'longdate':
+                $value = $itemObj->getVar($name);
                 // return YYYY/MM/DD format - not optimal as it is not using local date format, but how do we do that
                 // when we cannot convert it to a UNIX timestamp?
                 return str_replace("-", "/", $value);
                 break;
             case 'date':
+                $value = $itemObj->getVar($name);
                 return formatTimestamp($value, 's');
                 break;
             case 'datetime':
+                $value = $itemObj->getVar($name);
                 if (!empty($value)) {
                        return formatTimestamp($value, 'm');
                    } else {
@@ -777,32 +787,37 @@ class Module_skeletonItemfield extends XoopsObject
                    }
                 break;
             case 'autotext':
-                $value = $itemObj->getVar($this->getVar('itemfield_name'), 'n'); // autotext can have HTML in it
+                $value = $itemObj->getVar($name, 'n'); // autotext can have HTML in it
                 $value = str_replace("{X_UID}", $itemObj->getVar('uid'), $value);
                 $value = str_replace("{X_URL}", XOOPS_URL, $value );
                 $value = str_replace("{X_UNAME}", $itemObj->getVar('uname'), $value);
                 return $value;
                 break;
             case 'rank':
-                $userrank = $itemObj->rank();
-                $user_rankimage = "";
-                if (isset($userrank['image']) && $userrank['image'] != "") {
-                    $user_rankimage = '<img src="' . XOOPS_UPLOAD_URL . '/' . $userrank['image'] . '" alt="' . $userrank['title'] . '" /><br />';
+                $value = $itemObj->getVar($name);
+                $userRank = $itemObj->rank();
+                $userRankHtml = '';
+                if (isset($userRank['image']) && $userRank['image'] != '') {
+                    $userRankHtml = "<img src='" . XOOPS_UPLOAD_URL . "/{$userRank['image']}' alt='{$userRank['title']}' />";
+                    $userRankHtml .= "<br />";
                 }
-                return $user_rankimage.$userrank['title'];
+                $userRankHtml .= $userRank['title'];
+                return $userRankHtml;
                 break;
             case 'yesno':
+                $value = $itemObj->getVar($name);
                 return $value ? _YES : _NO;
                 break;
             case 'timezone':
-                xoops_load('XoopsLists');
-                $timezones = XoopsLists::getTimeZoneList();
+                $value = $itemObj->getVar($name);
                 $value = empty($value) ? '0' : strval($value);
-                return $timezones[str_replace('.0', '', $value)];
+                //
+                $timeZones = XoopsLists::getTimeZoneList();
+                return $timeZones[str_replace('.0', '', $value)];
                 break;
             // new item field types
             case 'file':
-                $typeconfigs = $this->getVar('itemfield_typeconfigs');
+                $value = $itemObj->getVar($name);
                 $value = json_decode($value, true); // associative arrays
                 return $value;
                 break;

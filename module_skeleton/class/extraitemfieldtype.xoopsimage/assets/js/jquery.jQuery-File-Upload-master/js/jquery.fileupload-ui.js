@@ -1,5 +1,5 @@
 /*
- * jQuery File Upload User Interface Plugin 9.4.0
+ * jQuery File Upload User Interface Plugin 9.6.0
  * https://github.com/blueimp/jQuery-File-Upload
  *
  * Copyright 2010, Sebastian Tschan
@@ -9,8 +9,8 @@
  * http://www.opensource.org/licenses/MIT
  */
 
-/*jslint nomen: true, unparam: true, regexp: true */
-/*global define, window, URL, webkitURL, FileReader */
+/* jshint nomen:false */
+/* global define, window */
 
 (function (factory) {
     'use strict';
@@ -31,7 +31,7 @@
             window.tmpl
         );
     }
-}(function ($, tmpl, loadImage) {
+}(function ($, tmpl) {
     'use strict';
 
     $.blueimp.fileupload.prototype._specialOptions.push(
@@ -62,6 +62,11 @@
             // The expected data type of the upload response, sets the dataType
             // option of the $.ajax upload requests:
             dataType: 'json',
+            
+            // Error and info messages:
+            messages: {
+                unknownError: 'Unknown error'  
+            },
 
             // Function returning the current number of files,
             // used by the maxNumberOfFiles validation:
@@ -96,12 +101,10 @@
                     options.prependFiles ? 'prepend' : 'append'
                 ](data.context);
                 that._forceReflow(data.context);
-                $.when(
-                    that._transition(data.context),
-                    data.process(function () {
-                        return $this.fileupload('process', data);
-                    })
-                ).always(function () {
+                that._transition(data.context);
+                data.process(function () {
+                    return $this.fileupload('process', data);
+                }).always(function () {
                     data.context.each(function (index) {
                         $(this).find('.size').text(
                             that._formatFileSize(data.files[index].size)
@@ -214,7 +217,7 @@
                         if (data.errorThrown !== 'abort') {
                             var file = data.files[index];
                             file.error = file.error || data.errorThrown ||
-                                true;
+                                data.i18n('unknownError');
                             deferred = that._addFinishedDeferreds();
                             that._transition($(this)).done(
                                 function () {
@@ -371,7 +374,9 @@
                     };
                 if (data.url) {
                     data.dataType = data.dataType || that.options.dataType;
-                    $.ajax(data).done(removeNode);
+                    $.ajax(data).done(removeNode).fail(function () {
+                        that._trigger('destroyfailed', e, data);
+                    });
                 } else {
                     removeNode();
                 }

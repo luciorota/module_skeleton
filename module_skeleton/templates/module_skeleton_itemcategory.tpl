@@ -6,8 +6,27 @@
 
 <{include file='db:module_skeleton_header.tpl'}>
 
-IN PROGRESS
-IN PROGRESS
-IN PROGRESS
+<{$itemcategory_select}>
+
+<h1><{$smarty.const._CO_MODULE_SKELETON_ITEMCATEGORY}></h1>
+<{$itemcategory.itemcategory_title}>
+
+<h1><{$smarty.const._CO_MODULE_SKELETON_ITEMCATEGORIES_LIST}></h1>
+<ul>
+<{foreach item=child_itemcategory from=$child_itemcategories}>
+    <li>
+        <a href="itemcategory.php?itemcategory_id=<{$child_itemcategory.itemcategory_id}>"><{$child_itemcategory.itemcategory_title}></a>
+    </li>
+<{/foreach}>
+</ul>
+
+<h1><{$smarty.const._CO_MODULE_SKELETON_ITEMS_LIST}></h1>
+<ul>
+<{foreach item=item from=$items}>
+    <li>
+        <a href="item.php?item_id=<{$item.item_id}>"><{$item.item_title}></a>
+    </li>
+<{/foreach}>
+</ul>
 
 <{include file='db:module_skeleton_footer.tpl'}>

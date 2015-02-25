@@ -1,5 +1,5 @@
-<div class="module_skeleton_headertable">
-    <div class="module_skeleton_breadcrumb">
+<div class="wfdownloads_headertable">
+    <div class="wfdownloads_breadcrumb">
         <{foreach item=bread from=$breadcrumb name=bcloop}>
     <span class="bread">
     <{if ($bread.link)}>

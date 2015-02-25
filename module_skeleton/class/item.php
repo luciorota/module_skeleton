@@ -97,6 +97,9 @@ class Module_skeletonItem extends XoopsObject
     public function getInfo()
     {
         global $myts;
+        global $xoopsUser;
+        $groupperm_handler = xoops_gethandler('groupperm');
+        //
         xoops_load('XoopsUserUtility');
         //
         $item = $this->toArray();
@@ -111,13 +114,58 @@ class Module_skeletonItem extends XoopsObject
         } else {
             $item['item_itemcategory_title'] = _CO_MODULE_SKELETON_ITEMCATEGORY_ROOT; // IN PROGRESS
             $item['item_itemcategory_title_html'] = $myts->htmlSpecialChars($item['item_itemcategory_title']);
-            $item['item_itemcategory_description'] = '';
-            $item['item_itemcategory_description_html'] = '';
+            $item['item_itemcategory_description'] = _CO_MODULE_SKELETON_ITEMCATEGORY_ROOT_DESC;
+            $item['item_itemcategory_description_html'] = $myts->htmlSpecialChars($item['item_itemcategory_description']);
         }
         $item['item_title_html'] = $myts->htmlSpecialChars($item['item_title']);
         //
         $item['item_owner_uname'] = XoopsUserUtility::getUnameFromId($item['item_owner_uid']);
         $item['item_date_formatted'] = XoopsLocal::formatTimestamp($item['item_date'], 'l');
+        //
+
+        // item: extra item fields
+        $itemfieldCriteria = new Criteria('itemfield_category_id', 0);
+        $itemfieldCriteria->setSort('itemfield_weight');
+        $itemfieldCriteria->setOrder('ASC');
+        $itemfieldObjs = $this->module_skeleton->getHandler('itemfield')->getObjects($itemfieldCriteria);
+        foreach ($itemfieldObjs as $itemfieldObj) {
+            $item[$itemfieldObj->getVar('itemfield_name')] = $itemfieldObj->getOutputValue($this);
+        }
+        // get readable && writable itemfieldcategory ids
+        $permReadIds = $groupperm_handler->getItemIds('itemfieldcategory_read', $groups, $this->module_skeleton->getModule()->mid());
+        $permWriteIds = $groupperm_handler->getItemIds('itemfieldcategory_write', $groups, $this->module_skeleton->getModule()->mid());
+        $permIds = array_intersect($permReadIds, $permWriteIds);
+        $itemfieldcategoryCriteria = new CriteriaCompo();
+        $itemfieldcategoryCriteria->add(new Criteria('itemfieldcategory_id', '(' . implode(',', $permIds) . ')', 'IN'));
+        // get and sort itemfieldcategories
+        $itemfieldcategoryCount = $this->module_skeleton->getHandler('itemfieldcategory')->getCount($itemfieldcategoryCriteria);
+        if ($itemfieldcategoryCount > 0) {
+            $sortedItemfieldcategories = module_skeleton_sortItemfieldcategories($itemfieldcategoryCriteria); // as array
+            foreach ($sortedItemfieldcategories as $sortedItemfieldcategory) {
+// IN PROGRESS
+// IN PROGRESS check permissions
+// IN PROGRESS
+                $itemfieldcategory = $sortedItemfieldcategory['itemfieldcategory']; // as array
+                $itemfieldCriteria = new Criteria('itemfield_category_id', $itemfieldcategory['itemfieldcategory_id']);
+                $itemfieldCriteria->setSort('itemfield_weight');
+                $itemfieldCriteria->setOrder('ASC');
+                $itemfieldObjs = $this->module_skeleton->getHandler('itemfield')->getObjects($itemfieldCriteria);
+                if (count($itemfieldObjs) > 0) {
+                    $itemfieldcategory_label = new XoopsFormLabel($itemfieldcategory['itemfieldcategory_title'], $itemfieldcategory['itemfieldcategory_description']);
+                    //$itemfieldcategory_label->setDescription($itemfieldcategory['itemfieldcategory_description']);
+                    $form->addElement($itemfieldcategory_label);
+                    foreach ($itemfieldObjs as $itemfieldObj) {
+                        $item[$itemfieldObj->getVar('itemfield_name')] = $itemfieldObj->getOutputValue($this);
+                    }
+                    unset($itemfieldcategory_label);
+                }
+            }
+        }
+
+
+
+
+
 // IN PROGRESS
 // IN PROGRESS
 // IN PROGRESS
@@ -185,7 +233,10 @@ class Module_skeletonItem extends XoopsObject
             $form->addElement($item_date_datetime);
         }
         // item: extra item fields
-        $itemfieldObjs = $this->module_skeleton->getHandler('itemfield')->getObjects(new Criteria('itemfield_category_id', 0));
+        $itemfieldCriteria = new Criteria('itemfield_category_id', 0);
+        $itemfieldCriteria->setSort('itemfield_weight');
+        $itemfieldCriteria->setOrder('ASC');
+        $itemfieldObjs = $this->module_skeleton->getHandler('itemfield')->getObjects($itemfieldCriteria);
         foreach ($itemfieldObjs as $itemfieldObj) {
             $form->addElement($itemfieldObj->getEditElement($this), $itemfieldObj->getVar('itemfield_required'));
         }
@@ -204,7 +255,10 @@ class Module_skeletonItem extends XoopsObject
 // IN PROGRESS check permissions
 // IN PROGRESS
                 $itemfieldcategory = $sortedItemfieldcategory['itemfieldcategory']; // as array
-                $itemfieldObjs = $this->module_skeleton->getHandler('itemfield')->getObjects(new Criteria('itemfield_category_id', $itemfieldcategory['itemfieldcategory_id']));
+                $itemfieldCriteria = new Criteria('itemfield_category_id', $itemfieldcategory['itemfieldcategory_id']);
+                $itemfieldCriteria->setSort('itemfield_weight');
+                $itemfieldCriteria->setOrder('ASC');
+                $itemfieldObjs = $this->module_skeleton->getHandler('itemfield')->getObjects($itemfieldCriteria);
                 if (count($itemfieldObjs) > 0) {
                     $itemfieldcategory_label = new XoopsFormLabel($itemfieldcategory['itemfieldcategory_title'], $itemfieldcategory['itemfieldcategory_description']);
                     //$itemfieldcategory_label->setDescription($itemfieldcategory['itemfieldcategory_description']);

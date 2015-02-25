@@ -23,7 +23,7 @@ if (DIRECTORY_SEPARATOR != "/") {
     $currentPath = str_replace(strpos( $currentPath, "\\\\", 2 ) ? "\\\\" : DIRECTORY_SEPARATOR, "/", $currentPath);
 }
 include_once dirname(dirname(dirname(dirname(__DIR__)))) . '/mainfile.php';
-defined('XOOPS_ROOT_PATH') || die('XOOPS root path not defined');
+defined('XOOPS_ROOT_PATH') or die('Restricted access');
 $GLOBALS['xoopsLogger']->activated = false;
 
 define("FORMAJAXIMAGEMANAGER_FILENAME", basename($currentPath));
@@ -928,8 +928,6 @@ switch ($op) {
         break;
 }
 
-
-
 if (!class_exists('XoopsFormAjaxImageManager')) {
     xoops_load('XoopsFormElement');
 
@@ -1182,7 +1180,11 @@ if (!class_exists('XoopsFormAjaxImageManager')) {
          */
         function render()
         {
-            static $commonJsIncluded = false;
+            static $isCommonFormAjaxImageManagerIncluded = false;
+            $commonJs = '';
+            $js = '';
+            $html = '';
+            $ret = '';
 
             $myts = MyTextSanitizer::getInstance();
 
@@ -1791,8 +1793,8 @@ function formajaximagemanager_init(name) {
             ';
             $html = "\n";
             if (is_object($GLOBALS['xoTheme'])) {
-                if (!$commonJsIncluded) {
-                    $commonJsIncluded = true;
+                if (!$isCommonFormAjaxImageManagerIncluded) {
+                    $isCommonFormAjaxImageManagerIncluded = true;
                     //$GLOBALS['xoTheme']->addStylesheet(XOOPS_URL . '/xoops.css');
                     $GLOBALS['xoTheme']->addStylesheet(FORMAJAXIMAGEMANAGER_CSS_REL_URL . '/formajaximagemanager.css');
                     $GLOBALS['xoTheme']->addScript(XOOPS_URL . '/browse.php?Frameworks/jquery/jquery.js');
@@ -1827,8 +1829,8 @@ function formajaximagemanager_init(name) {
                     $GLOBALS['xoTheme']->addScript('','', $commonJs);
                 }
             } else {
-                if (!$commonJsIncluded) {
-                    $commonJsIncluded = true;
+                if (!$isCommonFormAjaxImageManagerIncluded) {
+                    $isCommonFormAjaxImageManagerIncluded = true;
                     $html .= "<style type='text/css'>@import url(" . XOOPS_URL . "/xoops.css);</style>\n";
                     //
                     $html .= "<style type='text/css'>@import url(" . FORMAJAXIMAGEMANAGER_CSS_REL_URL . "/formajaximagemanager.css);</style>\n";
@@ -1944,7 +1946,8 @@ $(document).ready(function() {
             }
             $categoriesCount = count($categoriesListArray);
             //
-            $html .= "<b>" . _FAIM_IMAGE_MANAGER . "</b>\n";
+            $html .= "<fieldset>\n";
+            $html .= "<legend>" . _FAIM_IMAGE_MANAGER . "</legend>\n";
             $html .= "<div>\n";
             $html .= _FAIM_IMGCAT ."\n";
             $html .= "<br />\n";
@@ -1971,11 +1974,14 @@ $(document).ready(function() {
             $html .= "<div>\n";
             $html .= "<input type='button' name='{$this->getId()}_upload_image_button' id='{$this->getId()}_upload_image_button' title='" . _FAIM_ADD_IMAGE . "' value='" . _FAIM_ADD_IMAGE . "' />\n";
             $html .= "</div>\n";
-            $html .= "<fieldset>\n";
+            $html .= "<br />\n";
             $html .= "<div name='{$this->getId()}_container' id='{$this->getId()}_container' class='faim-formajaximagemenager_container' {$this->getExtra()} >\n";
             $html .= "</div>\n";
             $html .= "</fieldset>\n";
+            $html .= "<fieldset>\n";
+            $html .= "<legend>" . _FAIM_IMAGE . "</legend>\n";
             $html .= "<input type='text' name='{$this->getName()}' title='{$this->getTitle()}' id='{$this->getId()}' size='80' maxlength='255' value='{$myts->htmlSpecialChars($this->getValue())}' {$this->getExtra()} />\n";
+            $html .= "</fieldset>\n";
             return $html;
         }
     }

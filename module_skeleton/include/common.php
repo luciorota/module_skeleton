@@ -52,8 +52,8 @@ xoops_loadLanguage('common', MODULE_SKELETON_DIRNAME);
 include_once MODULE_SKELETON_ROOT_PATH . '/include/functions.php';
 include_once MODULE_SKELETON_ROOT_PATH . '/include/constants.php';
 
-include_once MODULE_SKELETON_ROOT_PATH . '/class/session.php'; // Module_skeletonSession class
 include_once MODULE_SKELETON_ROOT_PATH . '/class/module_skeleton.php'; // Module_skeletonModule_skeleton class
+include_once MODULE_SKELETON_ROOT_PATH . '/class/common/session.php'; // Module_skeletonSession class
 include_once MODULE_SKELETON_ROOT_PATH . '/class/common/breadcrumb.php'; // Module_skeletonBreadcrumb class
 include_once MODULE_SKELETON_ROOT_PATH . '/class/common/choicebyletter.php'; // Module_skeletonChoiceByLetter class
 include_once MODULE_SKELETON_ROOT_PATH . '/class/common/tree.php'; // Module_skeletonObjectTree class

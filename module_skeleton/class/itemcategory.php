@@ -69,6 +69,7 @@ class Module_skeletonItemcategory extends XoopsObject
         $itemcategory = $this->toArray();
         $itemcategory['id'] = $itemcategory['itemcategory_id'];
         $itemcategory['itemcategory_title_html'] = $myts->htmlSpecialChars($itemcategory['itemcategory_title']);
+        $itemcategory['itemcategory_description_html'] = $myts->htmlSpecialChars($itemcategory['itemcategory_description']);
         //
         $itemcategory['itemcategory_owner_uname'] = XoopsUserUtility::getUnameFromId($itemcategory['itemcategory_owner_uid']);
         $itemcategory['itemcategory_date_formatted'] = XoopsLocal::formatTimestamp($itemcategory['itemcategory_date'], 'l');
