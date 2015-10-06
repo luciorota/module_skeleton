@@ -30,14 +30,14 @@ class Module_skeletonItemcategory extends XoopsObject
      * @var Module_skeletonModule_skeleton
      * @access private
      */
-    private $module_skeleton = null;
+    private $module_skeletonHelper = null;
 
     /**
      * constructor
      */
     public function __construct()
     {
-        $this->module_skeleton = Module_skeletonModule_skeleton::getInstance();
+        $this->module_skeletonHelper = \Xmf\Module\Helper::getHelper('module_skeleton');
         $this->db = XoopsDatabaseFactory::getDatabaseConnection();
         $this->initVar('itemcategory_id', XOBJ_DTYPE_INT);
         $this->initVar('itemcategory_pid', XOBJ_DTYPE_INT, 0);
@@ -94,7 +94,7 @@ class Module_skeletonItemcategory extends XoopsObject
             $action = $_SERVER['REQUEST_URI'];
         }
         //
-        $isAdmin = module_skeleton_userIsAdmin();
+        $isAdmin = $this->module_skeletonHelper->isUserAdmin();
         $groups = is_object($xoopsUser) ? $xoopsUser->getGroups() : array(0 => XOOPS_GROUP_ANONYMOUS);
         //
         $title = $this->isNew() ? _CO_MODULE_SKELETON_BUTTON_ITEMCATEGORY_ADD : _CO_MODULE_SKELETON_BUTTON_ITEMCATEGORY_EDIT;
@@ -111,7 +111,7 @@ class Module_skeletonItemcategory extends XoopsObject
         $editor_configs['cols']   = 80;
         $editor_configs['width']  = '100%';
         $editor_configs['height'] = '800px';
-        $editor_configs['editor'] = $this->module_skeleton->getConfig('editor_options');
+        $editor_configs['editor'] = $this->module_skeletonHelper->getConfig('editor_options');
         $itemcategory_description_editor = new XoopsFormEditor(_CO_MODULE_SKELETON_ITEMCATEGORY_DESCRIPTION, 'itemcategory_description', $editor_configs);
         $itemcategory_description_editor->setDescription(_CO_MODULE_SKELETON_ITEMCATEGORY_DESCRIPTION_DESC);
         $form->addElement($itemcategory_description_editor);
@@ -135,8 +135,8 @@ class Module_skeletonItemcategory extends XoopsObject
         $options_tray->addElement($breaks_checkbox);
         $form->addElement($options_tray);
         // itemcategory: itemcategory_pid
-        if ($this->module_skeleton->getHandler('itemcategory')->getCount() > 0) {
-            $itemcategoryObjs = $this->module_skeleton->getHandler('itemcategory')->getObjects();
+        if ($this->module_skeletonHelper->getHandler('itemcategory')->getCount() > 0) {
+            $itemcategoryObjs = $this->module_skeletonHelper->getHandler('itemcategory')->getObjects();
             $itemcategoryObjsTree = new Module_skeletonObjectTree($itemcategoryObjs, 'itemcategory_id', 'itemcategory_pid');
             $itemcategory_pid_select = new XoopsFormLabel(_CO_MODULE_SKELETON_ITEMCATEGORY_PID_TITLE, $itemcategoryObjsTree->makeSelBox('itemcategory_pid', 'itemcategory_title', '-', $this->getVar('itemcategory_pid', 'e'), array('0' => _CO_MODULE_SKELETON_ITEMCATEGORY_ROOT)));
             $itemcategory_pid_select->setDescription(_CO_MODULE_SKELETON_ITEMCATEGORY_PID_TITLE_DESC);
@@ -167,13 +167,13 @@ class Module_skeletonItemcategory extends XoopsObject
             $form->addElement($itemcategory_date_datetime);
         }
         // permission: read
-        $read_groups = $groupperm_handler->getGroupIds('itemcategory_read', $this->getVar('itemcategory_id'), $this->module_skeleton->getModule()->mid());
-        $read_groups_select = new XoopsFormSelectGroup(_CO_MODULE_SKELETON_PERM_ITEMCATEGORY_READ, 'itemcategory_read', true, $read_groups, 5, true);
+        $read_groups = $groupperm_handler->getGroupIds('itemcategoryRead', $this->getVar('itemcategory_id'), $this->module_skeletonHelper->getModule()->mid());
+        $read_groups_select = new XoopsFormSelectGroup(_CO_MODULE_SKELETON_PERM_ITEMCATEGORY_READ, 'itemcategoryRead', true, $read_groups, 5, true);
         $read_groups_select->setDescription(_CO_MODULE_SKELETON_PERM_ITEMCATEGORY_READ_DESC);
         $form->addElement($read_groups_select);
         // permission: write
-        $write_groups = $groupperm_handler->getGroupIds('itemcategory_write', $this->getVar('itemcategory_id'), $this->module_skeleton->getModule()->mid());
-        $write_groups_select = new XoopsFormSelectGroup(_CO_MODULE_SKELETON_PERM_ITEMCATEGORY_WRITE, 'itemcategory_write', true, $write_groups, 5, true);
+        $write_groups = $groupperm_handler->getGroupIds('itemcategoryWrite', $this->getVar('itemcategory_id'), $this->module_skeletonHelper->getModule()->mid());
+        $write_groups_select = new XoopsFormSelectGroup(_CO_MODULE_SKELETON_PERM_ITEMCATEGORY_WRITE, 'itemcategoryWrite', true, $write_groups, 5, true);
         $write_groups_select->setDescription(_CO_MODULE_SKELETON_PERM_ITEMCATEGORY_WRITE_DESC);
         $form->addElement($write_groups_select);
         // form: button tray
@@ -214,7 +214,7 @@ class Module_skeletonItemcategoryHandler extends XoopsPersistableObjectHandler
      * @var Module_skeletonModule_skeleton
      * @access public
      */
-    private $module_skeleton = null;
+    private $module_skeletonHelper = null;
 
     var $allItemcategories = false;
     var $topItemcategories = false;
@@ -224,8 +224,8 @@ class Module_skeletonItemcategoryHandler extends XoopsPersistableObjectHandler
      */
     public function __construct($db)
     {
-        parent::__construct($db, 'module_skeleton_itemcategories', 'Module_skeletonItemcategory', 'itemcategory_id', 'itemcategory_title');
-        $this->module_skeleton = Module_skeletonModule_skeleton::getInstance();
+        parent::__construct($db, 'mod_module_skeleton_itemcategories', 'Module_skeletonItemcategory', 'itemcategory_id', 'itemcategory_title');
+        $this->module_skeletonHelper = \Xmf\Module\Helper::getHelper('module_skeleton');
     }
 
     /**
@@ -245,15 +245,15 @@ class Module_skeletonItemcategoryHandler extends XoopsPersistableObjectHandler
             if (!$itemcategoryObj) {
                 return false;
             }
-        } elseif (get_class($itemcategoryObj) == 'Module_skeletonCategory') {
+        } elseif (get_class($itemcategoryObj) == 'Module_skeletonItemcategory') {
             $itemcategory_id = (int) $itemcategoryObj->getVar('itemcategory_id');
         } else {
             return false;
         }
         // delete items
-        $itemObjs = $this->module_skeleton->getHandler('item')->getObjects(new Criteria('item_category_id', $itemcategory_id));
+        $itemObjs = $this->module_skeletonHelper->getHandler('item')->getObjects(new Criteria('item_category_id', $itemcategory_id));
         foreach($itemObjs as $itemObj) {
-            if (!$this->module_skeleton->getHandler('item')->delete($itemObj)) { // delete as object
+            if (!$this->module_skeletonHelper->getHandler('item')->delete($itemObj)) { // delete as object
                 // ERROR
                 return false;
             }
@@ -275,11 +275,11 @@ class Module_skeletonItemcategoryHandler extends XoopsPersistableObjectHandler
             return false;
         }
         // delete permissions
-        $mid = $this->module_skeleton->getModule()->mid();
+        $mid = $this->module_skeletonHelper->getModule()->mid();
         $groupperm_handler = xoops_gethandler('groupperm');
         $groupperm_handler->deleteByModule($mid, 'itemcategory.%', $itemcategory_id);
-        //$groupperm_handler->deleteByModule($mid, 'itemcategory_read', $itemcategory_id);
-        //$groupperm_handler->deleteByModule($mid, 'itemcategory_write', $itemcategory_id);
+        //$groupperm_handler->deleteByModule($mid, 'itemcategoryRead', $itemcategory_id);
+        //$groupperm_handler->deleteByModule($mid, 'itemcategoryWrite', $itemcategory_id);
         return true;
     }
 }

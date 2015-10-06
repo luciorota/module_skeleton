@@ -19,6 +19,11 @@
  * @version         svn:$id$
  */
 
+// GLOBAL PERM
+define("_MODULE_SKELETON_PERM_1", 1);
+define("_MODULE_SKELETON_PERM_2", 2);
+
+
 // ITEMS/ITEMCATEGORIES status
 define("_MODULE_SKELETON_STATUS_WAITING", 0);
 define("_MODULE_SKELETON_STATUS_APPROVED", 1);

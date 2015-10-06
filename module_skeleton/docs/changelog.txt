@@ -1,6 +1,15 @@
 0.02 Alpha 2       NOT RELEASED
 =================================
 
+- added: XMF menu.php (luciorota)
+- added: XMF index.php (luciorota)
+- added: XMF about.php (luciorota)
+- added: XMF \Xmf\Module\Session (luciorota)
+- in_progress: XMF \Xmf\Module\Helper (luciorota)
+
+- TODO: XMF permissions
+- TODO: XMF ...
+
 - added: Google Map Position (longitude, latitude, elevation and zoom level) extra itemfield type (luciorota)
 - added: Xoops Image extra itemfield type (luciorota)
 - added: Sample extra itemfield type (luciorota)
@@ -8,7 +17,7 @@
 - fixed: Module_skeletonObjectTree (luciorota)
 - added: use php DateTime object methods instead of strtotime() function to get right timestamp date (luciorota)
 - fixed: objectise Module_skeletonChoiceByLetter (luciorota)
-- replaced "dirname(__FILE__)" with "__DIR__" since the min. PHP is now 5.3.7, and __DIR__ is faster  (mamba)
+- replaced "dirname(__FILE__)" with "__DIR__" since the min. PHP is now 5.3.7, and __DIR__ is faster (mamba)
 - added missing _AM_MODULE_SKELETON_REQUIRED_TOGGLE_FAILED and _AM_MODULE_SKELETON_REQUIRED_TOGGLE_SUCCESS (mamba)
 - replaced $choiceByLetterTpl in \class\common\breadcrumb.php with $breadcrumbTpl (mamba)
 - changed $modversion['help'] = 'page=help'; to $modversion['help'] = 'page=overview'; (mamba)

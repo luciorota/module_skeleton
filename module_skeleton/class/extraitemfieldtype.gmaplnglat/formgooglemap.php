@@ -206,7 +206,7 @@ class FormGoogleMap extends XoopsFormElementTray
                         position: initLatlng,
                         map: map,
                         title: '" . _FORMGOOGLEMAP_MARKER_CLICKTOUPDATEPOSITION . "',
-                        draggable: true,
+                        draggable: true
                     });
                     google.maps.event.addListener(marker, 'click', function() {
                         //map.setZoom(8);
@@ -220,7 +220,7 @@ class FormGoogleMap extends XoopsFormElementTray
                     marker = new google.maps.Marker({
                         position: initLatlng,
                         map: map,
-                        draggable: false,
+                        draggable: false
                     });
                 }
 

@@ -20,9 +20,8 @@
  */
 
 // module info/menu
-$xoopsTpl->assign('moduleInfoSub', $module_skeleton->getModule()->subLink());
+$xoopsTpl->assign('moduleInfoSub', $module_skeletonHelper->getModule()->subLink());
 // module admin
-$xoopsTpl->assign("isAdmin", module_skeleton_userIsAdmin());
-$xoopsTpl->assign("module_skeleton_adminpage", "<a href='" . MODULE_SKELETON_URL . "/admin/index.php'>" . _MD_MODULE_SKELETON_ADMIN_PAGE . "</a>");
+$xoopsTpl->assign('isAdmin', $module_skeletonHelper->isUserAdmin());
 
 include_once XOOPS_ROOT_PATH . '/footer.php';

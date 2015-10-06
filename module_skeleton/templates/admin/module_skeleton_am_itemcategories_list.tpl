@@ -30,7 +30,7 @@
 <{*
                 <{section name=indent loop=$sorted_itemcategory.level-1 step=1}>-<{/section}>
 *}>
-                <span class="caption-text"><a href='../viewcat.php?itemcategory_id=<{$sorted_itemcategory.itemcategory.itemcategory_id}>'><{$sorted_itemcategory.itemcategory.itemcategory_title}></a></span>
+                <span class="caption-text"><a href='../itemcategory.php?itemcategory_id=<{$sorted_itemcategory.itemcategory.itemcategory_id}>'><{$sorted_itemcategory.itemcategory.itemcategory_title}></a></span>
                 </div>
                 <div class="xoops-form-element-help"><{$sorted_itemcategory.itemcategory.itemcategory_description}></div>
             </div>

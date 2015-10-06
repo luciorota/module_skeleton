@@ -322,6 +322,11 @@ define('_CO_MODULE_SKELETON_ITEMFIELD_PROF_EDITABLE_DESC', "");
 
 
 // permissions
+define('_CO_MODULE_SKELETON_PERM_GLOBAL', "Global permissions");
+define('_CO_MODULE_SKELETON_PERM_GLOBAL_DESC', "");
+define('_AM_MODULE_SKELETON_PERM_1', "PERM1");
+define('_AM_MODULE_SKELETON_PERM_2', "PERM2");
+//
 define('_CO_MODULE_SKELETON_PERM_ITEMCATEGORY_WRITE', "Item category write permission");
 define('_CO_MODULE_SKELETON_PERM_ITEMCATEGORY_WRITE_DESC', "Select item category write permission by group");
 define('_CO_MODULE_SKELETON_PERM_ITEMCATEGORY_READ', "Item category read permission");

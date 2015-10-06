@@ -9,12 +9,12 @@
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
 /**
- * Module_skeleton module
+ * Addresses module
  *
  * @copyright       The XOOPS Project http://sourceforge.net/projects/xoops/
  * @license         GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
- * @package         module_skeleton
- * @since           1.00
+ * @package         adresses
+ * @since           2.00
  * @author          Xoops Development Team
  * @version         svn:$id$
  */

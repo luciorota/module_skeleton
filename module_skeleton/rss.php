@@ -37,12 +37,12 @@ $xoopsTpl = new XoopsTpl();
 
 // Find case
 $case     = "all";
-$itemcategoryObj = $module_skeleton->getHandler('itemcategory')->get((int) $_REQUEST['itemcategory_id']);
+$itemcategoryObj = $module_skeletonHelper->getHandler('itemcategory')->get((int) $_REQUEST['itemcategory_id']);
 
 $groups = is_object($xoopsUser) ? $xoopsUser->getGroups() : array(0 => XOOPS_GROUP_ANONYMOUS);
 
 // Get download permissions
-$allowedReadItemcategoriesIds = $groupperm_handler->getItemIds('read', $groups, $module_skeleton->getModule()->mid());
+$allowedReadItemcategoriesIds = $groupperm_handler->getItemIds('read', $groups, $module_skeletonHelper->getModule()->mid());
 
 if (!$itemcategoryObj->isNew()) {
     if (!in_array($itemcategoryObj->getVar('itemcategory_id'), $allowedReadItemcategoriesIds)) {
@@ -64,7 +64,7 @@ switch ($case) {
 }
 
 $xoopsTpl->caching = true;
-$xoopsTpl->cache_lifetime = $xoopsConfig['module_cache'][(int) $module_skeleton->getModule()->mid()];
+$xoopsTpl->cache_lifetime = $xoopsConfig['module_cache'][(int) $module_skeletonHelper->getModule()->mid()];
 if (!$xoopsTpl->is_cached('db:' . $xoopsOption['template_main'], $cache_prefix)) {
     // Get content
     $limit = 30;
@@ -78,12 +78,12 @@ if (!$xoopsTpl->is_cached('db:' . $xoopsOption['template_main'], $cache_prefix))
         default:
         case "all" :
             $shorthand   = 'all';
-            $title       = $xoopsConfig['sitename'] . ' - ' . htmlspecialchars($module_skeleton->getModule()->getVar('name'), ENT_QUOTES);
+            $title       = $xoopsConfig['sitename'] . ' - ' . htmlspecialchars($module_skeletonHelper->getModule()->getVar('name'), ENT_QUOTES);
             $desc        = $xoopsConfig['slogan'];
-            $channel_url = XOOPS_URL . '/modules/' . $module_skeleton->getModule()->getVat('dirname') . '/rss.php';
+            $channel_url = XOOPS_URL . '/modules/' . $module_skeletonHelper->getModule()->getVat('dirname') . '/rss.php';
 
             $itemCriteria->add(new Criteria('item_category_id', '(' . implode(',', $allowedReadItemcategoriesIds) . ')', 'IN'));
-            $itemObjs = $module_skeleton->getHandler('item')->getObjects($itemCriteria);
+            $itemObjs = $module_skeletonHelper->getHandler('item')->getObjects($itemCriteria);
             $id        = 0;
             break;
 
@@ -91,10 +91,10 @@ if (!$xoopsTpl->is_cached('db:' . $xoopsOption['template_main'], $cache_prefix))
             $shorthand   = 'cat';
             $title       = $xoopsConfig['sitename'] . ' - ' . htmlspecialchars($itemcategoryObj->getVar('title'), ENT_QUOTES);
             $desc        = $xoopsConfig['slogan'] . ' - ' . htmlspecialchars($itemcategoryObj->getVar('title'), ENT_QUOTES);
-            $channel_url = XOOPS_URL . '/modules/' . $module_skeleton->getModule()->getVat('dirname') . '/rss.php?cid=' . (int) $itemcategoryObj->getVar('cid');
+            $channel_url = XOOPS_URL . '/modules/' . $module_skeletonHelper->getModule()->getVat('dirname') . '/rss.php?cid=' . (int) $itemcategoryObj->getVar('cid');
 
             $itemCriteria->add(new Criteria('item_category_id', (int) $itemcategoryObj->getVar('itemcategory_id')));
-            $itemObjs = $module_skeleton->getHandler('item')->getObjects($itemCriteria);
+            $itemObjs = $module_skeletonHelper->getHandler('item')->getObjects($itemCriteria);
             $id        = $itemcategoryObj->getVar('itemcategory_id');
             break;
     }
@@ -107,12 +107,12 @@ if (!$xoopsTpl->is_cached('db:' . $xoopsOption['template_main'], $cache_prefix))
     $xoopsTpl->assign('channel_webmaster', $xoopsConfig['adminmail']);
     $xoopsTpl->assign('channel_editor', $xoopsConfig['adminmail']);
     $xoopsTpl->assign('channel_editor_name', $xoopsConfig['sitename']);
-    $xoopsTpl->assign('channel_itemcategory', $module_skeleton->getModule()->getVar('name', 'e'));
+    $xoopsTpl->assign('channel_itemcategory', $module_skeletonHelper->getModule()->getVar('name', 'e'));
     $xoopsTpl->assign('channel_generator', 'PHP');
     $xoopsTpl->assign('channel_language', _LANGCODE);
 
     // Assign items to template style array
-    $url = XOOPS_URL . '/modules/' . $module_skeleton->getModule()->getVat('dirname') . '/';
+    $url = XOOPS_URL . '/modules/' . $module_skeletonHelper->getModule()->getVat('dirname') . '/';
     if (count($itemObjs) > 0) {
         // Get users for downloads
         $uids = array();

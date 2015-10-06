@@ -29,7 +29,7 @@ $itemcategory_id = XoopsRequest::getInt('itemcategory_id', 0);
 
 // check permissions
 if ($itemcategory_id != 0) {
-    if (!$groupperm_handler->checkRight('itemcategory_read', $itemcategory_id, $groups, $module_skeleton->getModule()->mid())) {
+    if (!$groupperm_handler->checkRight('itemcategoryRead', $itemcategory_id, $groups, $module_skeletonHelper->getModule()->mid())) {
         if (in_array(XOOPS_GROUP_ANONYMOUS, $groups)) {
             redirect_header(XOOPS_URL . '/user.php', 3, _MD_MODULE_SKELETON_NEEDLOGINVIEW);
         } else {
@@ -39,13 +39,13 @@ if ($itemcategory_id != 0) {
 }
 
 // get write/read permissions
-$itemcategory_write_ids = $groupperm_handler->getItemIds('itemcategory_write', $groups, $module_skeleton->getModule()->mid()); // array
-$itemcategory_read_ids = $groupperm_handler->getItemIds('itemcategory_read', $groups, $module_skeleton->getModule()->mid()); // array
+$itemcategory_write_ids = $groupperm_handler->getItemIds('itemcategoryWrite', $groups, $module_skeletonHelper->getModule()->mid()); // array
+$itemcategory_read_ids = $groupperm_handler->getItemIds('itemcategoryRead', $groups, $module_skeletonHelper->getModule()->mid()); // array
 
 // get itemcategories tree
 $itemcategoryCriteria = new CriteriaCompo();
 $itemcategoryCriteria->add(new Criteria('itemcategory_id', '(' . implode(',', $itemcategory_read_ids) . ')', 'IN'));
-$itemcategoryObjs = $module_skeleton->getHandler('itemcategory')->getObjects($itemcategoryCriteria, true);
+$itemcategoryObjs = $module_skeletonHelper->getHandler('itemcategory')->getObjects($itemcategoryCriteria, true);
 $itemcategoryObjsTree = new Module_skeletonObjectTree($itemcategoryObjs, 'itemcategory_id', 'itemcategory_pid');
 
 // get first childs and all parents
@@ -55,12 +55,12 @@ $parentItemcategoryObjs = $itemcategoryObjsTree->getAllParent($itemcategory_id);
 // get items
 $itemCriteria = new CriteriaCompo();
 $itemCriteria->add(new Criteria('item_category_id', $itemcategory_id));
-$itemObjs = $module_skeleton->getHandler('item')->getObjects($itemCriteria, true, true);
+$itemObjs = $module_skeletonHelper->getHandler('item')->getObjects($itemCriteria, true, true);
 
 
 
 // load template
-$xoopsOption['template_main'] = "{$module_skeleton->getModule()->dirname()}_itemcategory.tpl";
+$xoopsOption['template_main'] = "{$module_skeletonHelper->getModule()->dirname()}_itemcategory.tpl";
 include XOOPS_ROOT_PATH . '/header.php';
 
 $xoTheme->addScript(XOOPS_URL . '/browse.php?Frameworks/jquery/jquery.js');
@@ -68,7 +68,7 @@ $xoTheme->addStylesheet(MODULE_SKELETON_URL . '/assets/css/module.css');
 
 // template: module_skeleton_breadcrumb
 $breadcrumb = new Module_skeletonBreadcrumb();
-$breadcrumb->addLink($module_skeleton->getModule()->getVar('name'), MODULE_SKELETON_URL);
+$breadcrumb->addLink($module_skeletonHelper->getModule()->getVar('name'), MODULE_SKELETON_URL);
 $breadcrumb->addLink(_CO_MODULE_SKELETON_ITEMCATEGORY_ROOT, MODULE_SKELETON_URL . '/itemcategory.php');
 foreach (array_reverse($parentItemcategoryObjs) as $parentItemcategoryObj) {
     $breadcrumb->addLink($parentItemcategoryObj->getVar('itemcategory_title'), '?itemcategory_id=' . $parentItemcategoryObj->getVar('itemcategory_id'));
@@ -81,7 +81,7 @@ $GLOBALS['xoopsTpl']->assign('itemcategory_select', $itemcategory_select);
 
 // template: itemcategory
 if ($itemcategory_id != 0) {
-    $itemcategoryObj = $module_skeleton->getHandler('itemcategory')->get($itemcategory_id);
+    $itemcategoryObj = $module_skeletonHelper->getHandler('itemcategory')->get($itemcategory_id);
     if (empty($itemcategoryObj) || $itemcategoryObj->isNew()) {
         redirect_header('index.php', 3, _CO_MODULE_SKELETON_ERROR_NOITEMCATEGORY);
     }

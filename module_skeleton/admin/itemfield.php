@@ -23,7 +23,7 @@ $currentFile = basename(__FILE__);
 include_once __DIR__ . '/admin_header.php';
 
 // Check directories
-if (!is_dir($module_skeleton->getConfig('uploadPath'))) {
+if (!is_dir($module_skeletonHelper->getConfig('uploadPath'))) {
     redirect_header('index.php', 3, _CO_MODULE_SKELETON_WARNING_NOUPLOADDIR);
     exit();
 }
@@ -33,12 +33,12 @@ $op = isset($_REQUEST['op']) ? $_REQUEST['op'] : (isset($_REQUEST['itemfield_id'
 switch ($op) {
     default:
     case 'itemfields.list':
-        $datatypes = $module_skeleton->getHandler('itemfield')->getDataTypes(); // array of data types
-        $itemfieldtypes = $module_skeleton->getHandler('itemfield')->getStandardItemfieldTypesList();  // array of itemfield types
+        $datatypes = $module_skeletonHelper->getHandler('itemfield')->getDataTypes(); // array of data types
+        $itemfieldtypes = $module_skeletonHelper->getHandler('itemfield')->getStandardItemfieldTypesList();  // array of itemfield types
         //  admin navigation
         xoops_cp_header();
-        $indexAdmin = new ModuleAdmin();
-        echo $indexAdmin->addNavigation($currentFile);
+        $indexAdmin = \Xmf\Module\Admin::getInstance();
+        $indexAdmin->displayNavigation($currentFile);
         // buttons
         $adminMenu = new ModuleAdmin();
         $adminMenu->addItemButton(_CO_MODULE_SKELETON_BUTTON_ITEMFIELD_ADD, $currentFile . "?op=itemfield.add", 'add');
@@ -47,10 +47,10 @@ switch ($op) {
         $itemfieldCriteria = new CriteriaCompo();
         $itemfieldCriteria->setSort('itemfield_weight');
         $itemfieldCriteria->setOrder('ASC');
-        $itemfieldCount = $module_skeleton->getHandler('itemfield')->getCount();
+        $itemfieldCount = $module_skeletonHelper->getHandler('itemfield')->getCount();
         $GLOBALS['xoopsTpl']->assign('itemfieldCount', $itemfieldCount);
-        //$itemfields = $module_skeleton->getHandler('itemfield')->getObjects($itemfieldCriteria, true, false); // as array
-        $itemfieldObjs = $module_skeleton->getHandler('itemfield')->getObjects($itemfieldCriteria, true, true); // as array
+        //$itemfields = $module_skeletonHelper->getHandler('itemfield')->getObjects($itemfieldCriteria, true, false); // as array
+        $itemfieldObjs = $module_skeletonHelper->getHandler('itemfield')->getObjects($itemfieldCriteria, true, true); // as array
 /*
         foreach (array_keys($itemfields) as $i) {
             $itemfields[$i]['canEdit'] = $itemfields[$i]['itemfield_config'] || $itemfields[$i]['itemfield_show'] || $itemfields[$i]['itemfield_edit'];
@@ -68,7 +68,7 @@ switch ($op) {
         }
 
         $GLOBALS['xoopsTpl']->assign('token', $GLOBALS['xoopsSecurity']->getTokenHTML());
-        $GLOBALS['xoopsTpl']->display("db:{$module_skeleton->getModule()->dirname()}_am_itemfields_list.tpl");
+        $GLOBALS['xoopsTpl']->display("db:{$module_skeletonHelper->getModule()->dirname()}_am_itemfields_list.tpl");
         //
         include __DIR__ . '/admin_footer.php';
         break;
@@ -76,14 +76,14 @@ switch ($op) {
     case 'itemfield.add':
         //  admin navigation
         xoops_cp_header();
-        $indexAdmin = new ModuleAdmin();
-        echo $indexAdmin->addNavigation($currentFile);
+        $indexAdmin = \Xmf\Module\Admin::getInstance();
+        $indexAdmin->displayNavigation($currentFile);
         // buttons
         $adminMenu = new ModuleAdmin();
         $adminMenu->addItemButton(_CO_MODULE_SKELETON_BUTTON_ITEMFIELDS_LIST, "{$currentFile}?op=itemfields.list", 'list');
         echo $adminMenu->renderButton();
         //
-        $itemfieldObj = $module_skeleton->getHandler('itemfield')->create();
+        $itemfieldObj = $module_skeletonHelper->getHandler('itemfield')->create();
         $form = $itemfieldObj->getForm();
         $form->display();
         //
@@ -93,15 +93,15 @@ switch ($op) {
     case 'itemfield.edit':
         //  admin navigation
         xoops_cp_header();
-        $indexAdmin = new ModuleAdmin();
-        echo $indexAdmin->addNavigation($currentFile);
+        $indexAdmin = \Xmf\Module\Admin::getInstance();
+        $indexAdmin->displayNavigation($currentFile);
         // buttons
         $adminMenu = new ModuleAdmin();
         $adminMenu->addItemButton(_CO_MODULE_SKELETON_BUTTON_ITEMFIELDS_LIST, "{$currentFile}?op=itemfields.list", 'list');
         echo $adminMenu->renderButton();
         //
         $itemfield_id = XoopsRequest::getInt('itemfield_id', 0);
-        if (!$itemfieldObj = $module_skeleton->getHandler('itemfield')->get($itemfield_id)) {
+        if (!$itemfieldObj = $module_skeletonHelper->getHandler('itemfield')->get($itemfield_id)) {
             // ERROR
             redirect_header($currentFile, 3, _CO_MODULE_SKELETON_ERROR_NOITEMFIELD);
             exit();
@@ -131,7 +131,7 @@ switch ($op) {
 // IN PROGRESS
 // IN PROGRESS
         //
-        $itemfieldObj = $module_skeleton->getHandler('itemfield')->get($itemfield_id);
+        $itemfieldObj = $module_skeletonHelper->getHandler('itemfield')->get($itemfield_id);
         //
         if ($isNewItemfield) {
             $itemfieldObj->setVar('itemfield_name', XoopsRequest::getString('itemfield_name', ''));
@@ -207,12 +207,12 @@ switch ($op) {
             $itemfieldObj->setVar('itemfield_datatype', $_REQUEST['itemfield_datatype']);
         }
         //
-        if (!$module_skeleton->getHandler('itemfield')->insert($itemfieldObj)) {
+        if (!$module_skeletonHelper->getHandler('itemfield')->insert($itemfieldObj)) {
             // ERROR
             //  admin navigation
             xoops_cp_header();
-            $indexAdmin = new ModuleAdmin();
-            echo $indexAdmin->addNavigation($currentFile);
+            $indexAdmin = \Xmf\Module\Admin::getInstance();
+            $indexAdmin->displayNavigation($currentFile);
             // buttons
             $adminMenu = new ModuleAdmin();
             $adminMenu->addItemButton(_CO_MODULE_SKELETON_BUTTON_ITEMFIELDS_LIST, "{$currentFile}?op=itemfields.list", 'list');
@@ -228,15 +228,15 @@ switch ($op) {
         }
         $itemfield_id = (int) $itemfieldObj->getVar('itemfield_id');
         // save permissions
-        $read_groups = XoopsRequest::getArray('itemfield_read', array(), 'POST');
-        module_skeleton_savePermissions($read_groups, $itemfield_id, 'itemfield_read');
+        $read_groups = XoopsRequest::getArray('itemfieldRead', array(), 'POST');
+        module_skeleton_savePermissions($read_groups, $itemfield_id, 'itemfieldRead');
         if ($itemfieldObj->getVar('itemfield_edit') || $itemfieldObj->isNew()) {
-            $write_groups = XoopsRequest::getArray('itemfield_write', array(), 'POST');
-            module_skeleton_savePermissions($write_groups, $itemfield_id, 'itemfield_write');
+            $write_groups = XoopsRequest::getArray('itemfieldWrite', array(), 'POST');
+            module_skeleton_savePermissions($write_groups, $itemfield_id, 'itemfieldWrite');
         }
-        if (in_array($itemfieldObj->getVar('itemfield_type'), $module_skeleton->getHandler('itemfield')->getSearchableTypes())) {
-            $search_groups = XoopsRequest::getArray('itemfield_search', array(), 'POST');
-            module_skeleton_savePermissions($search_groups, $itemfield_id, 'itemfield_search');
+        if (in_array($itemfieldObj->getVar('itemfield_type'), $module_skeletonHelper->getHandler('itemfield')->getSearchableTypes())) {
+            $search_groups = XoopsRequest::getArray('itemfieldSearch', array(), 'POST');
+            module_skeleton_savePermissions($search_groups, $itemfield_id, 'itemfieldSearch');
         }
         //
         if ($redirectToEditForm == true) {
@@ -248,7 +248,7 @@ switch ($op) {
 
     case 'itemfield.delete':
         $itemfield_id = XoopsRequest::getInt('itemfield_id', 0);
-        $itemfieldObj = $module_skeleton->getHandler('itemfield')->get($itemfield_id);
+        $itemfieldObj = $module_skeletonHelper->getHandler('itemfield')->get($itemfield_id);
         if (!$itemfieldObj) {
             redirect_header($currentFile, 3, _CO_MODULE_SKELETON_ERROR_NOITEMFIELD);
             exit();
@@ -260,7 +260,7 @@ switch ($op) {
             if (!$GLOBALS['xoopsSecurity']->check()) {
                 redirect_header($currentFile, 3, implode(',', $GLOBALS['xoopsSecurity']->getErrors()));
             }
-            if ($module_skeleton->getHandler('itemfield')->delete($itemfieldObj)) {
+            if ($module_skeletonHelper->getHandler('itemfield')->delete($itemfieldObj)) {
                 redirect_header($currentFile, 3, _CO_MODULE_SKELETON_ITEMFIELD_DELETED);
             } else {
                 // ERROR
@@ -298,10 +298,10 @@ switch ($op) {
             if (count($ids) > 0) {
                 $errors = array();
                 // if there are changed itemfields, fetch the itemfielditemcategory objects
-                $itemfields = $module_skeleton->getHandler('itemfield')->getObjects(new Criteria('itemfield_id', '(' . implode(',', $ids) . ')', 'IN'), true);
+                $itemfields = $module_skeletonHelper->getHandler('itemfield')->getObjects(new Criteria('itemfield_id', '(' . implode(',', $ids) . ')', 'IN'), true);
                 foreach ($ids as $id) {
                     $itemfields[$id]->setVar('itemfield_weight', (int) $weight[$id]);
-                    if (!$module_skeleton->getHandler('itemfield')->insert($itemfields[$id])) {
+                    if (!$module_skeletonHelper->getHandler('itemfield')->insert($itemfields[$id])) {
                         $errors = array_merge($errors, $itemfields[$id]->getErrors());
                     }
                 }
@@ -317,7 +317,7 @@ switch ($op) {
 
     case 'itemfield.toggle':
         $itemfield_id = XoopsRequest::getInt('itemfield_id', 0);
-        $itemfieldObj = $module_skeleton->getHandler('itemfield')->get($itemfield_id);
+        $itemfieldObj = $module_skeletonHelper->getHandler('itemfield')->get($itemfield_id);
         if (!$itemfieldObj) {
             redirect_header($currentFile, 3, _CO_MODULE_SKELETON_ERROR_NOITEMFIELD);
             exit();
@@ -325,7 +325,7 @@ switch ($op) {
         $field = XoopsRequest::getString('field', '');
         $value = $itemfieldObj->getVar($field);
         $itemfieldObj->setVar($field, !$value);
-        if ($module_skeleton->getHandler('itemfield')->insert($itemfieldObj, true)) {
+        if ($module_skeletonHelper->getHandler('itemfield')->insert($itemfieldObj, true)) {
             redirect_header($currentFile, 0, _CO_MODULE_SKELETON_ACTION_TOGGLED);
         } else {
             redirect_header($currentFile, 0, _CO_MODULE_SKELETON_ERROR_NOTTOGGLED);

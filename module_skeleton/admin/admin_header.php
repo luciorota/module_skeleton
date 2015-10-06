@@ -15,15 +15,15 @@ include_once dirname(__DIR__) . '/include/common.php';
 // Include xoops admin header
 include_once XOOPS_ROOT_PATH . '/include/cp_header.php';
 
-$pathIcon16 = XOOPS_URL . '/' . $module_skeleton->getModule()->getInfo('icons16');
-$pathIcon32 = XOOPS_URL . '/' . $module_skeleton->getModule()->getInfo('icons32');
-$pathModuleAdmin = XOOPS_ROOT_PATH . '/' . $module_skeleton->getModule()->getInfo('dirmoduleadmin');
-require_once $pathModuleAdmin . '/moduleadmin/moduleadmin.php';
+$pathIcon16 = XOOPS_URL . '/' . $module_skeletonHelper->getModule()->getInfo('icons16');
+$pathIcon32 = XOOPS_URL . '/' . $module_skeletonHelper->getModule()->getInfo('icons32');
+$pathModuleAdmin = XOOPS_ROOT_PATH . '/' . $module_skeletonHelper->getModule()->getInfo('dirmoduleadmin');
+//require_once $pathModuleAdmin . '/moduleadmin/moduleadmin.php';
 
 // Load language files
-xoops_loadLanguage('admin', $module_skeleton->getModule()->dirname());
-xoops_loadLanguage('modinfo', $module_skeleton->getModule()->dirname());
-xoops_loadLanguage('main', $module_skeleton->getModule()->dirname());
+$module_skeletonHelper->loadLanguage('admin');
+$module_skeletonHelper->loadLanguage('modinfo');
+$module_skeletonHelper->loadLanguage('main');
 
 if (!isset($xoopsTpl) || !is_object($xoopsTpl)) {
     include_once(XOOPS_ROOT_PATH . '/class/template.php');

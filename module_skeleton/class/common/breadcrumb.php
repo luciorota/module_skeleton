@@ -37,7 +37,7 @@ class Module_skeletonBreadcrumb
      * @var Module_skeletonModule_skeleton
      * @access public
      */
-    public $module_skeleton = null;
+    public $module_skeletonHelper = null;
 
     private $dirname;
     private $_bread = array();
@@ -47,7 +47,7 @@ class Module_skeletonBreadcrumb
      */
     public function __construct()
     {
-        $this->module_skeleton = Module_skeletonModule_skeleton::getInstance();
+        $this->module_skeletonHelper = \Xmf\Module\Helper::getHelper('module_skeleton');
         $this->dirname = basename(dirname(dirname(__DIR__)));
     }
 
@@ -76,14 +76,14 @@ class Module_skeletonBreadcrumb
         if (!isset($GLOBALS['xoTheme']) || !is_object($GLOBALS['xoTheme'])) {
             include_once $GLOBALS['xoops']->path('/class/theme.php');
             $GLOBALS['xoTheme'] = new xos_opal_Theme();
-            }
+        }
         require_once $GLOBALS['xoops']->path('/class/template.php');
         $breadcrumbTpl = new XoopsTpl();
         $breadcrumbTpl->assign('breadcrumb', $this->_bread);
 // IN PROGRESS
 // IN PROGRESS
 // IN PROGRESS
-        $ret .= $breadcrumbTpl->fetch("db:{$this->module_skeleton->getModule()->dirname()}_co_breadcrumb.tpl");
+        $ret .= $breadcrumbTpl->fetch("db:{$this->module_skeletonHelper->getModule()->dirname()}_co_breadcrumb.tpl");
         unset($breadcrumbTpl);
 
         return $ret;

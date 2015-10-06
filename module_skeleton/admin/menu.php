@@ -21,43 +21,58 @@
 
 defined('XOOPS_ROOT_PATH') || die('XOOPS root path not defined');
 
-$module_handler = xoops_gethandler('module');
-$module = $module_handler->getByDirname(basename(dirname(__DIR__)));
-$pathIcon32 = '../../' . $module->getInfo('icons32');
-//$pathIcon32 = '/assets/images/icons/32x32';
-
-xoops_loadLanguage('modinfo', $module->dirname());
+// get path to icons
+$pathIcon32 = '';
+if (class_exists('Xmf\Module\Admin', true)) {
+    $pathIcon32 = \Xmf\Module\Admin::menuIconPath('');
+}
 
 $adminmenu = array();
-$i=0;
-$adminmenu[$i]["title"] = _MI_MODULE_SKELETON_MENU_HOME;
-$adminmenu[$i]['link'] = "admin/index.php";
-$adminmenu[$i]["icon"]  = $pathIcon32 . '/home.png';
-++$i;
-$adminmenu[$i]['title'] = _MI_MODULE_SKELETON_MENU_ITEMCATEGORIES;
-$adminmenu[$i]['link'] = "admin/itemcategory.php";
-$adminmenu[$i]["icon"]  = $pathIcon32 . '/category.png';
-++$i;
-$adminmenu[$i]['title'] = _MI_MODULE_SKELETON_MENU_ITEMS;
-$adminmenu[$i]['link'] = "admin/item.php";
-$adminmenu[$i]["icon"]  = $pathIcon32 . '/block.png';
-++$i;
-$adminmenu[$i]['title'] = _MI_MODULE_SKELETON_MENU_ITEMFIELDCATEGORIES;
-$adminmenu[$i]['link'] = "admin/itemfieldcategory.php";
-$adminmenu[$i]["icon"]  = $pathIcon32 . '/category.png';
-++$i;
-$adminmenu[$i]['title'] = _MI_MODULE_SKELETON_MENU_ITEMFIELDS;
-$adminmenu[$i]['link'] = "admin/itemfield.php";
-$adminmenu[$i]["icon"]  = $pathIcon32 . '/index.png';
-++$i;
-$adminmenu[$i]['title'] = _MI_MODULE_SKELETON_MENU_PERMISSIONS;
-$adminmenu[$i]['link'] = "admin/permissions.php";
-$adminmenu[$i]["icon"]  = $pathIcon32 . '/permissions.png';
-++$i;
-$adminmenu[$i]['title'] = _MI_MODULE_SKELETON_MENU_CLONE;
-$adminmenu[$i]['link'] = "admin/clone.php";
-$adminmenu[$i]["icon"] = './assets/images/icons/32/editcopy.png';
-++$i;
-$adminmenu[$i]['title'] = _MI_MODULE_SKELETON_MENU_ABOUT;
-$adminmenu[$i]['link'] =  "admin/about.php";
-$adminmenu[$i]["icon"]  = $pathIcon32 . '/about.png';
+// Index
+$adminmenu[] = array(
+    'title' => _MI_MODULE_SKELETON_MENU_HOME ,
+    'link' => 'admin/index.php' ,
+    'icon' => $pathIcon32 . 'home.png'
+);
+// Itemcategories
+$adminmenu[] = array(
+    'title' => _MI_MODULE_SKELETON_MENU_ITEMCATEGORIES ,
+    'link' => 'admin/itemcategory.php' ,
+    'icon' => $pathIcon32 . 'category.png'
+);
+// Items
+$adminmenu[] = array(
+    'title' => _MI_MODULE_SKELETON_MENU_ITEMS ,
+    'link' => 'admin/item.php' ,
+    'icon' => $pathIcon32 . 'block.png'
+);
+// Itemfieldcategories
+$adminmenu[] = array(
+    'title' => _MI_MODULE_SKELETON_MENU_ITEMFIELDCATEGORIES ,
+    'link' => 'admin/itemfieldcategory.php' ,
+    'icon' => $pathIcon32 . 'category.png'
+);
+// Itemfields
+$adminmenu[] = array(
+    'title' => _MI_MODULE_SKELETON_MENU_ITEMFIELDS ,
+    'link' => 'admin/itemfield.php' ,
+    'icon' => $pathIcon32 . 'index.png'
+);
+// Permissions
+$adminmenu[] = array(
+    'title' => _MI_MODULE_SKELETON_MENU_PERMISSIONS ,
+    'link' => 'admin/permissions.php' ,
+    'icon' => $pathIcon32 . 'permissions.png'
+);
+// Clone
+$adminmenu[] = array(
+    'title' => _MI_MODULE_SKELETON_MENU_CLONE ,
+    'link' => 'admin/clone.php' ,
+    'icon' => '/assets/images/icons/32/editcopy.png'
+);
+// About
+$adminmenu[] = array(
+    'title' => _MI_MODULE_SKELETON_MENU_ABOUT ,
+    'link' => 'admin/about.php' ,
+    'icon' => $pathIcon32 . 'about.png'
+);

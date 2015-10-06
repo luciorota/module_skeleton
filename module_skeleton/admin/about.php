@@ -13,9 +13,9 @@ include_once __DIR__ . '/admin_header.php';
 
 xoops_cp_header();
 
-$aboutAdmin = new ModuleAdmin();
-
-echo $aboutAdmin->addNavigation('about.php');
-echo $aboutAdmin->renderAbout('6KJ7RW5DR3VTJ', false);
+$aboutAdmin = \Xmf\Module\Admin::getInstance();
+$aboutAdmin->displayNavigation('about.php');
+\Xmf\Module\Admin::setPaypal('6XYZRW5DR3VTJ');
+$aboutAdmin->displayAbout(false);
 
 include 'admin_footer.php';

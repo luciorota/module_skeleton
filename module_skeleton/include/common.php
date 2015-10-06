@@ -19,7 +19,20 @@
  * @version         svn:$id$
  */
 
+use Xmf\Module\Helper;
+use Xmf\Module\Permission;
+use Xmf\Module\Session;
+
 defined('XOOPS_ROOT_PATH') || die('XOOPS root path not defined');
+
+if (!class_exists('\Xmf\Loader')) {
+    if (file_exists($file = dirname(dirname(dirname(__FILE__))) . '/xmf/include/bootstrap.php')) {
+        include_once $file;
+        trigger_error( 'Please install or reactivate XMF module');
+    } else {
+        redirect_header(XOOPS_URL, 5, 'Please install XMF module');
+    }
+}
 
 // common Xoops stuff
 xoops_load('XoopsFormLoader');
@@ -47,26 +60,19 @@ define('MODULE_SKELETON_CSS_URL', MODULE_SKELETON_URL . '/assets/css');
 define('MODULE_SKELETON_ADMIN_URL', MODULE_SKELETON_URL . '/admin');
 define('MODULE_SKELETON_ROOT_PATH', dirname(__DIR__));
 
-xoops_loadLanguage('common', MODULE_SKELETON_DIRNAME);
+$module_skeletonHelper = \Xmf\Module\Helper::getHelper('module_skeleton');
+$module_skeletonSession = new \Xmf\Module\Session($module_skeletonHelper->getModule());
+
+$module_skeletonHelper->loadLanguage('common');
 
 include_once MODULE_SKELETON_ROOT_PATH . '/include/functions.php';
 include_once MODULE_SKELETON_ROOT_PATH . '/include/constants.php';
 
-include_once MODULE_SKELETON_ROOT_PATH . '/class/module_skeleton.php'; // Module_skeletonModule_skeleton class
-include_once MODULE_SKELETON_ROOT_PATH . '/class/common/session.php'; // Module_skeletonSession class
 include_once MODULE_SKELETON_ROOT_PATH . '/class/common/breadcrumb.php'; // Module_skeletonBreadcrumb class
 include_once MODULE_SKELETON_ROOT_PATH . '/class/common/choicebyletter.php'; // Module_skeletonChoiceByLetter class
 include_once MODULE_SKELETON_ROOT_PATH . '/class/common/tree.php'; // Module_skeletonObjectTree class
 include_once MODULE_SKELETON_ROOT_PATH . '/class/common/uploader.php'; // Module_skeletonMediaUploader class
 
-$debug = false;
-$module_skeleton = Module_skeletonModule_skeleton::getInstance($debug);
-
 // this is needed or it will not work in blocks
 global $module_skeleton_isAdmin;
-
-// load only if module is installed
-if (is_object($module_skeleton->getModule())) {
-    // find if the user is admin of the module
-    $module_skeleton_isAdmin = module_skeleton_userIsAdmin();
-}
+$module_skeleton_isAdmin = $module_skeletonHelper->isUserAdmin();

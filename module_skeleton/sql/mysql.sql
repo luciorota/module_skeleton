@@ -1,7 +1,7 @@
 #
-# Table structure for table `module_skeleton_itemcategories`
+# Table structure for table `mod_module_skeleton_itemcategories`
 #
-CREATE TABLE `module_skeleton_itemcategories` (
+CREATE TABLE `mod_module_skeleton_itemcategories` (
     `itemcategory_id`           mediumint(8) unsigned   NOT NULL auto_increment,
     `itemcategory_pid`          mediumint(8) unsigned   NOT NULL default '0',
     `itemcategory_title`        varchar(255)            NOT NULL default '',
@@ -22,7 +22,7 @@ CREATE TABLE `module_skeleton_itemcategories` (
 ) ENGINE=MyISAM;
 
 #
-# Dumping data for table `module_skeleton_itemcategories`
+# Dumping data for table `mod_module_skeleton_itemcategories`
 #
 
 # --------------------------------------------------------
@@ -30,9 +30,9 @@ CREATE TABLE `module_skeleton_itemcategories` (
 
 
 #
-# Table structure for table `module_skeleton_items`
+# Table structure for table `mod_module_skeleton_items`
 #
-CREATE TABLE `module_skeleton_items` (
+CREATE TABLE `mod_module_skeleton_items` (
     `item_id`               mediumint(8) unsigned   NOT NULL auto_increment,
     `item_category_id`      mediumint(8) unsigned   NOT NULL default '0',
     `item_title`            varchar(255)            NOT NULL default '',
@@ -48,7 +48,7 @@ CREATE TABLE `module_skeleton_items` (
 ) ENGINE=MyISAM;
 
 #
-# Dumping data for table `module_skeleton_items`
+# Dumping data for table `mod_module_skeleton_items`
 #
 
 # --------------------------------------------------------
@@ -56,9 +56,9 @@ CREATE TABLE `module_skeleton_items` (
 
 
 #
-# Table structure for table `module_skeleton_itemfieldcategories`
+# Table structure for table `mod_module_skeleton_itemfieldcategories`
 #
-CREATE TABLE `module_skeleton_itemfieldcategories` (
+CREATE TABLE `mod_module_skeleton_itemfieldcategories` (
     `itemfieldcategory_id`          mediumint(8) unsigned   NOT NULL auto_increment,
     `itemfieldcategory_pid`         mediumint(8) unsigned   NOT NULL default '0',
     `itemfieldcategory_title`       varchar(255)            NOT NULL default '',
@@ -79,7 +79,7 @@ CREATE TABLE `module_skeleton_itemfieldcategories` (
 ) ENGINE=MyISAM;
 
 #
-# Dumping data for table `module_skeleton_itemfieldcategories`
+# Dumping data for table `mod_module_skeleton_itemfieldcategories`
 #
 
 # --------------------------------------------------------
@@ -87,9 +87,9 @@ CREATE TABLE `module_skeleton_itemfieldcategories` (
 
 
 #
-# Table structure for table `module_skeleton_itemfields`
+# Table structure for table `mod_module_skeleton_itemfields`
 #
-CREATE TABLE `module_skeleton_itemfields` (
+CREATE TABLE `mod_module_skeleton_itemfields` (
     `itemfield_id`          mediumint(8) unsigned   NOT NULL auto_increment,
     `itemfield_category_id` mediumint(8) unsigned   NOT NULL default '0',
     `itemfield_title`       varchar(255)            NOT NULL default '',
@@ -114,7 +114,7 @@ CREATE TABLE `module_skeleton_itemfields` (
 ) ENGINE=MyISAM;
 
 #
-# Dumping data for table `module_skeleton_itemfields`
+# Dumping data for table `mod_module_skeleton_itemfields`
 #
 
 # --------------------------------------------------------

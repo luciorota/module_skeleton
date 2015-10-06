@@ -37,7 +37,7 @@ include_once dirname(__DIR__) . '/include/common.php';
 function module_skeleton_search($queryArray, $andor, $limit, $offset, $userId = 0, $categories = array(), $sortBy = 0, $searchIn = '', $extra = '')
 {
     global $xoopsUser;
-    $module_skeleton = Module_skeletonModule_skeleton::getInstance();
+    $module_skeletonHelper = Module_skeletonModule_skeleton::getInstance();
 
     $groups = is_object($xoopsUser) ? $xoopsUser->getGroups() : array(0 => XOOPS_GROUP_ANONYMOUS);
     $groupperm_handler = xoops_gethandler('groupperm');

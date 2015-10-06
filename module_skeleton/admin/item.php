@@ -23,7 +23,7 @@ $currentFile = basename(__FILE__);
 include_once __DIR__ . '/admin_header.php';
 
 // Check directories
-if (!is_dir($module_skeleton->getConfig('uploadPath'))) {
+if (!is_dir($module_skeletonHelper->getConfig('uploadPath'))) {
     redirect_header('index.php', 3, _CO_MODULE_SKELETON_WARNING_NOUPLOADDIR);
     exit();
 }
@@ -33,10 +33,15 @@ switch ($op) {
     default:
     case 'items.list':
         $apply_filter = XoopsRequest::getBool('apply_filter', false);
+        if (!$apply_filter) {
+            // reset session varibles
+            $module_skeletonSession->destroy();
+        }
+
         //  admin navigation
         xoops_cp_header();
-        $indexAdmin = new ModuleAdmin();
-        echo $indexAdmin->addNavigation($currentFile);
+        $indexAdmin = \Xmf\Module\Admin::getInstance();
+        $indexAdmin->displayNavigation($currentFile);
         // buttons
         $adminMenu = new ModuleAdmin();
         $adminMenu->addItemButton(_CO_MODULE_SKELETON_BUTTON_ITEM_ADD, $currentFile . "?op=item.add", 'add');
@@ -45,19 +50,32 @@ switch ($op) {
         }
         echo $adminMenu->renderButton();
         //
-        $itemcategoryCount = $module_skeleton->getHandler('itemcategory')->getCount();
-        $categories = $module_skeleton->getHandler('itemcategory')->getObjects(null, true, false); // as array
-        $itemCount = $module_skeleton->getHandler('item')->getCount();
+        $itemcategoryCount = $module_skeletonHelper->getHandler('itemcategory')->getCount();
+        $categories = $module_skeletonHelper->getHandler('itemcategory')->getObjects(null, true, false); // as array
+        $itemCount = $module_skeletonHelper->getHandler('item')->getCount();
         $GLOBALS['xoopsTpl']->assign('itemCount', $itemCount);
         if ($itemCount > 0) {
             // get filter parameters
-            $filter_item_title_condition = XoopsRequest::getString('filter_item_title_condition', '');
-            $filter_item_title = XoopsRequest::getString('filter_item_title', '');
-            $filter_itemcategory_title_condition = XoopsRequest::getString('filter_itemcategory_title_condition', '');
-            $filter_itemcategory_title = XoopsRequest::getString('filter_itemcategory_title', '');
-            $filter_item_owner_uid = XoopsRequest::getArray('filter_item_owner_uid', null);
-//            $filter_item_date = XoopsRequest::getArray('filter_item_date', null);
-//            $filter_item_date_condition = XoopsRequest::getString('filter_item_date_condition', '<');
+            $session_item_title_condition = $module_skeletonSession->get('filter_item_title_condition');
+            $filter_item_title_condition = XoopsRequest::getString('filter_item_title_condition', $session_item_title_condition ? $session_item_title_condition : '');
+            //
+            $session_item_title = $module_skeletonSession->get('filter_item_title');
+            $filter_item_title = XoopsRequest::getString('filter_item_title', $session_item_title ? $session_item_title : '');
+            //
+            $session_itemcategory_title_condition = $module_skeletonSession->get('filter_itemcategory_title_condition');
+            $filter_itemcategory_title_condition = XoopsRequest::getString('filter_itemcategory_title_condition', $session_itemcategory_title_condition ? $session_itemcategory_title_condition : '');
+            //
+            $session_itemcategory_title = $module_skeletonSession->get('filter_item_title');
+            $filter_itemcategory_title = XoopsRequest::getString('filter_itemcategory_title', $session_itemcategory_title ? $session_itemcategory_title : '');
+            //
+            $session_item_owner_uid = $module_skeletonSession->get('filter_item_owner_uid');
+            $filter_item_owner_uid = XoopsRequest::getArray('filter_item_owner_uid', $session_item_owner_uid ? $session_item_owner_uid : null);
+            //
+//            $session_item_date = $module_skeletonSession->get('filter_item_date');
+//            $filter_item_date = XoopsRequest::getArray('filter_item_date', $session_item_date ? $session_item_date : null);
+            //
+//            $session_item_date_condition = $module_skeletonSession->get('filter_item_date_condition');
+//            $filter_item_date_condition = XoopsRequest::getString('filter_item_date_condition', $session_item_date_condition ? $session_item_date_condition : '<');
             //
             $itemCriteria = new CriteriaCompo();
             if ($apply_filter == true) {
@@ -113,7 +131,7 @@ switch ($op) {
                             $function = 'LIKE';
                             break;
                     }
-                    $item_category_ids = $module_skeleton->getHandler('itemcategory')->getIds(new Criteria('itemcategory_title', $pre . $filter_itemcategory_title . $post, $function));
+                    $item_category_ids = $module_skeletonHelper->getHandler('itemcategory')->getIds(new Criteria('itemcategory_title', $pre . $filter_itemcategory_title . $post, $function));
                     $itemCriteria->add(new Criteria('item_category_id', '(' . implode(',', $item_category_ids) . ')', 'IN'));
                 }
                 // evaluate item_owner_uid criteria
@@ -128,28 +146,28 @@ switch ($op) {
 */
             }
             $GLOBALS['xoopsTpl']->assign('apply_filter', $apply_filter);
-            $itemFilterCount = $module_skeleton->getHandler('item')->getCount($itemCriteria);
+            $itemFilterCount = $module_skeletonHelper->getHandler('item')->getCount($itemCriteria);
             $GLOBALS['xoopsTpl']->assign('itemFilterCount', $itemFilterCount);
             //
             $itemCriteria->setSort('item_date');
             $itemCriteria->setOrder('DESC');
             //
             $start = XoopsRequest::getInt('start', 0);
-            $limit = $module_skeleton->getConfig('admin_perpage');
+            $limit = $module_skeletonHelper->getConfig('adminPerpage');
             $itemCriteria->setStart($start);
             $itemCriteria->setLimit($limit);
             //
             if ($itemFilterCount > $limit) {
                 xoops_load('xoopspagenav');
                 $linklist = "op={$op}";
-                $linklist .= "&filter_item_title_condition={$filter_item_title_condition}";
-                $linklist .= "&filter_item_title={$filter_item_title}";
-                $linklist .= "&filter_itemcategory_title_condition={$filter_itemcategory_title_condition}";
-                $linklist .= "&filter_itemcategory_title={$filter_itemcategory_title}";
-                $linklist .= "&filter_item_owner_uid={$filter_item_owner_uid}";
-//                $linklist .= "&filter_item_date_condition={$filter_item_date_condition}";
-//                $linklist .= "&filter_item_date={$filter_item_date}";
-                $pagenav = new XoopsPageNav($itemFilterCount, $limit, $start, 'start', $linklist);
+                $module_skeletonSession->set('filter_item_title_condition', $filter_item_title_condition);
+                $module_skeletonSession->set('filter_item_title', $filter_item_title);
+                $module_skeletonSession->set('filter_itemcategory_title_condition', $filter_itemcategory_title_condition);
+                $module_skeletonSession->set('filter_itemcategory_title', $filter_itemcategory_title);
+                $module_skeletonSession->set('filter_item_owner_uid', $filter_item_owner_uid);
+//                $module_skeletonSession->set('filter_item_date_condition', $filter_item_date_condition);
+//                $module_skeletonSession->set('filter_item_date', $filter_item_date);
+              $pagenav = new XoopsPageNav($itemFilterCount, $limit, $start, 'start', $linklist);
                 $pagenav = $pagenav->renderNav(4);
             } else {
                 $pagenav = '';
@@ -175,7 +193,7 @@ switch ($op) {
             $GLOBALS['xoopsTpl']->assign('filter_itemcategory_title', $filter_itemcategory_title);
             //
             $item_owner_unameArrays = array();
-            $item_owner_uidArrays = $module_skeleton->getHandler('item')->getAll(null, array('item_owner_uid'), false, false);
+            $item_owner_uidArrays = $module_skeletonHelper->getHandler('item')->getAll(null, array('item_owner_uid'), false, false);
             foreach ($item_owner_uidArrays as $item_owner_uidArray) {
                 $item_owner_unameArrays[$item_owner_uidArray['item_owner_uid']] = XoopsUserUtility::getUnameFromId($item_owner_uidArray['item_owner_uid']);
             }
@@ -193,8 +211,8 @@ switch ($op) {
 */
             //
             $GLOBALS['xoopsTpl']->assign('token', $GLOBALS['xoopsSecurity']->getTokenHTML());
-            $itemObjs = $module_skeleton->getHandler('item')->getObjects($itemCriteria, true, true);
-            $items = $module_skeleton->getHandler('item')->getObjects($itemCriteria, true, false); // as array
+            $itemObjs = $module_skeletonHelper->getHandler('item')->getObjects($itemCriteria, true, true);
+            $items = $module_skeletonHelper->getHandler('item')->getObjects($itemCriteria, true, false); // as array
             // fill items array
             foreach ($itemObjs as $item_id => $itemObj) {
                 $itemArray = $itemObj->getInfo();
@@ -203,7 +221,7 @@ switch ($op) {
         } else {
             // NOP
         }
-        $GLOBALS['xoopsTpl']->display("db:{$module_skeleton->getModule()->dirname()}_am_items_list.tpl");
+        $GLOBALS['xoopsTpl']->display("db:{$module_skeletonHelper->getModule()->dirname()}_am_items_list.tpl");
         //
         include 'admin_footer.php';
         break;
@@ -215,15 +233,15 @@ switch ($op) {
         switch ($action) {
             case 'delete':
                 if (XoopsRequest::getBool('ok', false, 'POST') == true) {
-                    // delete subscriber (subscr), subscriptions (catsubscrs) and mailinglist
-                    if ($module_skeleton->getHandler('item')->deleteAll($itemCriteria, true, true)) {
+                    // delete items
+                    if ($module_skeletonHelper->getHandler('item')->deleteAll($itemCriteria, true, true)) {
                         redirect_header($currentFile, 3, _CO_MODULE_SKELETON_ITEMS_DELETED);
                     } else {
                         echo $itemObj->getHtmlErrors();
                     }
                 } else {
                     $item_titles = array();
-                    foreach ($module_skeleton->getHandler('item')->getObjects($itemCriteria) as $itemObj) {
+                    foreach ($module_skeletonHelper->getHandler('item')->getObjects($itemCriteria) as $itemObj) {
                         $item_titles[] = $itemObj->getVar('item_title');
                     }
                     // render start here
@@ -239,19 +257,19 @@ switch ($op) {
                 break;
 /*
             case 'activate':
-                // activate subscriber (subscr)
-                if ($xnewsletter->getHandler('subscr')->updateAll('subscr_activated', true, $subscrCriteria, true)) {
-                    redirect_header($currentFile, 3, _AM_XNEWSLETTER_FORMACTIVATEOK);
+                // activate items
+                if ($module_skeletonHelper->getHandler('item')->updateAll('item_activated', true, $itemCriteria, true)) {
+                    redirect_header($currentFile, 3,_CO_MODULE_SKELETON_ITEMS_ACTIVATED);
                 } else {
-                    echo $subscrObj->getHtmlErrors();
+                    // ERROR
                 }
                 break;
             case 'unactivate':
-                // unactivate subscriber (subscr)
-                if ($xnewsletter->getHandler('subscr')->updateAll('subscr_activated', false, $subscrCriteria, true)) {
-                    redirect_header($currentFile, 3, _AM_XNEWSLETTER_FORMUNACTIVATEOK);
+                // unactivate items
+                if ($module_skeletonHelper->getHandler('item')->updateAll('item_activated', false, $itemCriteria, true)) {
+                    redirect_header($currentFile, 3, _CO_MODULE_SKELETON_ITEMS_UNACTIVATED);
                 } else {
-                    echo $subscrObj->getHtmlErrors();
+                    // ERROR
                 }
                 break;
 */
@@ -265,15 +283,15 @@ switch ($op) {
     case 'item.edit':
         //  admin navigation
         xoops_cp_header();
-        $indexAdmin = new ModuleAdmin();
-        echo $indexAdmin->addNavigation($currentFile);
+        $indexAdmin = \Xmf\Module\Admin::getInstance();
+        $indexAdmin->displayNavigation($currentFile);
         // buttons
         $adminMenu = new ModuleAdmin();
         $adminMenu->addItemButton(_CO_MODULE_SKELETON_BUTTON_ITEMS_LIST, "{$currentFile}?op=items.list", 'list');
         echo $adminMenu->renderButton();
         //
         $item_id = XoopsRequest::getInt('item_id', 0);
-        if (!$itemObj = $module_skeleton->getHandler('item')->get($item_id)) {
+        if (!$itemObj = $module_skeletonHelper->getHandler('item')->get($item_id)) {
             // ERROR
             redirect_header($currentFile, 3, _CO_MODULE_SKELETON_ERROR_NOITEM);
             exit();
@@ -307,7 +325,7 @@ switch ($op) {
 // OR
         $item_date = time();
         //
-        $itemObj = $module_skeleton->getHandler('item')->get($item_id);
+        $itemObj = $module_skeletonHelper->getHandler('item')->get($item_id);
         //
         $itemObj->setVar('item_category_id', $item_category_id);
         $itemObj->setVar('item_title', $item_title);
@@ -318,14 +336,14 @@ switch ($op) {
         $itemObj->setVar('item_owner_uid', $item_owner_uid);
         $itemObj->setVar('item_date', $item_date);
         //
-        $itemfieldObjs = $module_skeleton->getHandler('itemfield')->getObjects();
+        $itemfieldObjs = $module_skeletonHelper->getHandler('itemfield')->getObjects();
         //
         foreach ($itemfieldObjs as $itemfieldObj) {
             $value = $itemfieldObj->getValueForSave($itemObj, $_REQUEST[$itemfieldObj->getVar('itemfield_name')]);
             $itemObj->setVar($itemfieldObj->getVar('itemfield_name'), $value);
         }
         //
-        if(!$module_skeleton->getHandler('item')->insert($itemObj)) {
+        if(!$module_skeletonHelper->getHandler('item')->insert($itemObj)) {
             // ERROR
             xoops_cp_header();
             echo $itemObj->getHtmlErrors();
@@ -351,7 +369,7 @@ switch ($op) {
 
     case 'item.delete':
         $item_id = XoopsRequest::getInt('item_id', 0);
-        $itemObj = $module_skeleton->getHandler('item')->get($item_id);
+        $itemObj = $module_skeletonHelper->getHandler('item')->get($item_id);
         if (!$itemObj) {
             redirect_header($currentFile, 3, _CO_MODULE_SKELETON_ERROR_NOITEM);
             exit();
@@ -360,7 +378,7 @@ switch ($op) {
             if (!$GLOBALS['xoopsSecurity']->check()) {
                 redirect_header($currentFile, 3, implode(',', $GLOBALS['xoopsSecurity']->getErrors()));
             }
-            if ($module_skeleton->getHandler('item')->delete($itemObj)) {
+            if ($module_skeletonHelper->getHandler('item')->delete($itemObj)) {
                 redirect_header($currentFile, 3, _CO_MODULE_SKELETON_ITEM_DELETED);
             } else {
                 // ERROR
@@ -385,7 +403,7 @@ switch ($op) {
 // IN PROGRESS
     case 'item.delete.file':
         $item_id = XoopsRequest::getInt('item_id', 0);
-        $itemObj = $module_skeleton->getHandler('item')->get($item_id);
+        $itemObj = $module_skeletonHelper->getHandler('item')->get($item_id);
         // get item field name and file key
         $file_name_key = XoopsRequest::getArray('delete_file_name_key', 0); // form value: delete_file_name_key[$itemfield_name][$file_key]
         $itemfield_names = array_keys($file_name_key);
@@ -396,18 +414,18 @@ switch ($op) {
         $files = json_decode($itemObj->getVar($itemfield_name), true);
         $file = $files[$file_key];
         // delete file from filesystem and from field
-        $uploadDir = $module_skeleton->getConfig('uploadPath') . '/';
+        $uploadDir = $module_skeletonHelper->getConfig('uploadPath') . '/';
         @unlink($uploadDir . $file['savedfilename']);
         // delete file from field
         unset($files[$file_key]);
         $files = array_values($files);
         $itemObj->setVar($itemfield_name, json_encode($files));
-        $module_skeleton->getHandler('item')->insert($itemObj);
+        $module_skeletonHelper->getHandler('item')->insert($itemObj);
         //
         //  admin navigation
         xoops_cp_header();
-        $indexAdmin = new ModuleAdmin();
-        echo $indexAdmin->addNavigation($currentFile);
+        $indexAdmin = \Xmf\Module\Admin::getInstance();
+        $indexAdmin->displayNavigation($currentFile);
         // buttons
         $adminMenu = new ModuleAdmin();
         $adminMenu->addItemButton(_CO_MODULE_SKELETON_BUTTON_ITEMS_LIST, "{$currentFile}?op=items.list", 'list');

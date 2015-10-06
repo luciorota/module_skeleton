@@ -26,7 +26,7 @@ defined('XOOPS_ROOT_PATH') || die('XOOPS root path not defined');
  */
 abstract class Module_skeletonExtraitemfieldtype
 {
-    protected $module_skeleton = null;
+    protected $module_skeletonHelper = null;
     protected $db = null;
     protected $itemObj = null;
     protected $itemfieldObj = null;
@@ -37,7 +37,7 @@ abstract class Module_skeletonExtraitemfieldtype
      */
     public function __construct($itemObj, $itemfieldObj)
     {
-        $this->module_skeleton = Module_skeletonModule_skeleton::getInstance();
+        $this->module_skeletonHelper = \Xmf\Module\Helper::getHelper('module_skeleton');
         $this->db = XoopsDatabaseFactory::getDatabaseConnection();
         $this->itemObj = $itemObj;
         $this->itemfieldObj = $itemfieldObj;

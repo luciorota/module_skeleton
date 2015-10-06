@@ -32,8 +32,8 @@ include_once __DIR__ . '/common.php';
  */
 function module_skeleton_com_update($item_id, $total_num)
 {
-    $module_skeleton = Module_skeletonModule_skeleton::getInstance();
-    $module_skeleton->getHandler('item')->updateAll('comments', intval($total_num), new Criteria('item_id', (int) $item_id));
+    $module_skeletonHelper = Module_skeletonModule_skeleton::getInstance();
+    $module_skeletonHelper->getHandler('item')->updateAll('comments', intval($total_num), new Criteria('item_id', (int) $item_id));
 }
 
 /**

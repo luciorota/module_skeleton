@@ -23,7 +23,7 @@ defined('XOOPS_ROOT_PATH') || die('XOOPS root path not defined');
 $modDirName = basename(dirname(__DIR__));
 include_once(XOOPS_ROOT_PATH . "/modules/$modDirName/include/common.php");
 //@include_once(XOOPS_ROOT_PATH . "/modules/module_skeleton/language/" . $xoopsConfig['language'] . "/admin.php");
-xoops_loadLanguage('admin', $modDirName);
+xoops_loadLanguage('admin', $modDirName); // IN PROGRESS $module_skeletonHelper->loadLanguage('admin');
 
 /**
  * @param object            $xoopsModule

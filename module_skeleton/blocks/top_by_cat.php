@@ -37,11 +37,11 @@ include_once dirname(__DIR__) . '/include/common.php';
 function module_skeleton_top_by_itemcategory_show($options)
 {
     global $xoopsUser;
-    $module_skeleton = Module_skeletonModule_skeleton::getInstance();
+    $module_skeletonHelper = Module_skeletonModule_skeleton::getInstance();
 
     $groupperm_handler            = xoops_gethandler('groupperm');
     $groups                   = is_object($xoopsUser) ? $xoopsUser->getGroups() : array(0 => XOOPS_GROUP_ANONYMOUS);
-    $allowedDownItemcategoriesIds = $groupperm_handler->getItemIds('WFDownCatPerm', $groups, $module_skeleton->getModule()->mid());
+    $allowedDownItemcategoriesIds = $groupperm_handler->getItemIds('WFDownCatPerm', $groups, $module_skeletonHelper->getModule()->mid());
 
     $block = array();
 
@@ -52,7 +52,7 @@ function module_skeleton_top_by_itemcategory_show($options)
     $criteria->setSort('date');
     $criteria->setOrder('DESC');
     $criteria->setLimit($options[1]);
-    $downloadObjs = $module_skeleton->getHandler('download')->getObjects($criteria);
+    $downloadObjs = $module_skeletonHelper->getHandler('download')->getObjects($criteria);
 
     foreach ($downloadObjs as $downloadObj) {
         $download = $downloadObj->toArray();
@@ -62,20 +62,20 @@ function module_skeleton_top_by_itemcategory_show($options)
         $download['title'] = xoops_substr($download['title'], 0, ($options[2] - 1));
         $download['id']    = (int) $download['lid'];
         if ($options[0] == 'published') {
-            $download['date'] = formatTimestamp($download['published'], $module_skeleton->getConfig('dateFormat'));
+            $download['date'] = formatTimestamp($download['published'], $module_skeletonHelper->getConfig('dateFormat'));
         } else {
-            $download['date'] = formatTimestamp($download['date'], $module_skeleton->getConfig('dateFormat'));
+            $download['date'] = formatTimestamp($download['date'], $module_skeletonHelper->getConfig('dateFormat'));
         }
-        $download['dirname']  = $module_skeleton->getModule()->dirname();
+        $download['dirname']  = $module_skeletonHelper->getModule()->dirname();
         $block['downloads'][] = $download;
     }
 
-    $allsubcats_linked_totop = $module_skeleton->getHandler('itemcategory')->getAllSubcatsTopParentCid();
+    $allsubcats_linked_totop = $module_skeletonHelper->getHandler('itemcategory')->getAllSubcatsTopParentCid();
 
-    foreach ($module_skeleton->getHandler('itemcategory')->topItemcategories as $cid) {
-        $block['topcats'][$cid]['title']  = $module_skeleton->getHandler('itemcategory')->allItemcategories[$cid]->getVar('title');
+    foreach ($module_skeletonHelper->getHandler('itemcategory')->topItemcategories as $cid) {
+        $block['topcats'][$cid]['title']  = $module_skeletonHelper->getHandler('itemcategory')->allItemcategories[$cid]->getVar('title');
         $block['topcats'][$cid]['cid']    = $cid;
-        $block['topcats'][$cid]['imgurl'] = $module_skeleton->getHandler('itemcategory')->allItemcategories[$cid]->getVar('imgurl');
+        $block['topcats'][$cid]['imgurl'] = $module_skeletonHelper->getHandler('itemcategory')->allItemcategories[$cid]->getVar('imgurl');
     }
 
 //mb    foreach ($block['downloads'] as $key => $value) {

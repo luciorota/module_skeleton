@@ -30,102 +30,42 @@ include_once MODULE_SKELETON_ROOT_PATH . '/class/common/filechecker.php';
 
 // admin navigation
 xoops_cp_header();
-$indexAdmin = new ModuleAdmin();
+
+$indexAdmin = \Xmf\Module\Admin::getInstance();
+$indexAdmin->displayNavigation($currentFile);
+
 $indexAdmin->addInfoBox(_AM_MODULE_SKELETON_MINDEX_DOWNSUMMARY);
 // Itemcategories
-$itemcategoryCount = $module_skeleton->getHandler('itemcategory')->getCount();
-if ($itemcategoryCount > 0) {
-    $indexAdmin->addInfoBoxLine(
-        _AM_MODULE_SKELETON_MINDEX_DOWNSUMMARY,
-        '<infolabel><a href="itemcategory.php">' . _AM_MODULE_SKELETON_ITEMCATEGORIES_COUNT . '</a></infolabel>',
-        $itemcategoryCount,
-        'green'
-    );
-} else {
-    $indexAdmin->addInfoBoxLine(
-        _AM_MODULE_SKELETON_MINDEX_DOWNSUMMARY,
-        '<infolabel><a href="itemcategory.php">' . _AM_MODULE_SKELETON_ITEMCATEGORIES_COUNT . '</a></infolabel>',
-        $itemcategoryCount,
-        'green'
-    );
-}
+$itemcategoryCount = $module_skeletonHelper->getHandler('itemcategory')->getCount();
+$indexAdmin->addInfoBoxLine('<infolabel><a href="itemcategory.php">' . _AM_MODULE_SKELETON_ITEMCATEGORIES_COUNT . '</a></infolabel>' . $itemcategoryCount);
 // Items
-$itemCount = $module_skeleton->getHandler('item')->getCount();
-if ($itemCount > 0) {
-    $indexAdmin->addInfoBoxLine(
-        _AM_MODULE_SKELETON_MINDEX_DOWNSUMMARY,
-        '<infolabel><a href="item.php">' . _AM_MODULE_SKELETON_ITEMS_COUNT . '</a><b></infolabel>',
-        $itemCount,
-        'green'
-    );
-} else {
-    $indexAdmin->addInfoBoxLine(
-        _AM_MODULE_SKELETON_MINDEX_DOWNSUMMARY,
-        '<infolabel><a href="item.php">' . _AM_MODULE_SKELETON_ITEMS_COUNT . '</a></infolabel>',
-        $itemCount,
-        'green'
-    );
-}
+$itemCount = $module_skeletonHelper->getHandler('item')->getCount();
+$indexAdmin->addInfoBoxLine('<infolabel><a href="item.php">' . _AM_MODULE_SKELETON_ITEMS_COUNT . '</a></infolabel>' . $itemCount);
 // Itemfieldcategories
-$itemfieldcategoryCount = $module_skeleton->getHandler('itemfieldcategory')->getCount();
-if ($itemfieldcategoryCount > 0) {
-    $indexAdmin->addInfoBoxLine(
-        _AM_MODULE_SKELETON_MINDEX_DOWNSUMMARY,
-        '<infolabel><a href="itemfieldcategory.php">' . _AM_MODULE_SKELETON_ITEMFIELDCATEGORIES_COUNT . '</a></infolabel>',
-        $itemfieldcategoryCount,
-        'green'
-    );
-} else {
-    $indexAdmin->addInfoBoxLine(
-        _AM_MODULE_SKELETON_MINDEX_DOWNSUMMARY,
-        '<infolabel><a href="itemfieldcategory.php">' . _AM_MODULE_SKELETON_ITEMFIELDCATEGORIES_COUNT . '</a></infolabel>',
-        $itemfieldcategoryCount,
-        'green'
-    );
-}
+$itemfieldcategoryCount = $module_skeletonHelper->getHandler('itemfieldcategory')->getCount();
+$indexAdmin->addInfoBoxLine('<infolabel><a href="itemfieldcategory.php">' . _AM_MODULE_SKELETON_ITEMFIELDCATEGORIES_COUNT . '</a></infolabel>' . $itemfieldcategoryCount);
 // Itemfields
-$itemfieldCount = $module_skeleton->getHandler('itemfield')->getCount();
-if ($itemfieldCount > 0) {
-    $indexAdmin->addInfoBoxLine(
-        _AM_MODULE_SKELETON_MINDEX_DOWNSUMMARY,
-        '<infolabel><a href="itemfield.php">' . _AM_MODULE_SKELETON_ITEMFIELDS_COUNT . '</a><b></infolabel>',
-        $itemfieldCount,
-        'green'
-    );
-} else {
-    $indexAdmin->addInfoBoxLine(
-        _AM_MODULE_SKELETON_MINDEX_DOWNSUMMARY,
-        '<infolabel><a href="itemfield.php">' . _AM_MODULE_SKELETON_ITEMFIELDS_COUNT . '</a></infolabel>',
-        $itemCount,
-        'green'
-    );
-}
+$itemfieldCount = $module_skeletonHelper->getHandler('itemfield')->getCount();
+$indexAdmin->addInfoBoxLine('<infolabel><a href="itemfield.php">' . _AM_MODULE_SKELETON_ITEMFIELDS_COUNT . '</a></infolabel>' . $itemfieldCount);
 // module max file size
-$indexAdmin->addInfoBoxLine(
-    _AM_MODULE_SKELETON_MINDEX_DOWNSUMMARY,
-    '<infolabel>' . _AM_MODULE_SKELETON_DOWN_MODULE_MAXFILESIZE . '</infolabel>',
-    module_skeleton_bytesToSize1024($module_skeleton->getConfig('uploadMaxFileSize')),
-    'green'
-);
+$indexAdmin->addInfoBoxLine('<infolabel>' . _AM_MODULE_SKELETON_DOWN_MODULE_MAXFILESIZE . '</infolabel>' . module_skeleton_bytesToSize1024($module_skeletonHelper->getConfig('uploadMaxFileSize')));
 // upload file size limit
 // get max file size (setup and php.ini)
 $phpiniMaxFileSize = (min((int) (ini_get('upload_max_filesize')), (int) (ini_get('post_max_size')), (int) (ini_get('memory_limit')))) * 1024 * 1024; // bytes
-$maxFileSize = module_skeleton_bytesToSize1024(min($module_skeleton->getConfig('uploadMaxFileSize'), $phpiniMaxFileSize));
-$indexAdmin->addInfoBoxLine(
-    _AM_MODULE_SKELETON_MINDEX_DOWNSUMMARY,
-    '<infolabel>' .  _AM_MODULE_SKELETON_UPLOAD_MAXFILESIZE . '</infolabel>',
-    $maxFileSize,
-    'green'
-);
+$maxFileSize = module_skeleton_bytesToSize1024(min($module_skeletonHelper->getConfig('uploadMaxFileSize'), $phpiniMaxFileSize));
+$indexAdmin->addInfoBoxLine('<infolabel>' .  _AM_MODULE_SKELETON_UPLOAD_MAXFILESIZE . '</infolabel>' . $maxFileSize);
+
 // check directories
 $indexAdmin->addConfigBoxLine('');
 $redirectFile = $_SERVER['PHP_SELF'];
 $indexAdmin->addConfigBoxLine('');
-$path = $module_skeleton->getConfig('uploadPath') . '/';
+$path = $module_skeletonHelper->getConfig('uploadPath') . '/';
 $indexAdmin->addConfigBoxLine(DirectoryChecker::getDirectoryStatus($path, 0777, $redirectFile));
 $indexAdmin->addConfigBoxLine('');
-echo $indexAdmin->addNavigation('index.php');
-echo $indexAdmin->renderIndex();
+
+$indexAdmin->displayIndex();
+//echo $indexAdmin->addNavigation('index.php');
+//echo $indexAdmin->renderIndex();
 echo module_skeleton_serverStats();
 
 include 'admin_footer.php';

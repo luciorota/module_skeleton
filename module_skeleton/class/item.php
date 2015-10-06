@@ -30,7 +30,7 @@ class Module_skeletonItem extends XoopsObject
      * @var Module_skeletonModule_skeleton
      * @access private
      */
-    private $module_skeleton = null;
+    private $module_skeletonHelper = null;
 
     /**
      * @var Module_skeletonCategory
@@ -45,7 +45,7 @@ class Module_skeletonItem extends XoopsObject
      */
     public function __construct($itemfields)
     {
-        $this->module_skeleton = Module_skeletonModule_skeleton::getInstance();
+        $this->module_skeletonHelper = \Xmf\Module\Helper::getHelper('module_skeleton');
         $this->db = XoopsDatabaseFactory::getDatabaseConnection();
         $this->initVar('item_id', XOBJ_DTYPE_INT);
         $this->initVar('item_category_id', XOBJ_DTYPE_INT, 0);
@@ -84,7 +84,7 @@ class Module_skeletonItem extends XoopsObject
     public function getItemcategory()
     {
         if (!isset($this->itemcategoryObj)) {
-            $this->itemcategoryObj = $this->module_skeleton->getHandler('itemcategory')->get($this->getVar('item_category_id'));
+            $this->itemcategoryObj = $this->module_skeletonHelper->getHandler('itemcategory')->get($this->getVar('item_category_id'));
         }
         return $this->itemcategoryObj;
     }
@@ -101,6 +101,9 @@ class Module_skeletonItem extends XoopsObject
         $groupperm_handler = xoops_gethandler('groupperm');
         //
         xoops_load('XoopsUserUtility');
+        //
+        $isAdmin = $this->module_skeletonHelper->isUserAdmin();
+        $groups = is_object($xoopsUser) ? $xoopsUser->getGroups() : array(0 => XOOPS_GROUP_ANONYMOUS);
         //
         $item = $this->toArray();
         $item['id'] = $item['item_id'];
@@ -127,18 +130,18 @@ class Module_skeletonItem extends XoopsObject
         $itemfieldCriteria = new Criteria('itemfield_category_id', 0);
         $itemfieldCriteria->setSort('itemfield_weight');
         $itemfieldCriteria->setOrder('ASC');
-        $itemfieldObjs = $this->module_skeleton->getHandler('itemfield')->getObjects($itemfieldCriteria);
+        $itemfieldObjs = $this->module_skeletonHelper->getHandler('itemfield')->getObjects($itemfieldCriteria);
         foreach ($itemfieldObjs as $itemfieldObj) {
             $item[$itemfieldObj->getVar('itemfield_name')] = $itemfieldObj->getOutputValue($this);
         }
         // get readable && writable itemfieldcategory ids
-        $permReadIds = $groupperm_handler->getItemIds('itemfieldcategory_read', $groups, $this->module_skeleton->getModule()->mid());
-        $permWriteIds = $groupperm_handler->getItemIds('itemfieldcategory_write', $groups, $this->module_skeleton->getModule()->mid());
+        $permReadIds = $groupperm_handler->getItemIds('itemfieldcategoryRead', $groups, $this->module_skeletonHelper->getModule()->mid());
+        $permWriteIds = $groupperm_handler->getItemIds('itemfieldcategoryWrite', $groups, $this->module_skeletonHelper->getModule()->mid());
         $permIds = array_intersect($permReadIds, $permWriteIds);
         $itemfieldcategoryCriteria = new CriteriaCompo();
         $itemfieldcategoryCriteria->add(new Criteria('itemfieldcategory_id', '(' . implode(',', $permIds) . ')', 'IN'));
         // get and sort itemfieldcategories
-        $itemfieldcategoryCount = $this->module_skeleton->getHandler('itemfieldcategory')->getCount($itemfieldcategoryCriteria);
+        $itemfieldcategoryCount = $this->module_skeletonHelper->getHandler('itemfieldcategory')->getCount($itemfieldcategoryCriteria);
         if ($itemfieldcategoryCount > 0) {
             $sortedItemfieldcategories = module_skeleton_sortItemfieldcategories($itemfieldcategoryCriteria); // as array
             foreach ($sortedItemfieldcategories as $sortedItemfieldcategory) {
@@ -149,7 +152,7 @@ class Module_skeletonItem extends XoopsObject
                 $itemfieldCriteria = new Criteria('itemfield_category_id', $itemfieldcategory['itemfieldcategory_id']);
                 $itemfieldCriteria->setSort('itemfield_weight');
                 $itemfieldCriteria->setOrder('ASC');
-                $itemfieldObjs = $this->module_skeleton->getHandler('itemfield')->getObjects($itemfieldCriteria);
+                $itemfieldObjs = $this->module_skeletonHelper->getHandler('itemfield')->getObjects($itemfieldCriteria);
                 if (count($itemfieldObjs) > 0) {
                     $itemfieldcategory_label = new XoopsFormLabel($itemfieldcategory['itemfieldcategory_title'], $itemfieldcategory['itemfieldcategory_description']);
                     //$itemfieldcategory_label->setDescription($itemfieldcategory['itemfieldcategory_description']);
@@ -189,7 +192,7 @@ class Module_skeletonItem extends XoopsObject
             $action = $_SERVER['REQUEST_URI'];
         }
         //
-        $isAdmin = module_skeleton_userIsAdmin();
+        $isAdmin = $this->module_skeletonHelper->isUserAdmin();
         $groups = is_object($xoopsUser) ? $xoopsUser->getGroups() : array(0 => XOOPS_GROUP_ANONYMOUS);
         //
         $title = $this->isNew() ? _CO_MODULE_SKELETON_BUTTON_ITEM_ADD : _CO_MODULE_SKELETON_BUTTON_ITEM_EDIT;
@@ -201,7 +204,7 @@ class Module_skeletonItem extends XoopsObject
         $item_title_text->setDescription(_CO_MODULE_SKELETON_ITEM_TITLE_DESC);
         $form->addElement($item_title_text, true);
         // item: item_category_id
-        $itemcategoryObjs = $this->module_skeleton->getHandler('itemcategory')->getObjects();
+        $itemcategoryObjs = $this->module_skeletonHelper->getHandler('itemcategory')->getObjects();
         $itemcategoryObjsTree = new Module_skeletonObjectTree($itemcategoryObjs, 'itemcategory_id', 'itemcategory_pid');
         $item_category_id_select = new XoopsFormLabel(_CO_MODULE_SKELETON_ITEMCATEGORY_TITLE, $itemcategoryObjsTree->makeSelBox('item_category_id', 'itemcategory_title', '-', $this->getVar('item_category_id', 'e'), array('0' => _CO_MODULE_SKELETON_ITEMCATEGORY_ROOT)));
         $item_category_id_select->setDescription(_CO_MODULE_SKELETON_ITEMCATEGORY_TITLE_DESC);
@@ -236,18 +239,18 @@ class Module_skeletonItem extends XoopsObject
         $itemfieldCriteria = new Criteria('itemfield_category_id', 0);
         $itemfieldCriteria->setSort('itemfield_weight');
         $itemfieldCriteria->setOrder('ASC');
-        $itemfieldObjs = $this->module_skeleton->getHandler('itemfield')->getObjects($itemfieldCriteria);
+        $itemfieldObjs = $this->module_skeletonHelper->getHandler('itemfield')->getObjects($itemfieldCriteria);
         foreach ($itemfieldObjs as $itemfieldObj) {
             $form->addElement($itemfieldObj->getEditElement($this), $itemfieldObj->getVar('itemfield_required'));
         }
         // get readable && writable itemfieldcategory ids
-        $permReadIds = $groupperm_handler->getItemIds('itemfieldcategory_read', $groups, $this->module_skeleton->getModule()->mid());
-        $permWriteIds = $groupperm_handler->getItemIds('itemfieldcategory_write', $groups, $this->module_skeleton->getModule()->mid());
+        $permReadIds = $groupperm_handler->getItemIds('itemfieldcategoryRead', $groups, $this->module_skeletonHelper->getModule()->mid());
+        $permWriteIds = $groupperm_handler->getItemIds('itemfieldcategoryWrite', $groups, $this->module_skeletonHelper->getModule()->mid());
         $permIds = array_intersect($permReadIds, $permWriteIds);
         $itemfieldcategoryCriteria = new CriteriaCompo();
         $itemfieldcategoryCriteria->add(new Criteria('itemfieldcategory_id', '(' . implode(',', $permIds) . ')', 'IN'));
         // get and sort itemfieldcategories
-        $itemfieldcategoryCount = $this->module_skeleton->getHandler('itemfieldcategory')->getCount($itemfieldcategoryCriteria);
+        $itemfieldcategoryCount = $this->module_skeletonHelper->getHandler('itemfieldcategory')->getCount($itemfieldcategoryCriteria);
         if ($itemfieldcategoryCount > 0) {
             $sortedItemfieldcategories = module_skeleton_sortItemfieldcategories($itemfieldcategoryCriteria); // as array
             foreach ($sortedItemfieldcategories as $sortedItemfieldcategory) {
@@ -258,7 +261,7 @@ class Module_skeletonItem extends XoopsObject
                 $itemfieldCriteria = new Criteria('itemfield_category_id', $itemfieldcategory['itemfieldcategory_id']);
                 $itemfieldCriteria->setSort('itemfield_weight');
                 $itemfieldCriteria->setOrder('ASC');
-                $itemfieldObjs = $this->module_skeleton->getHandler('itemfield')->getObjects($itemfieldCriteria);
+                $itemfieldObjs = $this->module_skeletonHelper->getHandler('itemfield')->getObjects($itemfieldCriteria);
                 if (count($itemfieldObjs) > 0) {
                     $itemfieldcategory_label = new XoopsFormLabel($itemfieldcategory['itemfieldcategory_title'], $itemfieldcategory['itemfieldcategory_description']);
                     //$itemfieldcategory_label->setDescription($itemfieldcategory['itemfieldcategory_description']);
@@ -308,7 +311,7 @@ class Module_skeletonItemHandler extends XoopsPersistableObjectHandler
      * @var Module_skeletonModule_skeleton
      * @access private
      */
-    private $module_skeleton = null;
+    private $module_skeletonHelper = null;
 
     /**
      * Array of {@link Module_skeletonItemfield} objects
@@ -322,8 +325,8 @@ class Module_skeletonItemHandler extends XoopsPersistableObjectHandler
      */
     public function __construct($db)
     {
-        parent::__construct($db, 'module_skeleton_items', 'Module_skeletonItem', 'item_id', 'item_title');
-        $this->module_skeleton = Module_skeletonModule_skeleton::getInstance();
+        parent::__construct($db, 'mod_module_skeleton_items', 'Module_skeletonItem', 'item_id', 'item_title');
+        $this->module_skeletonHelper = \Xmf\Module\Helper::getHelper('module_skeleton');
     }
 
     /**
@@ -351,7 +354,7 @@ class Module_skeletonItemHandler extends XoopsPersistableObjectHandler
     function loadItemfields()
     {
         if (count($this->itemfields) == 0) {
-            $this->itemfields = $this->module_skeleton->getHandler('itemfield')->loadItemfields();
+            $this->itemfields = $this->module_skeletonHelper->getHandler('itemfield')->loadItemfields();
         }
         return $this->itemfields;
     }
@@ -365,7 +368,7 @@ class Module_skeletonItemHandler extends XoopsPersistableObjectHandler
     */
     function createItemfield($isNew = true)
     {
-        $return = $this->module_skeleton->getHandler('itemfield')->create($isNew);
+        $return = $this->module_skeletonHelper->getHandler('itemfield')->create($isNew);
 
         return $return;
     }
@@ -381,7 +384,7 @@ class Module_skeletonItemHandler extends XoopsPersistableObjectHandler
     **/
     function getItemfields($criteria, $id_as_key = true, $as_object = true)
     {
-        return $this->module_skeleton->getHandler('itemfield')->getObjects($criteria, $id_as_key, $as_object);
+        return $this->module_skeletonHelper->getHandler('itemfield')->getObjects($criteria, $id_as_key, $as_object);
     }
 
     /**
@@ -394,7 +397,7 @@ class Module_skeletonItemHandler extends XoopsPersistableObjectHandler
     */
     function insertItemfield($itemfieldObj, $force = false)
     {
-        return $this->module_skeleton->getHandler('itemfield')->insert($itemfieldObj, $force);
+        return $this->module_skeletonHelper->getHandler('itemfield')->insert($itemfieldObj, $force);
     }
 
     /**
@@ -407,7 +410,7 @@ class Module_skeletonItemHandler extends XoopsPersistableObjectHandler
     */
     function deleteItemfield($itemfieldObj, $force = false)
     {
-        return $this->module_skeleton->getHandler('itemfield')->delete($itemfieldObj, $force);
+        return $this->module_skeletonHelper->getHandler('itemfield')->delete($itemfieldObj, $force);
     }
 
     /**
@@ -474,7 +477,7 @@ class Module_skeletonItemHandler extends XoopsPersistableObjectHandler
      */
     function getItemVars()
     {
-        return $this->module_skeleton->getHandler('itemfield')->getItemVars();
+        return $this->module_skeletonHelper->getHandler('itemfield')->getItemVars();
     }
 
     /**
@@ -523,8 +526,8 @@ class Module_skeletonItemHandler extends XoopsPersistableObjectHandler
             return false;
         }
         // delete files from filesystem
-        $uploadDir = $this->module_skeleton->getConfig('uploadPath') . '/';
-        $sql = "SELECT itemfield_name FROM `{$this->module_skeleton->getHandler('itemfield')->table}`";
+        $uploadDir = $this->module_skeletonHelper->getConfig('uploadPath') . '/';
+        $sql = "SELECT itemfield_name FROM `{$this->module_skeletonHelper->getHandler('itemfield')->table}`";
         $sql .= " WHERE itemfield_type = 'file'";
         $result = $this->db->query($sql);
         //$itemfield_names = array();
@@ -538,7 +541,7 @@ class Module_skeletonItemHandler extends XoopsPersistableObjectHandler
         }
 
         // delete comments
-        xoops_comment_delete((int) $this->module_skeleton->getModule()->mid(), (int) $item_id);
+        xoops_comment_delete((int) $this->module_skeletonHelper->getModule()->mid(), (int) $item_id);
         return true;
     }
 

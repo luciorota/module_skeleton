@@ -314,14 +314,14 @@ function module_skeleton_checkModule($dirname)
  */
 function module_skeleton_sortItemcategories($criteria = null, $itemcategory_pid = 0, $level = 0)
 {
-    $module_skeleton = Module_skeletonModule_skeleton::getInstance();
+    $module_skeletonHelper = \Xmf\Module\Helper::getHelper('module_skeleton');
     //
     $sorted = array();
     $subCategoryCriteria = (is_null($criteria)) ? new CriteriaCompo() : $criteria;
     $subCategoryCriteria->add(new Criteria('itemcategory_pid', $itemcategory_pid));
     $subCategoryCriteria->setSort('itemcategory_weight');
     $subCategoryCriteria->setOrder('ASC');
-    $subCategoryObjs = $module_skeleton->getHandler('itemcategory')->getObjects($subCategoryCriteria);
+    $subCategoryObjs = $module_skeletonHelper->getHandler('itemcategory')->getObjects($subCategoryCriteria);
     if (count($subCategoryObjs) > 0) {
         ++$level;
         foreach ($subCategoryObjs as $subCategoryObj) {
@@ -348,14 +348,14 @@ function module_skeleton_sortItemcategories($criteria = null, $itemcategory_pid 
  */
 function module_skeleton_sortItemfieldcategories($criteria = null, $itemfieldcategory_pid = 0, $level = 0)
 {
-    $module_skeleton = Module_skeletonModule_skeleton::getInstance();
+    $module_skeletonHelper = \Xmf\Module\Helper::getHelper('module_skeleton');
     //
     $sorted = array();
     $subCategoryCriteria = (is_null($criteria)) ? new CriteriaCompo() : $criteria;
     $subCategoryCriteria->add(new Criteria('itemfieldcategory_pid', $itemfieldcategory_pid));
     $subCategoryCriteria->setSort('itemfieldcategory_weight');
     $subCategoryCriteria->setOrder('ASC');
-    $subCategoryObjs = $module_skeleton->getHandler('itemfieldcategory')->getObjects($subCategoryCriteria);
+    $subCategoryObjs = $module_skeletonHelper->getHandler('itemfieldcategory')->getObjects($subCategoryCriteria);
     if (count($subCategoryObjs) > 0) {
         ++$level;
         foreach ($subCategoryObjs as $subCategoryObj) {
@@ -369,25 +369,6 @@ function module_skeleton_sortItemfieldcategories($criteria = null, $itemfieldcat
         }
     }
     return $sorted;
-}
-
-/**
- * Checks if a user is admin of Module_skeleton
- *
- * @return boolean
- */
-function module_skeleton_userIsAdmin()
-{
-    global $xoopsUser;
-    $module_skeleton = Module_skeletonModule_skeleton::getInstance();
-
-    static $module_skeleton_isAdmin;
-    if (isset($module_skeleton_isAdmin)) {
-        return $module_skeleton_isAdmin;
-    }
-
-    $module_skeleton_isAdmin = (!is_object($xoopsUser)) ? false : $xoopsUser->isAdmin($module_skeleton->getModule()->getVar('mid'));
-    return $module_skeleton_isAdmin;
 }
 
 /**
@@ -468,11 +449,11 @@ function module_skeleton_seo_genUrl($op, $id, $title = "")
  */
 function module_skeleton_savePermissions($groups, $id, $permName)
 {
-    $module_skeleton = Module_skeletonModule_skeleton::getInstance();
+    $module_skeletonHelper = \Xmf\Module\Helper::getHelper('module_skeleton');
 
     $id            = (int) $id;
     $result        = true;
-    $mid           = $module_skeleton->getModule()->mid();
+    $mid           = $module_skeletonHelper->getModule()->mid();
     $groupperm_handler = xoops_gethandler('groupperm');
 
     // First, if the permissions are already there, delete them
@@ -494,7 +475,7 @@ function module_skeleton_savePermissions($groups, $id, $permName)
  */
 function module_skeleton_serverStats()
 {
-//mb    $module_skeleton = Module_skeletonModule_skeleton::getInstance();
+//mb    $module_skeletonHelper = \Xmf\Module\Helper::getHelper('module_skeleton');
     global $xoopsDB;
     $html = "";
     $html .= "<fieldset><legend style='font-weight: bold; color: #900;'>" . _AM_MODULE_SKELETON_DOWN_IMAGEINFO . "</legend>\n";

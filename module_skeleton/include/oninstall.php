@@ -19,22 +19,16 @@
  * @version         svn:$id$
  */
 
-defined('XOOPS_ROOT_PATH') || die('XOOPS root path not defined');
-$modDirName = basename(dirname(__DIR__));
-include_once(XOOPS_ROOT_PATH . "/modules/$modDirName/include/common.php");
-//@include_once(XOOPS_ROOT_PATH . "/modules/module_skeleton/language/" . $xoopsConfig['language'] . "/admin.php");
-xoops_loadLanguage('admin', $modDirName);
-
-define('INDEX_FILE_PATH', XOOPS_ROOT_PATH . '/uploads/index.html');
-define('BLANK_FILE_PATH', XOOPS_ROOT_PATH . '/uploads/blank.gif');
-
 /**
  * @param object            $xoopsModule
  * @return bool             FALSE if failed
  */
 function xoops_module_pre_install_module_skeleton(&$xoopsModule)
 {
-    // NOP
+    if (!class_exists('\Xmf\Loader')) {
+        $xoopsModule->setErrors('<b>Please install or reactivate XMF module</b>');
+        return false;
+    }
     return true;
 }
 
@@ -44,15 +38,20 @@ function xoops_module_pre_install_module_skeleton(&$xoopsModule)
  */
 function xoops_module_install_module_skeleton(&$xoopsModule)
 {
+    define('INDEX_FILE_PATH', XOOPS_ROOT_PATH . '/uploads/index.html');
+    define('BLANK_FILE_PATH', XOOPS_ROOT_PATH . '/uploads/blank.gif');
+    xoops_loadLanguage('common', $xoopsModule->getVar('dirname'));
     // get module config values
     $config_handler = xoops_gethandler('config');
     $configArray = $config_handler->getConfigsByCat(0, $xoopsModule->getVar('mid'));
 
     // create and populate directories with empty blank.gif and index.html
-    $path = $configArray['uploadPath'];
-    if(!is_dir($path))
-        mkdir($path, 0777, true);
-    chmod($path, 0777);
-    copy(INDEX_FILE_PATH, $path . '/index.html');
+    if (isset($configArray['uploadPath'])) {
+        $path = $configArray['uploadPath'];
+        if(!is_dir($path))
+            mkdir($path, 0777, true);
+        chmod($path, 0777);
+        copy(INDEX_FILE_PATH, $path . '/index.html');
+    }
     return true;
 }

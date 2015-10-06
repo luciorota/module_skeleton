@@ -40,8 +40,8 @@ $modversion['official']    = false;
 include_once XOOPS_ROOT_PATH . "/modules/" . $modversion['dirname'] . "/include/constants.php";
 
 // About
-$modversion["module_status"]       = "Alpha";
-$modversion['release_date']        = '2015/02/25'; // YYYY/mm/dd
+$modversion["module_status"]       = "Alpha2";
+$modversion['release_date']        = '2015/10/04'; // YYYY/mm/dd
 $modversion["module_website_url"]  = "http://www.xoops.org/";
 $modversion["module_website_name"] = "XOOPS";
 $modversion['min_php']             = '5.3.7';
@@ -87,14 +87,10 @@ $modversion['system_menu'] = true;
 // All tables should not have any prefix!
 $modversion['sqlfile']['mysql'] = "sql/mysql.sql";
 // Tables created by sql file (without prefix!)
-$i                        = 0;
-$modversion['tables'][$i] = $modversion['dirname'] . '_itemcategories';
-++$i;
-$modversion['tables'][$i] = $modversion['dirname'] . '_items';
-++$i;
-$modversion['tables'][$i] = $modversion['dirname'] . '_itemfieldcategories';
-++$i;
-$modversion['tables'][$i] = $modversion['dirname'] . '_itemfields';
+$modversion['tables'][] = "mod_{$modversion['dirname']}_itemcategories";
+$modversion['tables'][] = "mod_{$modversion['dirname']}_items";
+$modversion['tables'][] = "mod_{$modversion['dirname']}_itemfieldcategories";
+$modversion['tables'][] = "mod_{$modversion['dirname']}_itemfields";
 
 
 
@@ -111,9 +107,8 @@ $modversion['hasMain']     = true;
 $module_handler = xoops_gethandler('module');
 $xoopsModule = $module_handler->getByDirname($modversion['dirname']);
 if (isset($xoopsModule) && is_object($xoopsModule) && $xoopsModule->dirname() == $modversion['dirname'] && $xoopsModule->isactive()) {
-    if (!isset($module_skelton)) {
-        include_once __DIR__ . '/class/module_skeleton.php';
-        $module_skelton = Module_skeletonModule_skeleton::getInstance();
+    if (!isset($module_skeletonHelper)) {
+        $module_skeletonHelper = \Xmf\Module\Helper::getHelper('module_skeleton');
     }
     $uid = (is_object($GLOBALS['xoopsUser']) && isset($GLOBALS['xoopsUser'])) ? $GLOBALS['xoopsUser']->uid() : 0;
     $groups = (is_object($GLOBALS['xoopsUser'])) ? $GLOBALS['xoopsUser']->getGroups() : array(XOOPS_GROUP_ANONYMOUS);
@@ -181,7 +176,6 @@ $modversion['templates'][] = array(
     'file'        => $modversion['dirname'] . '_itemcategory.tpl',
     'description' => ''
 );
-
 // Admin templates
 $modversion['templates'][] = array(
     'file'        => $modversion['dirname'] . '_am_itemcategories_list.tpl',
@@ -208,7 +202,6 @@ $modversion['templates'][] = array(
     'type'        => 'admin',
     'description' => ''
 );
-
 // Common templates
 $modversion['templates'][] = array(
     'file'        => $modversion['dirname'] . '_co_breadcrumb.tpl',
@@ -239,23 +232,23 @@ $modversion['config'][] = array(
 );
 
 $modversion['config'][] = array(
-    'name'        => 'perpage',
+    'name'        => 'userPerpage',
     'title'       => '_MI_MODULE_SKELETON_PERPAGE',
     'description' => '_MI_MODULE_SKELETON_PERPAGE_DESC',
     'formtype'    => 'select',
     'valuetype'   => 'int',
-    'options'     => array('5' => 5, '10' => 10, '15' => 15, '20' => 20, '25' => 25, '30' => 30, '50' => 50),
-    'default'     => 10
+    'options'     => array('25' => 25, '50' => 50, '100' => 100),
+    'default'     => 25
 );
 
 $modversion['config'][] = array(
-    'name'        => 'admin_perpage',
+    'name'        => 'adminPerpage',
     'title'       => '_MI_MODULE_SKELETON_ADMINPERPAGE',
     'description' => '_MI_MODULE_SKELETON_ADMINPERPAGE_DESC',
     'formtype'    => 'select',
     'valuetype'   => 'int',
-    'options'     => array('5' => 5, '10' => 10, '15' => 15, '20' => 20, '25' => 25, '30' => 30, '50' => 50),
-    'default'     => 10
+    'options'     => array('25' => 25, '50' => 50, '100' => 100),
+    'default'     => 25
 );
 
 $modversion['config'][] = array(

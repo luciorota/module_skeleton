@@ -25,7 +25,7 @@ include_once __DIR__ . 'header.php';
 $com_item_id = XoopsRequest::getInt('com_item_id', 0);
 if ($com_itemid > 0) {
     // Get item title
-    $item = $module_skeleton->getHandler('item')->get($com_item_id);
+    $item = $module_skeletonHelper->getHandler('item')->get($com_item_id);
     $com_replytitle = $item->getVar('item_title');
     include XOOPS_ROOT_PATH . '/include/comment_new.php';
 }

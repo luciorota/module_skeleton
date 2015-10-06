@@ -23,7 +23,7 @@ $currentFile = basename(__FILE__);
 include_once __DIR__ . '/admin_header.php';
 
 // Check directories
-if (!is_dir($module_skeleton->getConfig('uploadPath'))) {
+if (!is_dir($module_skeletonHelper->getConfig('uploadPath'))) {
     redirect_header('index.php', 3, _CO_MODULE_SKELETON_WARNING_NOUPLOADDIR);
     exit();
 }
@@ -34,21 +34,21 @@ switch ($op) {
     case 'itemfieldcategories.list':
         //  admin navigation
         xoops_cp_header();
-        $indexAdmin = new ModuleAdmin();
-        echo $indexAdmin->addNavigation($currentFile);
+        $indexAdmin = \Xmf\Module\Admin::getInstance();
+        $indexAdmin->displayNavigation($currentFile);
         // buttons
         $adminMenu = new ModuleAdmin();
         $adminMenu->addItemButton(_CO_MODULE_SKELETON_BUTTON_ITEMFIELDCATEGORY_ADD, "{$currentFile}?op=itemfieldcategory.add", 'add');
         echo $adminMenu->renderButton();
         //
-        $itemfieldcategoryCount = $module_skeleton->getHandler('itemfieldcategory')->getCount();
+        $itemfieldcategoryCount = $module_skeletonHelper->getHandler('itemfieldcategory')->getCount();
         $GLOBALS['xoopsTpl']->assign('itemfieldcategoryCount', $itemfieldcategoryCount);
         if ($itemfieldcategoryCount > 0) {
             $sortedItemfieldcategories = module_skeleton_sortItemfieldcategories(); // as array
             $GLOBALS['xoopsTpl']->assign('sorted_itemfieldcategories', $sortedItemfieldcategories);
             $GLOBALS['xoopsTpl']->assign('token', $GLOBALS['xoopsSecurity']->getTokenHTML() );
         }
-        $GLOBALS['xoopsTpl']->display("db:{$module_skeleton->getModule()->dirname()}_am_itemfieldcategories_list.tpl");
+        $GLOBALS['xoopsTpl']->display("db:{$module_skeletonHelper->getModule()->dirname()}_am_itemfieldcategories_list.tpl");
         //
         include __DIR__ . '/admin_footer.php';
         break;
@@ -57,15 +57,15 @@ switch ($op) {
     case 'itemfieldcategory.edit':
         //  admin navigation
         xoops_cp_header();
-        $indexAdmin = new ModuleAdmin();
-        echo $indexAdmin->addNavigation($currentFile);
+        $indexAdmin = \Xmf\Module\Admin::getInstance();
+        $indexAdmin->displayNavigation($currentFile);
         // buttons
         $adminMenu = new ModuleAdmin();
         $adminMenu->addItemButton(_CO_MODULE_SKELETON_BUTTON_ITEMFIELDCATEGORIES_LIST, "{$currentFile}?op=itemfieldcategories.list", 'list');
         echo $adminMenu->renderButton();
         //
         $itemfieldcategory_id = XoopsRequest::getInt('itemfieldcategory_id', 0);
-        if (!$itemfieldcategoryObj = $module_skeleton->getHandler('itemfieldcategory')->get($itemfieldcategory_id)) {
+        if (!$itemfieldcategoryObj = $module_skeletonHelper->getHandler('itemfieldcategory')->get($itemfieldcategory_id)) {
             // ERROR
             redirect_header($currentFile, 3, _CO_MODULE_SKELETON_ERROR_NOITEMFIELDCATEGORY);
             exit();
@@ -100,13 +100,13 @@ switch ($op) {
 // OR
         $itemfieldcategory_date = time();
         //
-        $itemfieldcategoryObj = $module_skeleton->getHandler('itemfieldcategory')->get($itemfieldcategory_id);
+        $itemfieldcategoryObj = $module_skeletonHelper->getHandler('itemfieldcategory')->get($itemfieldcategory_id);
         // a itemfieldcategory can not be a child of itself
         if (!$itemfieldcategoryObj->isNew()) {
-            $itemfieldcategoryObjs = $module_skeleton->getHandler('itemfieldcategory')->getObjects();
+            $itemfieldcategoryObjs = $module_skeletonHelper->getHandler('itemfieldcategory')->getObjects();
             $itemfieldcategoryObjsTree = new Module_skeletonObjectTree($itemfieldcategoryObjs, 'itemfieldcategory_id', 'itemfieldcategory_pid');
             $childItemfieldcategoryObjs = $itemfieldcategoryObjsTree->getAllChild($itemfieldcategory_id);
-            //$childcats = $module_skeleton->getHandler('itemfieldcategory')->getChildItemcategories($childitemfieldcategoryObjs);
+            //$childcats = $module_skeletonHelper->getHandler('itemfieldcategory')->getChildItemcategories($childitemfieldcategoryObjs);
             if ($itemfieldcategory_pid == $itemfieldcategory_id || in_array($itemfieldcategory_pid, array_keys($childItemfieldcategoryObjs))) {
                 // ERROR
                 xoops_cp_header();
@@ -132,7 +132,7 @@ switch ($op) {
         $itemfieldcategoryObj->setVar('itemfieldcategory_owner_uid', $itemfieldcategory_owner_uid);
         $itemfieldcategoryObj->setVar('itemfieldcategory_date', $itemfieldcategory_date);
         //
-        if (!$module_skeleton->getHandler('itemfieldcategory')->insert($itemfieldcategoryObj)) {
+        if (!$module_skeletonHelper->getHandler('itemfieldcategory')->insert($itemfieldcategoryObj)) {
             // ERROR
             xoops_cp_header();
             echo $itemfieldcategoryObj->getHtmlErrors();
@@ -141,10 +141,10 @@ switch ($op) {
         }
         $itemfieldcategory_id = (int) $itemfieldcategoryObj->getVar('itemfieldcategory_id');
         // save permissions
-        $read_groups = XoopsRequest::getArray('itemfieldcategory_read', array(), 'POST');
-        module_skeleton_savePermissions($read_groups, $itemfieldcategory_id, 'itemfieldcategory_read');
-        $write_groups = XoopsRequest::getArray('itemfieldcategory_write', array(), 'POST');
-        module_skeleton_savePermissions($write_groups, $itemfieldcategory_id, 'itemfieldcategory_write');
+        $read_groups = XoopsRequest::getArray('itemfieldcategoryRead', array(), 'POST');
+        module_skeleton_savePermissions($read_groups, $itemfieldcategory_id, 'itemfieldcategoryRead');
+        $write_groups = XoopsRequest::getArray('itemfieldcategoryWrite', array(), 'POST');
+        module_skeleton_savePermissions($write_groups, $itemfieldcategory_id, 'itemfieldcategoryWrite');
         //
         if ($isNewCategory) {
             // Notify of new itemfieldcategory
@@ -163,7 +163,7 @@ switch ($op) {
 
     case 'itemfieldcategory.delete':
         $itemfieldcategory_id = XoopsRequest::getInt('itemfieldcategory_id', 0);
-        $itemfieldcategoryObj = $module_skeleton->getHandler('itemfieldcategory')->get($itemfieldcategory_id);
+        $itemfieldcategoryObj = $module_skeletonHelper->getHandler('itemfieldcategory')->get($itemfieldcategory_id);
         if (!$itemfieldcategoryObj) {
             redirect_header($currentFile, 3, _CO_MODULE_SKELETON_ERROR_NOITEMFIELDCATEGORY);
             exit();
@@ -172,7 +172,7 @@ switch ($op) {
             if (!$GLOBALS['xoopsSecurity']->check()) {
                 redirect_header($currentFile, 3, implode(',', $GLOBALS['xoopsSecurity']->getErrors()));
             }
-            if ($module_skeleton->getHandler('itemfieldcategory')->delete($itemfieldcategoryObj)) {
+            if ($module_skeletonHelper->getHandler('itemfieldcategory')->delete($itemfieldcategoryObj)) {
                 redirect_header($currentFile, 3, _CO_MODULE_SKELETON_ITEMFIELDCATEGORY_DELETED);
             } else {
                 // ERROR
@@ -202,9 +202,9 @@ switch ($op) {
             $new_itemfieldcategory_weights = $_POST['new_itemfieldcategory_weights'];
             $ids = array();
             foreach ($new_itemfieldcategory_weights as $itemfieldcategory_id => $new_itemfieldcategory_weight) {
-                $itemfieldcategoryObj = $module_skeleton->getHandler('itemfieldcategory')->get($itemfieldcategory_id);
+                $itemfieldcategoryObj = $module_skeletonHelper->getHandler('itemfieldcategory')->get($itemfieldcategory_id);
                 $itemfieldcategoryObj->setVar('itemfieldcategory_weight', $new_itemfieldcategory_weight);
-                if (!$module_skeleton->getHandler('itemfieldcategory')->insert($itemfieldcategoryObj)) {
+                if (!$module_skeletonHelper->getHandler('itemfieldcategory')->insert($itemfieldcategoryObj)) {
                     redirect_header($currentFile, 3, $itemfieldcategoryObj->getErrors());
                 }
                 unset($itemfieldcategoryObj);

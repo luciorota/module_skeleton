@@ -34,7 +34,7 @@ class Module_skeletonChoiceByLetter
      * @var Module_skeletonModule_skeleton
      * @access public
      */
-    public $module_skeleton = null;
+    public $module_skeletonHelper = null;
 
     /**
      * *#@+
@@ -68,9 +68,9 @@ class Module_skeletonChoiceByLetter
      */
     public function __construct($objHandler, $criteria = null, $field_name = null, $alphabet = array(), $arg_name = 'letter', $url = null, $extra_arg = '', $caseSensitive = false)
     {
-        $this->module_skeleton = Module_skeletonModule_skeleton::getInstance();
+        $this->module_skeletonHelper = \Xmf\Module\Helper::getHelper('module_skeleton');
         $this->objHandler = $objHandler;
-        $this->criteria = is_null($criteria) ? new CriteriaCompo() : $criteria;
+        $this->criteria = is_null($criteria) ? new CriteriaCompo() : clone $criteria;
         $this->field_name = is_null($field_name) ? $this->objHandler->identifierName : $field_name;
         $this->alphabet = (count($alphabet) > 0) ? $alphabet : range('a', 'z'); // is there a way to get locale alphabet?
         $this->arg_name = $arg_name;
@@ -136,7 +136,7 @@ class Module_skeletonChoiceByLetter
 // IN PROGRESS
 // IN PROGRESS
 // IN PROGRESS
-        $ret .= $choiceByLetterTpl->fetch("db:{$this->module_skeleton->getModule()->dirname()}_co_choicebyletter.tpl");
+        $ret .= $choiceByLetterTpl->fetch("db:{$this->module_skeletonHelper->getModule()->dirname()}_co_choicebyletter.tpl");
         unset($choiceByLetterTpl);
 
         return $ret;

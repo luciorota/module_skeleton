@@ -23,7 +23,8 @@
 
 require_once dirname(dirname(dirname(dirname(__DIR__)))) . '/include/cp_header.php';
 $mydirname = basename(dirname(dirname(__DIR__)));
-xoops_loadLanguage('directorychecker', $mydirname);
+xoops_loadLanguage('directorychecker', $mydirname); // IN PROGRESS $module_skeletonHelper->loadLanguage('directorychecker');
+
 
 /**
  * Class DirectoryChecker

@@ -65,8 +65,8 @@ if (@$_POST['op'] == 'submit') {
     }
 
     xoops_cp_header();
-    $indexAdmin = new ModuleAdmin();
-    echo $indexAdmin->addNavigation($currentFile);
+    $indexAdmin = \Xmf\Module\Admin::getInstance();
+    $indexAdmin->displayNavigation($currentFile);
     echo $message;
     include 'admin_footer.php';
     exit();
@@ -74,11 +74,11 @@ if (@$_POST['op'] == 'submit') {
 } else {
     //  admin navigation
     xoops_cp_header();
-    $indexAdmin = new ModuleAdmin();
-    echo $indexAdmin->addNavigation($currentFile);
+    $indexAdmin = \Xmf\Module\Admin::getInstance();
+    $indexAdmin->displayNavigation($currentFile);
     //
     xoops_load('XoopsFormLoader');
-    $form = new XoopsThemeForm(sprintf(_AM_MODULE_SKELETON_CLONE_TITLE, $module_skeleton->getModule()->getVar('name', 'e') ), 'clone', $currentFile, 'post', true);
+    $form = new XoopsThemeForm(sprintf(_AM_MODULE_SKELETON_CLONE_TITLE, $module_skeletonHelper->getModule()->getVar('name', 'e') ), 'clone', $currentFile, 'post', true);
     $cloneDirname_text = new XoopsFormText(_AM_MODULE_SKELETON_CLONE_NAME, 'clonedirname', 20, 20, '');
     $cloneDirname_text->setDescription(_AM_MODULE_SKELETON_CLONE_NAME_DSC);
     $form->addElement($cloneDirname_text, true);
@@ -132,7 +132,7 @@ function module_skeleton_cloneFileDir($path)
  */
 function module_skeleton_createLogo($dirname)
 {
-    $module_skeleton = Module_skeletonModule_skeleton::getInstance();
+    $module_skeletonHelper = Module_skeletonModule_skeleton::getInstance();
     // Check extension/functions
     if (!extension_loaded("gd")) {
         return false;
@@ -155,7 +155,7 @@ function module_skeleton_createLogo($dirname)
     if (!file_exists($imageBase = XOOPS_ROOT_PATH . "/modules/" . $dirname . "/assets/images/module_logo_blank.png")) {
         return false;
     }
-    if (!file_exists($font = XOOPS_ROOT_PATH . "/modules/" . $module_skeleton->getModule()->dirname() . "/assets/images/VeraBd.ttf")) {
+    if (!file_exists($font = XOOPS_ROOT_PATH . "/modules/" . $module_skeletonHelper->getModule()->dirname() . "/assets/images/VeraBd.ttf")) {
         return false;
     }
     // Create image
