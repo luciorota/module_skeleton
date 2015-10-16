@@ -23,31 +23,23 @@ $currentFile = basename(__FILE__);
 include_once __DIR__ . '/header.php';
 
 $groups = is_object($xoopsUser) ? $xoopsUser->getGroups() : array(0 => XOOPS_GROUP_ANONYMOUS);
-
-// get item_id
+//
+// get item_id & itemObj & $item
 $item_id = XoopsRequest::getInt('item_id', 0);
-
-// get itemObj
 $itemObj = $module_skeletonHelper->getHandler('item')->get($item_id);
 if (empty($itemObj)) {
     redirect_header('index.php', 3, _CO_MODULE_SKELETON_ERROR_NOITEM);
 }
-
 $item = $itemObj->getInfo();
-
-// get itemcategory_id
+//
+// get itemcategory_id & itemcategoryObj & itemcategory
 $itemcategory_id = $item['item_category_id'];
-
-// get itemcategory
 if ($itemcategory_id != 0) {
     $itemcategoryObj = $module_skeletonHelper->getHandler('itemcategory')->get($itemcategory_id);
     if (empty($itemcategoryObj) || $itemcategoryObj->isNew()) {
         redirect_header('index.php', 3, _CO_MODULE_SKELETON_ERROR_NOITEMCATEGORY);
     }
     $itemcategory = $itemcategoryObj->getInfo();
-// IN PROGRESS
-// IN PROGRESS
-// IN PROGRESS
 } else {
     $itemcategory = array();
     $itemcategory['id'] = 0;
@@ -56,57 +48,75 @@ if ($itemcategory_id != 0) {
     $itemcategory['itemcategory_title_html'] = $myts->htmlSpecialChars($itemcategory['itemcategory_title']);
     $itemcategory['itemcategory_description'] = _CO_MODULE_SKELETON_ITEMCATEGORY_ROOT_DESC;
     $itemcategory['itemcategory_description_html'] = $myts->htmlSpecialChars($itemcategory['itemcategory_description']);
-// IN PROGRESS
-// IN PROGRESS
-// IN PROGRESS
 }
-
+//
 // check permissions
-if (!$groupperm_handler->checkRight('itemcategoryRead', $itemcategory_id, $groups, $module_skeletonHelper->getModule()->mid())) {
-    if (in_array(XOOPS_GROUP_ANONYMOUS, $groups)) {
-        redirect_header(XOOPS_URL . '/user.php', 3, _MD_MODULE_SKELETON_NEEDLOGINVIEW);
-    } else {
-        redirect_header('index.php', 3, _NOPERM);
+if ($itemcategory_id != 0) {
+    if (!$groupperm_handler->checkRight('itemcategoryRead', $itemcategory_id, $groups, $module_skeletonHelper->getModule()->mid())) {
+        if (in_array(XOOPS_GROUP_ANONYMOUS, $groups)) {
+            redirect_header(XOOPS_URL . '/user.php', 3, _MD_MODULE_SKELETON_NEEDLOGINVIEW);
+        } else {
+            redirect_header('index.php', 3, _NOPERM);
+        }
     }
 }
-
+//
 // get write/read permissions
 $itemcategory_write_ids = $groupperm_handler->getItemIds('itemcategoryWrite', $groups, $module_skeletonHelper->getModule()->mid()); // array
 $itemcategory_read_ids = $groupperm_handler->getItemIds('itemcategoryRead', $groups, $module_skeletonHelper->getModule()->mid()); // array
-
+//
 // get itemcategories tree
 $itemcategoryCriteria = new CriteriaCompo();
 $itemcategoryCriteria->add(new Criteria('itemcategory_id', '(' . implode(',', $itemcategory_read_ids) . ')', 'IN'));
 $itemcategoryObjs = $module_skeletonHelper->getHandler('itemcategory')->getObjects($itemcategoryCriteria, true);
-$itemcategoryObjsTree = new XoopsObjectTree($itemcategoryObjs, 'itemcategory_id', 'itemcategory_pid');
-
-// get first childs and all parents
-$childItemcategoryObjs = $itemcategoryObjsTree->getFirstChild($itemcategory_id);
-$parentItemcategoryObjs = $itemcategoryObjsTree->getAllParent($itemcategory_id);
+$itemcategoryObjsTree = new Module_skeletonObjectTree($itemcategoryObjs, 'itemcategory_id', 'itemcategory_pid');
+//
+// get itemcategory first childs and all parents
+$itemcategoryFirstChildObjs = $itemcategoryObjsTree->getFirstChild($itemcategory_id);
+$itemcategoryAllParentObjs = $itemcategoryObjsTree->getAllParent($itemcategory_id);
 
 
 
 // load template
 $xoopsOption['template_main'] = "{$module_skeletonHelper->getModule()->dirname()}_item.tpl";
 include XOOPS_ROOT_PATH . '/header.php';
-
+//
 $xoTheme->addScript(XOOPS_URL . '/browse.php?Frameworks/jquery/jquery.js');
 $xoTheme->addStylesheet(MODULE_SKELETON_URL . '/assets/css/module.css');
-
-$xoopsTpl->assign('module_skeleton_url', MODULE_SKELETON_URL . '/');
-
-// template: module_skeleton_breadcrumb
-$breadcrumb = new Module_skeletonBreadcrumb();
-$breadcrumb->addLink($module_skeletonHelper->getModule()->getVar('name'), MODULE_SKELETON_URL);
+//
+// template: itemcategory
+$GLOBALS['xoopsTpl']->assign('itemcategory', $itemcategory);
+//
+// template: itemcategoryAllParentsBreadcrumb
+$breadcrumb = new \Xmf\Template\Breadcrumb();
+$breadcrumbItems = array();
+$breadcrumbItems[] = array(
+    'caption' => $module_skeletonHelper->getModule()->getVar('name'),
+    'link' => MODULE_SKELETON_URL
+);
 if ($itemcategory_id != 0) {
-    $breadcrumb->addLink(_CO_MODULE_SKELETON_ITEMCATEGORY_ROOT, MODULE_SKELETON_URL . '/itemcategory.php');
-    foreach (array_reverse($parentItemcategoryObjs) as $parentItemcategoryObj) {
-        $breadcrumb->addLink($parentItemcategoryObj->getVar('itemcategory_title'), '?itemcategory_id=' . $parentItemcategoryObj->getVar('itemcategory_id'));
-    }
+    $breadcrumbItems[] = array(
+        'caption' => _CO_MODULE_SKELETON_ITEMCATEGORY_ROOT,
+        'link' => MODULE_SKELETON_URL . '/itemcategory.php?itemcategory_id=0'
+    );
 }
-$breadcrumb->addLink($itemcategory['itemcategory_title'], MODULE_SKELETON_URL . '/itemcategory.php?itemcategory_id=' . $itemcategory['itemcategory_id']);
-$breadcrumb->addLink($item['item_title'], '');
-$xoopsTpl->assign('module_skeleton_breadcrumb', $breadcrumb->render());
+$itemcategoryAllParentObjs = array_reverse($itemcategoryAllParentObjs);
+foreach ($itemcategoryAllParentObjs as $itemcategoryAllParentObj) {
+    $breadcrumbItems[] = array(
+        'caption' => $itemcategoryAllParentObj->getVar('itemcategory_title'),
+        'link' => MODULE_SKELETON_URL . '/itemcategory.php?itemcategory_id=' . $itemcategoryAllParentObj->getVar('itemcategory_id')
+    );
+}
+$breadcrumbItems[] = array(
+    'caption' => $itemcategory['itemcategory_title'],
+    'link' => MODULE_SKELETON_URL . '/itemcategory.php?itemcategory_id=' . $itemcategory['itemcategory_id']
+);
+$breadcrumbItems[] = array(
+    'caption' => $item['item_title'],
+    'link' => ''
+);
+$breadcrumb->setItems($breadcrumbItems);
+$GLOBALS['xoopsTpl']->assign('itemcategoryAllParentsBreadcrumb', $breadcrumb->fetch());
 
 // IN PROGRESS
 // IN PROGRESS

@@ -22,6 +22,7 @@
 use Xmf\Module\Helper;
 use Xmf\Module\Permission;
 use Xmf\Module\Session;
+use Xmf\Template\Breadcrumb;
 
 defined('XOOPS_ROOT_PATH') || die('XOOPS root path not defined');
 

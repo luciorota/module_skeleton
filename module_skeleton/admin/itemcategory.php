@@ -32,54 +32,84 @@ $op = XoopsRequest::getString('op', 'categories.list');
 switch ($op) {
     default:
     case 'categories.list':
+        $itemcategory_id = XoopsRequest::getInt('itemcategory_id', 0);
         //  admin navigation
         xoops_cp_header();
         $indexAdmin = \Xmf\Module\Admin::getInstance();
         $indexAdmin->displayNavigation($currentFile);
         // buttons
         $adminMenu = new ModuleAdmin();
-        $adminMenu->addItemButton(_CO_MODULE_SKELETON_BUTTON_ITEMCATEGORY_ADD, "{$currentFile}?op=itemcategory.add", 'add');
+        $adminMenu->addItemButton(_CO_MODULE_SKELETON_BUTTON_ITEMCATEGORY_ADD, "{$currentFile}?op=itemcategory.add&amp;itemcategory_id={$itemcategory_id}", 'add');
         echo $adminMenu->renderButton();
         //
-// IN PROGRESS
-// IN PROGRESS
-// IN PROGRESS
-        $itemcategory_id = XoopsRequest::getInt('itemcategory_id', 0); // IN PROGRESS
-        $itemcategory_pid = XoopsRequest::getInt('itemcategory_pid', $itemcategory_id);
-        // get itemcategory
-        if ($itemcategoryObj = $module_skeletonHelper->getHandler('itemcategory')->get($itemcategory_id)) {
+        // get itemcategoryObj & itemcategory
+        if ($itemcategory_id != 0) {
+            $itemcategoryObj = $module_skeletonHelper->getHandler('itemcategory')->get($itemcategory_id);
+            if (empty($itemcategoryObj) || $itemcategoryObj->isNew()) {
+                redirect_header('index.php', 3, _CO_MODULE_SKELETON_ERROR_NOITEMCATEGORY);
+            }
             $itemcategory = $itemcategoryObj->getInfo();
-// IN PROGRESS
-// IN PROGRESS
-// IN PROGRESS
         } else {
-            // MAIN category
-            $itemcategory = array(
-                'itemcategory_id' => 0,
-                //'itemcategory_pid' => 0,
-                'title' => _MAIN,
-// IN PROGRESS
-// IN PROGRESS
-// IN PROGRESS
-            );
+            // ROOT/MAIN category
+            $itemcategory = array();
+            $itemcategory['id'] = 0;
+            $itemcategory['itemcategory_id'] = 0;
+            $itemcategory['itemcategory_title'] = _CO_MODULE_SKELETON_ITEMCATEGORY_ROOT; // IN PROGRESS
+            $itemcategory['itemcategory_title_html'] = $myts->htmlSpecialChars($itemcategory['itemcategory_title']);
+            $itemcategory['itemcategory_description'] = _CO_MODULE_SKELETON_ITEMCATEGORY_ROOT_DESC;
+            $itemcategory['itemcategory_description_html'] = $myts->htmlSpecialChars($itemcategory['itemcategory_description']);
         }
         $GLOBALS['xoopsTpl']->assign('itemcategory', $itemcategory);
+        //
+        // check permissions
+        // ADMIN SIDE: all permissions
+        // get write/read permissions
+        $itemcategory_write_ids = $groupperm_handler->getItemIds('itemcategoryWrite', $groups, $module_skeletonHelper->getModule()->mid()); // array
+        $itemcategory_read_ids = $groupperm_handler->getItemIds('itemcategoryRead', $groups, $module_skeletonHelper->getModule()->mid()); // array
+        //
+        // get itemcategories tree
+        $itemcategoryCriteria = new CriteriaCompo();
+        // ADMIN SIDE: all permissions
+        $itemcategoryObjs = $module_skeletonHelper->getHandler('itemcategory')->getObjects($itemcategoryCriteria, true);
+        $itemcategoryObjsTree = new XoopsObjectTree($itemcategoryObjs, 'itemcategory_id', 'itemcategory_pid');
+        //
+        // get itemcategory first childs and all parents
+        $itemcategoryAllParentObjs = $itemcategoryObjsTree->getAllParent($itemcategory_id);
+        $itemcategoryFirstChildObjs = $itemcategoryObjsTree->getFirstChild($itemcategory_id);
+        //
+        // breadcrumb
+        $breadcrumb = new \Xmf\Template\Breadcrumb();
+        $breadcrumbItems = array();
+        if ($itemcategory_id != 0) {
+            $breadcrumbItems[] = array(
+                'caption' => _CO_MODULE_SKELETON_ITEMCATEGORY_ROOT,
+                'link' => MODULE_SKELETON_ADMIN_URL . '/' . $currentFile
+            );
+        }
+        $itemcategoryAllParentObjs = array_reverse($itemcategoryAllParentObjs);
+        foreach ($itemcategoryAllParentObjs as $itemcategoryAllParentObj) {
+            $breadcrumbItems[] = array(
+                'caption' => $itemcategoryAllParentObj->getVar('itemcategory_title'),
+                'link' => MODULE_SKELETON_ADMIN_URL . '/' . $currentFile . '?itemcategory_id=' . $itemcategoryAllParentObj->getVar('itemcategory_id')
+            );
+        }
+        $breadcrumbItems[] = array(
+            'caption' => $itemcategory['itemcategory_title'],
+            'link' => ''
+        );
+        $breadcrumb->setItems($breadcrumbItems);
+        $GLOBALS['xoopsTpl']->assign('itemcategoryAllParentsBreadcrumb', $breadcrumb->fetch());
+
 // IN PROGRESS
 // IN PROGRESS
 // IN PROGRESS
-        // get itemcategory parents
-        $itemcategoryObjs = $module_skeletonHelper->getHandler('itemcategory')->getObjects();
-        $itemcategoryObjsTree = new Module_skeletonObjectTree($itemcategoryObjs, 'itemcategory_id', 'itemcategory_pid');
-        $itemcategoryParentObjs = $itemcategoryObjsTree->getAllParent($itemcategory_id);
-// IN PROGRESS
-// IN PROGRESS
-// IN PROGRESS
+
         $itemcategoriesCriteria = null; // IN PROGRESS
         //
         $itemcategoryCount = $module_skeletonHelper->getHandler('itemcategory')->getCount();
         $GLOBALS['xoopsTpl']->assign('itemcategoryCount', $itemcategoryCount);
         if ($itemcategoryCount > 0) {
-            $sortedItemcategories = module_skeleton_sortItemcategories($itemcategoriesCriteria, $itemcategory_pid); // as array
+            $sortedItemcategories = module_skeleton_sortItemcategories($itemcategoriesCriteria, $itemcategory_id); // as array
             $GLOBALS['xoopsTpl']->assign('sorted_itemcategories', $sortedItemcategories);
             $GLOBALS['xoopsTpl']->assign('token', $GLOBALS['xoopsSecurity']->getTokenHTML() );
         }
@@ -90,21 +120,22 @@ switch ($op) {
 
     case 'itemcategory.add':
     case 'itemcategory.edit':
+        $itemcategory_id = XoopsRequest::getInt('itemcategory_id', 0);
         //  admin navigation
         xoops_cp_header();
         $indexAdmin = \Xmf\Module\Admin::getInstance();
         $indexAdmin->displayNavigation($currentFile);
         // buttons
         $adminMenu = new ModuleAdmin();
-        $adminMenu->addItemButton(_CO_MODULE_SKELETON_BUTTON_ITEMCATEGORIES_LIST, "{$currentFile}?op=categories.list", 'list');
+        $adminMenu->addItemButton(_CO_MODULE_SKELETON_BUTTON_ITEMCATEGORIES_LIST, "{$currentFile}?op=categories.list&amp;itemcategory_id={$itemcategory_id}", 'list');
         echo $adminMenu->renderButton();
         //
-        $itemcategory_id = XoopsRequest::getInt('itemcategory_id', 0);
         if (!$itemcategoryObj = $module_skeletonHelper->getHandler('itemcategory')->get($itemcategory_id)) {
             // ERROR
             redirect_header($currentFile, 3, _CO_MODULE_SKELETON_ERROR_NOITEMCATEGORY);
             exit();
         }
+        $itemcategoryObj->setVar('itemcategory_pid', $itemcategory_id);
         $form = $itemcategoryObj->getForm();
         $form->display();
         //

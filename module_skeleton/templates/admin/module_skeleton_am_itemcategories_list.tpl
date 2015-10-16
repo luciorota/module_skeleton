@@ -5,7 +5,10 @@
 <{else}>
     <table class="outer">
         <tr>
-            <td align='left' colspan='6'><{$smarty.const._AM_MODULE_SKELETON_ITEMCATEGORIES_COUNT|replace:'%s':$itemcategoryCount}></td>
+            <td class='left' colspan='6'><{$smarty.const._AM_MODULE_SKELETON_ITEMCATEGORIES_COUNT|replace:'%s':$itemcategoryCount}></td>
+        </tr>
+        <tr>
+            <th class="caption-text left" colspan='6'><{$itemcategoryAllParentsBreadcrumb}></th>
         </tr>
     <form id='categories_form' name='categories_form' action='' method='post'>
         <tr>
@@ -30,7 +33,7 @@
 <{*
                 <{section name=indent loop=$sorted_itemcategory.level-1 step=1}>-<{/section}>
 *}>
-                <span class="caption-text"><a href='../itemcategory.php?itemcategory_id=<{$sorted_itemcategory.itemcategory.itemcategory_id}>'><{$sorted_itemcategory.itemcategory.itemcategory_title}></a></span>
+                <span class="caption-text"><a href='itemcategory.php?itemcategory_id=<{$sorted_itemcategory.itemcategory.itemcategory_id}>'><{$sorted_itemcategory.itemcategory.itemcategory_title}></a></span>
                 </div>
                 <div class="xoops-form-element-help"><{$sorted_itemcategory.itemcategory.itemcategory_description}></div>
             </div>

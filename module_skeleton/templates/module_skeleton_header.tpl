@@ -1,6 +1,6 @@
 <div class="header">
 // HEADER
-    <{$module_skeleton_breadcrumb}>
+    <{$itemcategoryAllParentsBreadcrumb}>
 
 <{if $module_skeleton_choicebyletter}>
     <div class="module_skeleton_head_choicebyletter" align="center"><{$module_skeleton_choicebyletter}></div>

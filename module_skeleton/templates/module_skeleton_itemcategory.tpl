@@ -13,9 +13,9 @@
 
 <h1><{$smarty.const._CO_MODULE_SKELETON_ITEMCATEGORIES_LIST}></h1>
 <ul>
-<{foreach item=child_itemcategory from=$child_itemcategories}>
+<{foreach item=itemcategoryFirstChild from=$itemcategoryFirstChilds}>
     <li>
-        <a href="itemcategory.php?itemcategory_id=<{$child_itemcategory.itemcategory_id}>"><{$child_itemcategory.itemcategory_title}></a>
+        <a href="itemcategory.php?itemcategory_id=<{$itemcategoryFirstChild.itemcategory_id}>"><{$itemcategoryFirstChild.itemcategory_title}></a>
     </li>
 <{/foreach}>
 </ul>
